@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings - IronBro26</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bg2: #1a1a1a;
+      --panel: rgba(17, 17, 17, 0.95);
+      --text: #fff;
+      --accent: #ff1a1a;
+      --accent-light: #ff6666;
+      --accent-dark: #660000;
+      --transition-speed: 0.3s;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: background-color var(--transition-speed) ease,
+                  color var(--transition-speed) ease,
+                  border-color var(--transition-speed) ease,
+                  box-shadow var(--transition-speed) ease;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, var(--bg), var(--bg2));
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+      background: var(--panel);
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    h1 {
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2.2em;
+      text-shadow: 0 0 10px var(--accent-light);
+    }
+
+    .theme-section {
+      margin-bottom: 30px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+
+    h2 {
+      color: var(--accent-light);
+      margin-bottom: 15px;
+      font-size: 1.4em;
+    }
+
+    .theme-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .theme-option {
+      background: var(--bg);
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: var(--text);
+    }
+
+    .theme-option:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(255, 26, 26, 0.3);
+    }
+
+    .theme-option.active {
+      background: var(--accent);
+      color: #000;
+      font-weight: bold;
+      border-color: var(--accent-light);
+    }
+
+    .theme-preview {
+      width: 100%;
+      height: 80px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, var(--theme-color, #666), #222);
+    }
+
+    @media (max-width: 768px) {
+      .theme-options {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .container {
+        padding: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .theme-options {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--accent);
+      color: #000;
+      padding: 15px 25px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      font-weight: 600;
+    }
+
+    .notification.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Theme class-based styles */
+    .theme-yellow {
+      --accent: #ffcc00 !important;
+      --accent-light: #ffdd66 !important;
+      --accent-dark: #cc9900 !important;
+    }
+
+    .theme-purple {
+      --accent: #9c27b0 !important;
+      --accent-light: #ba68c8 !important;
+      --accent-dark: #6a1b9a !important;
+    }
+
+    .theme-skyblue {
+      --accent: #00bcd4 !important;
+      --accent-light: #4dd0e1 !important;
+      --accent-dark: #008ba3 !important;
+    }
+
+    /* Transitions */
+    body, .theme-option, .back-button, .reset-button {
+      transition: background-color var(--transition-speed) ease,
+                  color var(--transition-speed) ease,
+                  border-color var(--transition-speed) ease,
+                  box-shadow var(--transition-speed) ease;
+    }
+
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(135deg, var(--bg), var(--bg2));
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      background: var(--panel);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent) var(--bg);
+    }
+
+    /* Custom scrollbar for WebKit browsers */
+    .container::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .container::-webkit-scrollbar-track {
+      background: var(--bg);
+      border-radius: 4px;
+    }
+
+    .container::-webkit-scrollbar-thumb {
+      background-color: var(--accent);
+      border-radius: 4px;
+    }
+
+    .container::-webkit-scrollbar-thumb:hover {
+      background-color: var(--accent-light);
+    }
+
+    h1 {
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 0 0 10px var(--accent), 0 0 25px var(--accent-light);
+    }
+
+    .theme-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+    }
+
+    .theme-option {
+      background: var(--panel);
+      border: 2px solid var(--accent);
+      border-radius: 12px;
+      padding: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .theme-option:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px var(--accent);
+    }
+
+    .theme-name {
+      font-weight: 600;
+      margin-top: 10px;
+      color: var(--text);
+    }
+
+    .back-button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 24px;
+      background: var(--accent);
+      color: #000;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .back-button:hover {
+      background: var(--accent-light);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px var(--accent);
+    }
+
+    .settings-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .reset-button {
+      background: #333;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .reset-button:hover {
+      background: #555;
+    }
+
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease-out;
+      pointer-events: none;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .notification.show {
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Theme Settings</h1>
+
+    <section class="theme-section">
+      <h2>Pick a Theme</h2>
+      <div class="theme-options" id="themeOptions">
+        <!-- Theme cards inserted here -->
+      </div>
+    </section>
+
+    <section class="theme-section">
+      <h2>Customize</h2>
+      <p>Use the buttons below to apply or reset the selected theme. The page will also try to replace hard-coded red areas with your chosen accent color.</p>
+      <div class="settings-actions">
+        <div>
+          <button id="applyButton" class="back-button">Apply Theme</button>
+          <button id="resetButton" class="reset-button">Reset to Default</button>
+        </div>
+        <a href="brosquad-new.html" class="back-button" id="backButton">← Back to BroSquad</a>
+      </div>
+    </section>
+
+  <div id="notification" class="notification"></div>
+
+  <script>
+    // Theme Manager Wrapper for Settings Page
+    class SettingsThemeManager {
+      constructor() {
+        this.currentTheme = localStorage.getItem('theme') || 'red';
+      }
+
+      init() {
+        this.setupEventListeners();
+        this.updateActiveButton(this.currentTheme);
+      }
+
+      setupEventListeners() {
+        // Theme selection
+        document.querySelectorAll('.theme-option').forEach(option => {
+          option.addEventListener('click', () => {
+            const theme = option.dataset.theme;
+            this.setTheme(theme);
+          });
+        });
+
+        // Reset button
+        document.getElementById('resetButton')?.addEventListener('click', () => {
+          this.setTheme('red');
+        });
+      }
+
+      setTheme(theme) {
+        // Use the global ThemeManager to apply the theme
+        if (window.ThemeManager) {
+          window.ThemeManager.applyTheme(theme);
+          this.currentTheme = theme;
+          this.updateActiveButton(theme);
+          this.showNotification(`Theme set to: ${theme.replace('brosquad-', '').charAt(0).toUpperCase() + theme.replace('brosquad-', '').slice(1)}`);
+        }
+      }
+
+      updateActiveButton(theme) {
+        document.querySelectorAll('.theme-option').forEach(option => {
+          if (option.dataset.theme === theme) {
+            option.classList.add('active');
+          } else {
+            option.classList.remove('active');
+          }
+        });
+      }
+
+      showNotification(message) {
+        const notification = document.getElementById('notification');
+        notification.textContent = message;
+        notification.classList.add('show');
+        
+        setTimeout(() => {
+          notification.classList.remove('show');
+        }, 3000);
+      }
+    }
+
+    // Initialize theme manager when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      // First, ensure the theme manager is loaded
+      if (typeof window.ThemeManager === 'undefined') {
+        console.warn('ThemeManager not found. Loading fallback theme manager...');
+        // Fallback to local theme manager if the global one isn't available
+        window.ThemeManager = {
+          applyTheme: function(theme) {
+            const root = document.documentElement;
+            const themeMap = {
+              'red': { accent: '#ff1a1a', light: '#ff6666', dark: '#660000' },
+              'yellow': { accent: '#ffcc00', light: '#ffee66', dark: '#b38f00' },
+              'sky': { accent: '#87ceeb', light: '#b3e0ff', dark: '#5f9ea0' },
+              'purple': { accent: '#9b30ff', light: '#b452ff', dark: '#551a8b' },
+              'brosquad-neon': { accent: '#00ff9d', light: '#80ffce', dark: '#00b36b' },
+              'brosquad-purple': { accent: '#b026ff', light: '#d580ff', dark: '#7a00cc' },
+              'brosquad-cyan': { accent: '#00f7ff', light: '#80fbff', dark: '#00b3b8' },
+              'brosquad-blue': { accent: '#00aaff', light: '#66ccff', dark: '#006699' }
+            };
+            
+            const colors = themeMap[theme] || themeMap['red'];
+            root.style.setProperty('--accent', colors.accent);
+            root.style.setProperty('--accent-light', colors.light);
+            root.style.setProperty('--accent-dark', colors.dark);
+            root.setAttribute('data-theme', theme);
+          }
+        };
+      }
+      
+      // Initialize and store the theme manager
+      themeManager = new SettingsThemeManager();
+      themeManager.init();
+      
+      // Make available globally
+      window.themeManager = themeManager;
+      
+      // Sync current theme from localStorage
+      const currentTheme = localStorage.getItem('theme') || 'red';
+      window.ThemeManager.applyTheme(currentTheme);
+    });
+  </script>
+  <script>
+    (function(){
+      // Small theme catalog used by this settings page.
+      const THEMES = [
+        { id: 'red', name: 'Red', accent: '#ff1a1a', preview: ['#ff6b6b','#ff1a1a'] },
+  // removed: orange, pink, gold
+        { id: 'brosquad-neon', name: 'Neon', accent: '#00ff9d', preview: ['#00ff9d','#00b36b'] },
+        { id: 'brosquad-purple', name: 'Purple', accent: '#b026ff', preview: ['#b026ff','#7a00cc'] },
+        { id: 'brosquad-cyan', name: 'Cyan', accent: '#00f7ff', preview: ['#00f7ff','#00b3b8'] },
+        { id: 'brosquad-blue', name: 'BroSquad Blue', accent: '#00aaff', preview: ['#00aaff','#006699'] }
+      ];
+
+      const themeOptions = document.getElementById('themeOptions');
+      let selectedTheme = localStorage.getItem('theme') || 'red';
+      const modifiedNodes = new WeakSet(); // track nodes we changed so reset can clean them
+
+      function createCard(theme){
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'theme-option';
+        card.dataset.theme = theme.id;
+
+        const preview = document.createElement('div');
+        preview.className = 'theme-preview';
+        preview.style.background = `linear-gradient(135deg, ${theme.preview[0]}, ${theme.preview[1]})`;
+
+        const name = document.createElement('div');
+        name.className = 'theme-name';
+        name.textContent = theme.name;
+
+        card.appendChild(preview);
+        card.appendChild(name);
+
+        card.addEventListener('click', () => {
+          selectedTheme = theme.id;
+          document.querySelectorAll('.theme-option').forEach(n => n.classList.remove('active'));
+          card.classList.add('active');
+          // Immediately apply the selected theme and persist the accent for other pages
+          try {
+            safeApplyTheme(selectedTheme);
+            localStorage.setItem('theme', selectedTheme);
+            const t = THEMES.find(x => x.id === selectedTheme) || THEMES[0];
+            if (t && t.accent) {
+              replaceHardRedColors(t.accent);
+              try { localStorage.setItem('siteAccent', t.accent); } catch(e) {}
+              try { window.dispatchEvent(new CustomEvent('siteAccentChanged', { detail: { accent: t.accent } })); } catch(e) {}
+              try { document.dispatchEvent(new CustomEvent('siteAccentChanged', { detail: { accent: t.accent } })); } catch(e) {}
+            }
+          } catch (e) { console.warn('Immediate theme apply failed', e); }
+        });
+
+        if (theme.id === selectedTheme) card.classList.add('active');
+        return card;
+      }
+
+      THEMES.forEach(t => themeOptions.appendChild(createCard(t)));
+
+      function safeApplyTheme(themeId){
+        try {
+          // If ThemeManager exists use it, otherwise fallback to root CSS vars
+          if (window.ThemeManager && typeof window.ThemeManager.applyTheme === 'function') {
+            window.ThemeManager.applyTheme(themeId);
+          } else if (window.themeManager && typeof window.themeManager.setTheme === 'function') {
+            // older page-level manager
+            window.themeManager.setTheme(themeId);
+          } else {
+            // Fallback mapping similar to earlier fallback
+            const map = {};
+            THEMES.forEach(t => map[t.id] = t);
+            const t = map[themeId] || map['red'];
+            if (t) {
+              const root = document.documentElement;
+              root.style.setProperty('--accent', t.accent);
+              root.style.setProperty('--accent-light', t.preview[0]);
+              root.style.setProperty('--accent-dark', t.preview[1]);
+              root.setAttribute('data-theme', themeId);
+            }
+          }
+        } catch (err) {
+          console.error('Failed to apply theme:', err);
+        }
+      }
+
+      // Replace hard-coded red/orange/pink/yellow colors on the page with the active accent color.
+      function replaceHardRedColors(accent) {
+        // Helper: check if a color is in red/orange/yellow/pink hue ranges
+        function isWarmColor(colorStr) {
+          if (!colorStr) return false;
+          const s = colorStr.replace(/\s+/g,'').toLowerCase();
+          const tokens = ['#ff1a1a','#ff0000','#ff4d4d','red','#ff6b1a','#ffd700','#ff1a8c','#ffcc00','#ffa500'];
+          if (tokens.includes(s)) return true;
+
+          // parse rgb
+          const m = s.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+          let r,g,b;
+          if (m) { r = parseInt(m[1],10); g = parseInt(m[2],10); b = parseInt(m[3],10); }
+          else {
+            const mh = s.match(/#([0-9a-f]{6})/i);
+            if (mh) { const hex = mh[1]; r = parseInt(hex.slice(0,2),16); g = parseInt(hex.slice(2,4),16); b = parseInt(hex.slice(4,6),16); }
+          }
+          if (typeof r === 'number'){
+            // RGB -> HSL hue
+            const rn = r/255, gn = g/255, bn = b/255;
+            const max = Math.max(rn,gn,bn), min = Math.min(rn,gn,bn);
+            let h = 0;
+            if (max !== min) {
+              const d = max - min;
+              switch(max){
+                case rn: h = (gn - bn) / d + (gn < bn ? 6 : 0); break;
+                case gn: h = (bn - rn) / d + 2; break;
+                case bn: h = (rn - gn) / d + 4; break;
+              }
+              h = h * 60;
+            }
+            // warm hue ranges
+            if (h >= 345 || h <= 15) return true; // red
+            if (h > 15 && h <= 45) return true; // orange
+            if (h > 45 && h <= 75) return true; // yellow
+            if (h > 300 && h <= 345) return true; // pink/magenta
+          }
+          return false;
+        }
+
+        const all = document.querySelectorAll('*');
+        all.forEach(node => {
+          if (!(node instanceof HTMLElement)) return;
+          const cs = getComputedStyle(node);
+          // Check color and background-color
+          try {
+            if (cs.color && isWarmColor(cs.color)) { node.style.color = accent; modifiedNodes.add(node); }
+            if (cs.backgroundColor && isWarmColor(cs.backgroundColor)) { node.style.backgroundColor = accent; modifiedNodes.add(node); }
+            if (cs.borderTopColor && isWarmColor(cs.borderTopColor)) { node.style.borderColor = accent; modifiedNodes.add(node); }
+          } catch (e) {
+            // ignore nodes that throw (SVG, etc)
+          }
+        });
+      }
+
+      function clearReplacements() {
+        // We only clear inline styles that we marked
+        document.querySelectorAll('*').forEach(node => {
+          if (!(node instanceof HTMLElement)) return;
+          if (modifiedNodes.has(node)) {
+            node.style.color = '';
+            node.style.backgroundColor = '';
+            node.style.borderColor = '';
+            // can't remove from weakset explicitly; GC will handle nodes no longer referenced
+          }
+        });
+      }
+
+      document.getElementById('applyButton')?.addEventListener('click', () => {
+        safeApplyTheme(selectedTheme);
+        localStorage.setItem('theme', selectedTheme);
+        // find accent value from THEMES
+        const t = THEMES.find(x => x.id === selectedTheme) || THEMES[0];
+        if (t && t.accent) {
+          replaceHardRedColors(t.accent);
+          try {
+            // Persist a site-wide accent color and notify other pages
+            localStorage.setItem('siteAccent', t.accent);
+            // Fire a cross-window event for same-tab listeners
+            try { window.dispatchEvent(new CustomEvent('siteAccentChanged', { detail: { accent: t.accent } })); } catch(e) {}
+            try { document.dispatchEvent(new CustomEvent('siteAccentChanged', { detail: { accent: t.accent } })); } catch(e) {}
+          } catch (e) { /* ignore storage failures */ }
+        }
+        const notification = document.getElementById('notification');
+        if (notification) { notification.textContent = `Applied ${t.name}`; notification.classList.add('show'); setTimeout(()=>notification.classList.remove('show'),2500); }
+      });
+
+      document.getElementById('resetButton')?.addEventListener('click', () => {
+        // reset to default theme (red) and clear replacements
+        selectedTheme = 'red';
+        localStorage.removeItem('theme');
+        safeApplyTheme('red');
+        clearReplacements();
+        try {
+          localStorage.removeItem('siteAccent');
+          try { window.dispatchEvent(new CustomEvent('siteAccentChanged', { detail: { accent: null } })); } catch(e) {}
+          try { document.dispatchEvent(new CustomEvent('siteAccentChanged', { detail: { accent: null } })); } catch(e) {}
+        } catch (e) { /* ignore */ }
+        document.querySelectorAll('.theme-option').forEach(n => n.classList.remove('active'));
+        const defaultCard = document.querySelector('.theme-option[data-theme="red"]');
+        if (defaultCard) defaultCard.classList.add('active');
+        const notification = document.getElementById('notification');
+        if (notification) { notification.textContent = `Reset to default`; notification.classList.add('show'); setTimeout(()=>notification.classList.remove('show'),2500); }
+      });
+
+      // Back button navigation
+      document.getElementById('backButton')?.addEventListener('click', (e)=>{
+        e.preventDefault();
+        window.location.href = 'brosquad-new.html';
+      });
+
+      // initialize: apply current theme so previews match
+      safeApplyTheme(selectedTheme);
+    })();
+  </script>
+</body>
+</html>
+

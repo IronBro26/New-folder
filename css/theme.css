@@ -1,0 +1,86 @@
+:root {
+  /* Default theme colors */
+  --accent: #3366ff;
+  --accent-light: #6699ff;
+  --accent-dark: #0033cc;
+  --accent-rgb: 51, 102, 255;
+  
+  /* Text colors */
+  --text-primary: #ffffff;
+  --text-secondary: #cccccc;
+  --text-dark: #333333;
+  
+  /* Background colors */
+  --bg-primary: #121212;
+  --bg-secondary: #1e1e1e;
+  --card-bg: #1e1e1e;
+  
+  /* Transitions */
+  --theme-transition: all 0.3s ease;
+}
+
+/* Theme transition effect */
+.theme-transition * {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Apply theme colors to elements */
+body {
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: var(--theme-transition);
+}
+
+a:hover {
+  color: var(--accent-light);
+  text-decoration: underline;
+}
+
+button, .btn, input[type="submit"] {
+  background-color: var(--accent);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: var(--theme-transition);
+}
+
+button:hover, .btn:hover, input[type="submit"]:hover {
+  background-color: var(--accent-light);
+  transform: translateY(-2px);
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: var(--theme-transition);
+  border: 1px solid rgba(var(--accent-rgb), 0.2);
+}
+
+/* Special handling for elements that should stay white/black */
+.keep-white {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+.keep-black {
+  color: #000000 !important;
+  fill: #000000 !important;
+  stroke: #000000 !important;
+}
+
+/* Emoji styling */
+.emoji, .emojis, [role="img"] {
+  filter: none !important;
+  -webkit-filter: none !important;
+}

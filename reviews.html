@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BroSquad - Reviews</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bg2: #1a1a1a;
+      --bg3: #2a2a2a;
+      --text-primary: #ffffff;
+      --text-secondary: #b3b3b3;
+      --accent: #00f7ff;
+      --card-bg: rgba(30, 30, 30, 0.8);
+      --border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+
+    .reviews-container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    
+    .reviews-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .reviews-header h1 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--accent);
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .review-form {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border: 1px solid var(--border-color);
+    }
+    
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      background: var(--bg2);
+      color: var(--text-primary);
+      font-family: 'Roboto', sans-serif;
+    }
+    
+    textarea.form-control {
+      min-height: 120px;
+      resize: vertical;
+    }
+    
+    .rating {
+      display: flex;
+      gap: 0.5rem;
+      margin: 0.5rem 0;
+    }
+    
+    .rating input {
+      display: none;
+    }
+    
+    .rating label {
+      font-size: 1.8rem;
+      color: #444;
+      cursor: pointer;
+    }
+    
+    .rating label:hover,
+    .rating input:checked ~ label {
+      color: #ffd700;
+    }
+    
+    .btn-submit {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 0.8rem 2rem;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+    
+    .btn-submit:hover {
+      opacity: 0.9;
+    }
+
+    .btn-home {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 0.8rem 2rem;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: opacity 0.3s;
+      display: block;
+      margin: 1rem auto;
+    }
+
+    .btn-home:hover {
+      opacity: 0.8;
+    }
+
+    .reviews-list {
+      display: grid;
+      gap: 1.2rem;
+    }
+    
+    .review-card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      padding: 1.2rem;
+      border: 1px solid var(--border-color);
+      position: relative;
+      transition: transform 0.2s ease;
+    }
+
+    .review-card:hover {
+      transform: scale(1.02);
+    }
+    
+    .review-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.8rem;
+    }
+    
+    .review-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      color: #000;
+      font-weight: 700;
+    }
+    
+    .review-user {
+      flex: 1;
+    }
+    
+    .review-user h4 {
+      margin: 0 0 0.2rem 0;
+      color: var(--text-primary);
+    }
+    
+    .review-rating {
+      color: #ffd700;
+      font-size: 0.9rem;
+    }
+    
+    .review-date {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-left: auto;
+    }
+    
+    .review-content {
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+    
+    .no-reviews {
+      text-align: center;
+      color: var(--text-secondary);
+      padding: 2rem 0;
+    }
+
+    @media (max-width: 600px) {
+      .reviews-container {
+        padding: 0 0.8rem;
+      }
+      
+      .review-form {
+        padding: 1.2rem;
+      }
+      
+      .review-header {
+        flex-wrap: wrap;
+      }
+      
+      .review-date {
+        width: 100%;
+        margin: 0.5rem 0 0 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <script src="js/theme-manager.js"></script>
+
+  <div class="reviews-container">
+    <header class="reviews-header">
+      <h1>Share Your Experience</h1>
+      <p>We value your feedback about BroSquad!</p>
+  <button class="btn-home" onclick="window.location.href='./index.html'">🏠 Go to Home</button>
+    </header>
+    
+    <form id="reviewForm" class="review-form">
+      <div class="form-group">
+        <label for="name">Your Name</label>
+        <input type="text" id="name" class="form-control" required minlength="2" maxlength="50">
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email (optional)</label>
+        <input type="email" id="email" class="form-control" maxlength="100">
+      </div>
+      
+      <div class="form-group">
+        <label>Your Rating</label>
+        <div class="rating">
+          <input type="radio" id="star5" name="rating" value="5" required>
+          <label for="star5" title="5 stars">★</label>
+          <input type="radio" id="star4" name="rating" value="4">
+          <label for="star4" title="4 stars">★</label>
+          <input type="radio" id="star3" name="rating" value="3">
+          <label for="star3" title="3 stars">★</label>
+          <input type="radio" id="star2" name="rating" value="2">
+          <label for="star2" title="2 stars">★</label>
+          <input type="radio" id="star1" name="rating" value="1">
+          <label for="star1" title="1 star">★</label>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="review">Your Review</label>
+        <textarea id="review" class="form-control" required minlength="10" maxlength="1000"></textarea>
+      </div>
+      
+      <button type="submit" class="btn-submit">Submit Review</button>
+    </form>
+    
+    <div class="reviews-list" id="reviewsList">
+      <div class="no-reviews">No reviews yet. Be the first to review!</div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const reviewForm = document.getElementById('reviewForm');
+      const reviewsList = document.getElementById('reviewsList');
+      
+      // Load reviews
+      function loadReviews() {
+  const reviews = JSON.parse(localStorage.getItem('reviews') || '[]');
+        if (reviews.length === 0) {
+          reviewsList.innerHTML = '<div class="no-reviews">No reviews yet. Be the first to review!</div>';
+          return;
+        }
+
+        reviewsList.innerHTML = reviews.map((review, index) => `
+          <div class="review-card" data-id="${index}">
+            <div class="review-header">
+              <div class="review-avatar">${review.name.charAt(0).toUpperCase()}</div>
+              <div class="review-user">
+                <h4>${review.name}</h4>
+                <div class="review-rating">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</div>
+              </div>
+              <div class="review-date">${new Date(review.date).toLocaleDateString()}</div>
+            </div>
+            <div class="review-content">${review.review.replace(/\n/g, '<br>')}</div>
+          </div>
+        `).join('');
+      }
+
+      // Delete review by right click
+      reviewsList.addEventListener('contextmenu', function(e) {
+        const card = e.target.closest('.review-card');
+        if (card) {
+          e.preventDefault();
+          const id = card.dataset.id;
+          const reviews = JSON.parse(localStorage.getItem('reviews') || '[]');
+          if (confirm('Delete this review?')) {
+            reviews.splice(id, 1);
+            localStorage.setItem('reviews', JSON.stringify(reviews));
+            loadReviews();
+          }
+        }
+      });
+
+      // Add review
+      reviewForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const rating = document.querySelector('input[name="rating"]:checked').value;
+        const reviewText = document.getElementById('review').value.trim();
+
+  const reviews = JSON.parse(localStorage.getItem('reviews') || '[]');
+        reviews.unshift({
+          name,
+          email,
+          rating: parseInt(rating),
+          review: reviewText,
+          date: new Date().toISOString()
+        });
+
+            localStorage.setItem('reviews', JSON.stringify(reviews));
+        reviewForm.reset();
+        loadReviews();
+        alert('Thank you for your review!');
+      });
+
+      loadReviews();
+    });
+  </script>
+</body>
+</html>

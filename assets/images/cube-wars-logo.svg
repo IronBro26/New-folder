@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 80">
+  <defs>
+    <linearGradient id="g1" x1="0" x2="1">
+      <stop offset="0%" stop-color="#00b4d8"/>
+      <stop offset="100%" stop-color="#0077b6"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="0" x2="1">
+      <stop offset="0%" stop-color="#90e0ef"/>
+      <stop offset="100%" stop-color="#00b4d8"/>
+    </linearGradient>
+  </defs>
+  <rect width="240" height="80" rx="8" fill="#07142a"/>
+  <g transform="translate(14,12)">
+    <g id="cube" transform="scale(1.6)">
+      <polygon points="24,0 48,12 24,24 0,12" fill="url(#g1)" stroke="#012a4a" stroke-width="1"/>
+      <polygon points="24,24 48,36 24,48 0,36" fill="url(#g2)" stroke="#012a4a" stroke-width="1" opacity="0.95"/>
+      <rect x="10" y="10" width="28" height="28" fill="#023e8a" transform="rotate(15 24 24)" opacity="0.9"/>
+    </g>
+    <text x="86" y="28" font-family="Segoe UI, Roboto, Arial" font-size="22" fill="#e6f0ff" font-weight="700">CUBE</text>
+    <text x="86" y="52" font-family="Segoe UI, Roboto, Arial" font-size="18" fill="#8ecae6">WARS</text>
+  </g>
+</svg>

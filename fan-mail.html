@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fan Mail - IronBro26</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #0a0a0a;
+  --bg2: #1a1a1a;
+  --panel: #111;
+  --text: #fff;
+  --accent: #ff1a1a;
+  --accent-light: #ff6666;
+  --accent-dark: #660000;
+  --transition-speed: 0.3s;
+}
+
+* { transition: all var(--transition-speed) ease; }
+
+body {
+  margin:0;
+  font-family:'Poppins',Arial,sans-serif;
+  display:flex;
+  min-height:100vh;
+  background:linear-gradient(135deg,var(--bg),var(--bg2));
+  color:var(--text);
+}
+
+.sidebar {
+  width:260px;
+  padding:20px;
+  display:flex; flex-direction:column; align-items:center;
+  position:fixed; top:0; left:0; height:100%;
+  background: linear-gradient(180deg, var(--accent), var(--accent-dark));
+  box-shadow: 0 0 25px var(--accent), inset 0 0 20px var(--accent-dark);
+}
+.sidebar img {
+  width:100px; border-radius:50%; margin-bottom:15px;
+  box-shadow:0 0 15px var(--accent),0 0 30px var(--accent-light);
+}
+.sidebar h1 {
+  font-size:22px; margin-bottom:20px; color:var(--accent);
+  text-align:center; text-shadow:0 0 10px var(--accent),0 0 25px var(--accent-light);
+}
+.sidebar a {
+  color:var(--text); text-decoration:none; padding:10px;
+  display:block; text-align:center; margin:5px 0; border-radius:8px;
+  box-shadow:0 0 5px var(--accent); font-weight:600;
+}
+.sidebar a.active, .sidebar a:hover {
+  background:var(--accent); color:#000;
+  box-shadow:0 0 15px var(--accent),0 0 30px var(--accent-light);
+}
+
+.content {
+  margin-left:280px;
+  padding:20px;
+  flex:1; display:flex; flex-direction:column;
+}
+
+h2 {
+  text-align:center; color:var(--accent);
+  text-shadow:0 0 10px var(--accent),0 0 25px var(--accent-light);
+}
+
+.chat-container {
+  flex:1; overflow-y:auto; padding:10px; background:var(--panel);
+  border-radius:12px; display:flex; flex-direction:column; gap:10px;
+  margin-bottom:15px; box-shadow:0 0 20px var(--accent) inset;
+}
+
+.chat-bubble {
+  max-width:80%; padding:12px; border-radius:18px;
+  background:#222; border-left:4px solid var(--accent);
+  box-shadow:0 0 10px var(--accent);
+}
+.chat-bubble:hover { transform:scale(1.03); box-shadow:0 0 15px var(--accent-light); }
+.chat-time { font-size:10px; color:#ccc; margin-top:4px; text-align:right; }
+
+.chat-form { display:flex; flex-direction:column; gap:8px; }
+.chat-form input, .chat-form textarea {
+  padding:10px; border-radius:12px; border:none; font-size:14px;
+  resize:none; background:#222; color:var(--text);
+  box-shadow:0 0 8px var(--accent) inset;
+}
+.chat-form button {
+  padding:12px; border-radius:12px; border:none;
+  background:var(--accent); color:white; font-weight:bold; cursor:pointer;
+  box-shadow:0 0 10px var(--accent),0 0 20px var(--accent-light);
+}
+.chat-form button:hover {
+  background:var(--accent-light);
+  box-shadow:0 0 15px var(--accent),0 0 30px var(--accent);
+}
+
+.theme-buttons {
+  display:flex; flex-wrap:wrap; justify-content:center; margin-top:20px;
+}
+.theme-buttons button {
+  margin:5px; padding:8px 12px; border:none; border-radius:6px;
+  font-weight:bold; cursor:pointer; color:#fff;
+}
+</style>
+</head>
+<body>
+
+<div class="sidebar" id="sidebar">
+  <img src="IronBro.jpg" alt="IronBro">
+  <h1>IronBro26 Fan Club</h1>
+  <a href="index.html" class="nav-link">🏠 Home</a>
+  <a href="fan-mail.html" class="nav-link active">💌 Fan Mail</a>
+  <a href="videos.html" class="nav-link">🎬 Videos</a>
+</div>
+
+<div class="content">
+  <h2>💌 Fan Mail Wall</h2>
+  <div class="chat-container" id="chatContainer"></div>
+
+  <div class="chat-form">
+    <input type="text" id="username" placeholder="Your Name">
+    <textarea id="message" placeholder="Write your message..." rows="2"></textarea>
+    <button id="sendBtn">Send</button>
+  </div>
+
+  <div class="theme-buttons">
+    <button style="background:#ff1a1a" data-theme="red">Red</button>
+    <button style="background:#1a8cff" data-theme="blue">Blue</button>
+    <button style="background:#00ff9d" data-theme="neon">Neon</button>
+    <button style="background:#b026ff" data-theme="purple">Purple</button>
+    <button style="background:#00f7ff" data-theme="cyan">Cyan</button>
+  </div>
+</div>
+
+<script>
+// Bro Squad themes
+const themes = {
+  red: { accent: '#ff1a1a', light: '#ff6666', dark: '#660000' },
+  blue: { accent: '#1a8cff', light: '#66b3ff', dark: '#0059b3' },
+  neon: { accent: '#00ff9d', light: '#80ffce', dark: '#00b36b' },
+  purple: { accent: '#b026ff', light: '#d580ff', dark: '#7a00cc' },
+  cyan: { accent: '#00f7ff', light: '#80fbff', dark: '#00b3b8' }
+};
+
+const sidebar = document.getElementById('sidebar');
+
+// Apply a theme
+function applyTheme(name) {
+  const theme = themes[name];
+  document.documentElement.style.setProperty('--accent', theme.accent);
+  document.documentElement.style.setProperty('--accent-light', theme.light);
+  document.documentElement.style.setProperty('--accent-dark', theme.dark);
+
+  sidebar.style.background = `linear-gradient(180deg, ${theme.accent}, ${theme.dark})`;
+  sidebar.style.boxShadow = `0 0 25px ${theme.accent}, inset 0 0 20px ${theme.dark}`;
+}
+
+// Theme buttons click
+document.querySelectorAll('.theme-buttons button').forEach(btn => {
+  btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+});
+
+// Highlight active nav link
+document.addEventListener('DOMContentLoaded', () => {
+  const currentPage = 'fan-mail.html';
+  document.querySelectorAll('.sidebar a').forEach(link => {
+    if(link.getAttribute('href') === currentPage) link.classList.add('active');
+    else link.classList.remove('active');
+  });
+
+  // Fan mail functionality
+  const chatContainer = document.getElementById('chatContainer');
+  let messages = JSON.parse(localStorage.getItem('fanMailMessages') || '[]');
+
+  function renderMessages() {
+    chatContainer.innerHTML = '';
+    messages.forEach((msg, index) => {
+      const bubble = document.createElement('div');
+      bubble.classList.add('chat-bubble');
+      bubble.innerHTML = `<strong>${msg.username}</strong><div class="chat-time">${msg.time}</div><div>${msg.message}</div>`;
+      bubble.addEventListener('contextmenu', e => {
+        e.preventDefault();
+        if(confirm('Delete this message?')) {
+          messages.splice(index,1);
+          localStorage.setItem('fanMailMessages', JSON.stringify(messages));
+          renderMessages();
+        }
+      });
+      chatContainer.appendChild(bubble);
+    });
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+  }
+
+  document.getElementById('sendBtn').addEventListener('click', () => {
+    const username = document.getElementById('username').value.trim();
+    const message = document.getElementById('message').value.trim();
+    if(!username || !message) return alert('Enter name and message!');
+    const time = new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+    messages.push({ username, message, time });
+    localStorage.setItem('fanMailMessages', JSON.stringify(messages));
+    document.getElementById('username').value = '';
+    document.getElementById('message').value = '';
+    renderMessages();
+  });
+
+  renderMessages();
+});
+</script>
+
+</body>
+</html>

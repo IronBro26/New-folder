@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 80">
+  <defs>
+    <linearGradient id="s1" x1="0" x2="1">
+      <stop offset="0%" stop-color="#ffd166"/>
+      <stop offset="100%" stop-color="#ef476f"/>
+    </linearGradient>
+  </defs>
+  <rect width="260" height="80" rx="8" fill="#07142a"/>
+  <g transform="translate(14,12)">
+    <g id="rocket">
+      <path d="M20 36 C24 24, 40 20, 48 28 C56 36, 52 56, 36 64 C24 70, 12 62, 8 48 C6 40, 8 40, 20 36 Z" fill="url(#s1)" stroke="#7f1d1d" stroke-width="1"/>
+      <circle cx="40" cy="32" r="4" fill="#fffb"/>
+      <g transform="translate(0,38)">
+        <ellipse cx="20" cy="6" rx="8" ry="3" fill="#ffb703" opacity="0.8"/>
+      </g>
+    </g>
+    <text x="86" y="32" font-family="Segoe UI, Roboto, Arial" font-size="20" fill="#e6f0ff" font-weight="700">SPACE</text>
+    <text x="86" y="56" font-family="Segoe UI, Roboto, Arial" font-size="16" fill="#ffd6a5">BLASTERS</text>
+  </g>
+</svg>

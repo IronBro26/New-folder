@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cube Wars - Bro Squad</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/nav-lock.css">
+    <link rel="icon" type="image/svg+xml" href="assets/images/cube-wars-logo.svg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/theme-styles.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            background: var(--bg, #0a0a1a);
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-light, #00ffff);
+            text-shadow: 0 0 10px var(--accent, #00ffff), 0 0 20px var(--accent-light, #00ffff);
+            overflow-y: auto;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .logo-container {
+            margin: 20px auto;
+            text-align: center;
+            max-width: 800px;
+        }
+        
+        .logo-container img {
+            height: 100px;
+            margin-bottom: 10px;
+        }
+        
+        #game-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 500px;
+            margin: 20px auto;
+            background: var(--bg-dark, #000033);
+            border: 2px solid var(--accent, #1a1aff);
+            box-shadow: 0 0 30px var(--accent, #1a1aff), 0 0 60px var(--accent-light, #0044ff);
+            overflow: hidden;
+            border-radius: 10px;
+        }
+        
+        #game-canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        
+        #score {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #00ffff;
+            font-weight: bold;
+            z-index: 10;
+            text-shadow: 0 0 5px var(--accent-light, #ff80c1);
+            font-family: 'Orbitron', sans-serif;
+            padding: 5px 10px;
+            background: var(--card-bg, rgba(0, 0, 51, 0.7));
+            border: 1px solid var(--accent, #ff1a8c);
+        }
+
+        .home-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.06);
+            color: var(--text);
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px var(--accent, #ff1a8c), 0 0 30px var(--accent-light, #ff80c1);
+        }
+        
+        #restart-btn:hover {
+            background: var(--accent, #ff1a8c);
+            color: #000;
+            text-shadow: 0 0 10px var(--accent-light, #ff80c1);
+        }
+        
+        .controls-info {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 15px;
+            background: var(--card-bg, rgba(0, 0, 51, 0.7));
+            border: 1px solid var(--accent, #ff1a8c);
+            color: var(--accent, #ff1a8c);
+            text-shadow: 0 0 5px var(--accent-light, #ff80c1);
+            box-shadow: 0 0 15px var(--accent, #ff1a8c);
+        }
+        
+        .controls-info h3 {
+            margin-top: 0;
+            color: var(--accent-light, #00ffff);
+            text-shadow: 0 0 10px var(--accent, #00ffff);
+        }
+
+        /* Game over overlay */
+        #game-over {
+            display: none;
+            position: absolute;
+            left: 50%;
+            top: 40%;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+            color: #fff;
+            text-align: center;
+            background: rgba(0,0,0,0.6);
+            padding: 24px 30px;
+            border-radius: 12px;
+            border: 2px solid rgba(255,255,255,0.08);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 20px;
+        }
+
+        #restart-btn {
+            margin-top: 12px;
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            color: #000;
+            font-weight: 700;
+        }
+        
+        .controls-info p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        
+        .bro-logo {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #1a1aff;
+            font-weight: bold;
+            font-size: 18px;
+            text-shadow: 0 0 5px #00ffff;
+            z-index: 10;
+        }
+    </style>
+    <script src="js/theme-manager.js"></script>
+    <script src="js/theme-init.js"></script>
+    <script>
+        // Apply theme when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            // Apply saved theme or default to brosquad-red
+            const savedTheme = localStorage.getItem('theme') || 'brosquad-red';
+            if (window.themeManager && typeof window.themeManager.applyTheme === 'function') {
+                window.themeManager.applyTheme(savedTheme);
+            } else {
+                // Fallback if theme manager isn't loaded
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="logo-container">
+        <img src="assets/images/cube-wars-logo.svg" alt="Cube Wars" />
+        <p>Dodge the enemy cubes and shoot them down! Collect power-ups for special abilities.</p>
+    </div>
+    
+    <div id="game-container">
+        <div id="score">SCORE: 0</div>
+        <a href="brosquad-settings.html" class="bro-logo" title="Theme Settings">BRO SQUAD</a>
+        <canvas id="game-canvas" width="600" height="500" tabindex="0"></canvas>
+        <div id="game-over">
+            GAME OVER!<br>
+            <button id="restart-btn">PLAY AGAIN</button>
+        </div>
+    </div>
+    
+    <div class="controls-info">
+        <h3>HOW TO PLAY:</h3>
+        <p>🡄 🡆 - Move Left/Right</p>
+        <p>SPACE - Shoot</p>
+        <p>Destroy the cubes before they reach the bottom!</p>
+    </div>
+
+    <script>
+        // Game initialization
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+        const gameOverElement = document.getElementById('game-over');
+        const restartBtn = document.getElementById('restart-btn');
+        
+        // Make canvas focusable for keyboard controls
+        canvas.setAttribute('tabindex', '0');
+        canvas.focus();
+
+        // Game variables
+        let score = 0;
+        let gameRunning = true;
+        const keys = {};
+
+        // Player
+        const player = {
+            x: canvas.width / 2 - 25,
+            y: canvas.height - 60,
+            width: 50,
+            height: 50,
+            speed: 10,  // Increased from 7
+            color: '#1a1aff',
+            bullets: [],
+            lastShot: 0,
+            shootDelay: 150,  // Faster shooting (was 250)
+            
+            update: function() {
+                // Movement
+                if (keys['a'] || keys['ArrowLeft']) {
+                    this.x -= this.speed;
+                }
+                if (keys['d'] || keys['ArrowRight']) {
+                    this.x += this.speed;
+                }
+
+                // Keep player in bounds
+                if (this.x < 0) this.x = 0;
+                if (this.x + this.width > canvas.width) this.x = canvas.width - this.width;
+
+                // Shooting
+                const now = Date.now();
+                if ((keys[' '] || keys['Spacebar']) && now - this.lastShot > this.shootDelay) {
+                    this.shoot();
+                    this.lastShot = now;
+                }
+
+                // Update bullets
+                this.bullets = this.bullets.filter(bullet => {
+                    bullet.y -= 15;  // Faster bullets (was 12)
+                    return bullet.y > 0;
+                });
+            },
+            
+            shoot: function() {
+                this.bullets.push({
+                    x: this.x + this.width / 2 - 3,
+                    y: this.y - 15,  // Start bullets higher up
+                    width: 6,
+                    height: 15,
+                    color: '#00ffff'
+                });
+            },
+            
+            draw: function() {
+                // Draw player (cube)
+                ctx.fillStyle = this.color;
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+                
+                // Draw cube details
+                ctx.strokeStyle = '#00ffff';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(this.x + 5, this.y + 5, this.width - 10, this.height - 10);
+                ctx.fillStyle = 'rgba(0, 255, 255, 0.3)';
+                ctx.fillRect(this.x + 10, this.y + 10, this.width - 20, this.height - 20);
+
+                // Draw bullets
+                ctx.fillStyle = '#00ffff';
+                this.bullets.forEach(bullet => {
+                    ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+                });
+            }
+        };
+
+        // Enemies
+        const enemies = [];
+        let lastEnemySpawn = 0;
+        const enemySpawnRate = 700;  // Faster enemy spawn (was 1000)
+
+        function spawnEnemy() {
+            const size = Math.random() * 30 + 25;
+            const hue = Math.random() * 60 + 200; // Blue to purple colors
+            const enemy = {
+                x: Math.random() * (canvas.width - size),
+                y: -size,
+                width: size,
+                height: size,
+                speed: Math.random() * 3 + 1.5,  // Slightly faster enemies
+                color: `hsl(${hue}, 100%, 50%)`,
+                rotation: 0,
+                rotationSpeed: (Math.random() - 0.5) * 0.1
+            };
+            enemies.push(enemy);
+            return enemy;
+        }
+
+        function updateEnemies() {
+            const now = Date.now();
+            if (now - lastEnemySpawn > enemySpawnRate) {
+                spawnEnemy();
+                lastEnemySpawn = now;
+            }
+
+            // Update enemies
+            for (let i = enemies.length - 1; i >= 0; i--) {
+                const enemy = enemies[i];
+                enemy.y += enemy.speed;
+                enemy.rotation += enemy.rotationSpeed;
+
+                // Check collision with player
+                if (isColliding(player, enemy)) {
+                    gameOver();
+                    return;
+                }
+
+                // Check collision with bullets
+                for (let j = player.bullets.length - 1; j >= 0; j--) {
+                    const bullet = player.bullets[j];
+                    if (isColliding(bullet, enemy)) {
+                        player.bullets.splice(j, 1);
+                        enemies.splice(i, 1);
+                        score += 10;
+                        scoreElement.textContent = `SCORE: ${score}`;
+                        break;
+                    }
+                }
+
+                // Remove if off screen
+                if (enemy.y > canvas.height) {
+                    gameOver();
+                    return;
+                }
+            }
+        }
+
+        function drawEnemies() {
+            enemies.forEach(enemy => {
+                ctx.save();
+                ctx.translate(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2);
+                ctx.rotate(enemy.rotation);
+                
+                // Draw enemy cube
+                ctx.fillStyle = enemy.color;
+                ctx.fillRect(-enemy.width/2, -enemy.height/2, enemy.width, enemy.height);
+                
+                // Draw cube details
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(-enemy.width/2 + 3, -enemy.height/2 + 3, enemy.width - 6, enemy.height - 6);
+                
+                ctx.restore();
+            });
+        }
+
+        function isColliding(rect1, rect2) {
+            return rect1.x < rect2.x + rect2.width &&
+                   rect1.x + rect1.width > rect2.x &&
+                   rect1.y < rect2.y + rect2.height &&
+                   rect1.y + rect1.height > rect2.y;
+        }
+
+        function gameOver() {
+            gameRunning = false;
+            gameOverElement.style.display = 'block';
+            // Save high score for current user if signed in
+            try {
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+                if (currentUser && currentUser.email) {
+                    const hs = JSON.parse(localStorage.getItem('highScores') || '{}');
+                    const prev = parseInt(hs[currentUser.email] || 0, 10);
+                    if (score > prev) {
+                        hs[currentUser.email] = score;
+                        localStorage.setItem('highScores', JSON.stringify(hs));
+                        localStorage.setItem('highScoresTimestamp', Date.now());
+                    }
+                }
+            } catch (e) { /* ignore */ }
+        }
+
+        function resetGame() {
+            // Reset game state
+            score = 0;
+            scoreElement.textContent = 'SCORE: 0';
+            player.x = canvas.width / 2 - 25;
+            player.y = canvas.height - 60;
+            player.bullets = [];
+            enemies.length = 0;
+            gameOverElement.style.display = 'none';
+            gameRunning = true;
+            lastEnemySpawn = Date.now();
+            gameLoop();
+        }
+
+        // Starfield effect
+        const stars = [];
+        const starCount = 100;
+        
+        // Initialize stars
+        for (let i = 0; i < starCount; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 1.5,
+                speed: Math.random() * 2 + 1
+            });
+        }
+        
+        function drawStarfield() {
+            ctx.fillStyle = 'white';
+            stars.forEach(star => {
+                star.y += star.speed;
+                if (star.y > canvas.height) {
+                    star.y = 0;
+                    star.x = Math.random() * canvas.width;
+                }
+                ctx.fillRect(star.x, star.y, star.size, star.size);
+            });
+        }
+
+        function gameLoop() {
+            if (!gameRunning) return;
+
+            // Clear canvas with slight fade effect
+            ctx.fillStyle = 'rgba(0, 0, 20, 0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw starfield background
+            drawStarfield();
+
+            // Update and draw game objects
+            player.update();
+            updateEnemies();
+            player.draw();
+            drawEnemies();
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Event listeners
+        window.addEventListener('keydown', (e) => {
+            keys[e.key] = true;
+            // Prevent spacebar from scrolling the page
+            if (e.code === 'Space') {
+                e.preventDefault();
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            keys[e.key] = false;
+        });
+
+        restartBtn.addEventListener('click', resetGame);
+
+        // Start the game
+        resetGame();
+    </script>
+</body>
+</html>

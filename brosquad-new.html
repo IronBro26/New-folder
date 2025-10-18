@@ -1,0 +1,1801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BroSquad Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/theme-styles.css">
+    <script src="./js/theme-manager.js"></script>
+    <style>
+        /* Add smooth transitions for theme colors */
+        :root, :root * {
+            transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease, box-shadow 0.5s ease, text-shadow 0.5s ease;
+        }
+        
+        /* Disable transitions during initial page load */
+        .preload * {
+            transition: none !important;
+        }
+        
+        :root {
+            /* Theme colors - these will be overridden by the theme manager */
+            --accent: #ff1a1a;
+            --accent-light: #ff4d4d;
+            --accent-dark: #cc0000;
+            --accent-rgb: 255, 26, 26;
+            
+            /* Base colors */
+            --bg: #0a0a0a;
+            --bg-light: #1a1a1a;
+            --text: #ffffff;
+            --text-secondary: #b3b3b3;
+            --card-bg: rgba(30, 30, 30, 0.8);
+            
+            /* Transitions */
+            --transition: all 0.3s ease;
+            
+            /* Theme transition */
+            --theme-transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        /* Smooth theme transitions */
+        .theme-transition *,
+        .theme-transition *::before,
+        .theme-transition *::after {
+            transition: var(--theme-transition) !important;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg), var(--bg-light));
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, var(--accent-dark) 0%, var(--bg) 100%);
+            padding: 30px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            box-shadow: 5px 0 30px rgba(var(--accent-rgb), 0.3);
+            border-right: 2px solid rgba(var(--accent-rgb), 0.3);
+            overflow-y: auto;
+            z-index: 1000;
+            transition: var(--theme-transition);
+        }
+        
+        /* Theme Toggle Styles */
+        .theme-toggle {
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .btn-theme {
+            width: 100%;
+            padding: 10px 15px;
+            background: rgba(var(--accent-rgb), 0.1);
+            border: 1px solid var(--accent);
+            color: var(--text);
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: var(--theme-transition);
+        }
+        
+        .btn-theme:hover {
+            background: rgba(var(--accent-rgb), 0.2);
+        }
+        
+        .theme-options {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg-light);
+            border: 1px solid var(--accent);
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1001;
+        }
+        
+        .theme-options.show {
+            display: block;
+        }
+        
+        .theme-option {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--theme-transition);
+        }
+        
+        .theme-option:hover {
+            background: rgba(var(--accent-rgb), 0.1);
+        }
+        
+        .theme-preview {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid var(--text);
+        }
+
+        .sidebar-header {
+            text-align: center;
+            padding-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary);
+            box-shadow: 0 0 30px var(--primary), 0 0 50px rgba(255, 26, 26, 0.5);
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px var(--primary), 0 0 70px rgba(255, 26, 26, 0.7);
+        }
+
+        .site-title {
+            color: #fff;
+            font-size: 28px;
+            margin: 15px 0 5px;
+            text-shadow: 0 0 15px var(--primary), 0 0 30px var(--primary);
+            letter-spacing: 1px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #ff1a1a, #ff6b6b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 14px 20px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            border-radius: 10px;
+            transition: var(--transition);
+            font-weight: 500;
+            margin: 4px 0;
+            background: rgba(255, 26, 26, 0.1);
+            border-left: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link i {
+            margin-right: 12px;
+            font-size: 20px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255, 26, 26, 0.2);
+            color: #fff;
+            transform: translateX(8px);
+            box-shadow: 0 5px 20px rgba(255, 26, 26, 0.4);
+            border-left: 3px solid var(--primary);
+        }
+
+        .nav-link:hover i, .nav-link.active i {
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        /* Main Content */
+        .content {
+            margin-left: 280px;
+            padding: 40px;
+            min-height: 100vh;
+            transition: var(--theme-transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .color-change-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                rgba(255, 26, 26, 0.1) 0%, 
+                rgba(26, 255, 26, 0.1) 25%, 
+                rgba(26, 26, 255, 0.1) 50%, 
+                rgba(255, 255, 26, 0.1) 75%);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            z-index: -1;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-title {
+            text-align: center;
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--card-bg);
+            border-radius: 10px;
+        }
+
+        /* Squad Grid */
+        .squad-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .squad-member {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 26, 26, 0.1);
+        }
+
+        .squad-member:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 26, 26, 0.2);
+            border-color: var(--primary);
+        }
+
+        .squad-member img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            margin-bottom: 15px;
+            box-shadow: 0 0 20px rgba(255, 26, 26, 0.3);
+            transition: var(--transition);
+        }
+
+        .squad-member:hover img {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px var(--primary);
+        }
+
+        .squad-member h3 {
+            margin-top: 10px;
+            color: var(--primary);
+            font-size: 1.2em;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text);
+            font-size: 16px;
+            transition: var(--transition);
+            margin-bottom: 10px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 26, 26, 0.2);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background: var(--primary);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 26, 26, 0.3);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .squad-member {
+            margin-bottom: 5px;
+        }
+
+        .message-user {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .message-content {
+            word-wrap: break-word;
+        }
+
+        /* Members List - Cute Blocks */
+        .members-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+            margin: 15px 0;
+            padding: 10px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .member-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            aspect-ratio: 1/1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .member-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-color: var(--accent);
+        }
+        
+        .member-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent);
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .member-item:hover .member-avatar {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px var(--accent);
+        }
+        
+        .member-name {
+            font-size: 0.8em;
+            font-weight: 500;
+            color: var(--text);
+            max-width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 5px;
+        }
+        
+
+        /* Make avatars look clickable */
+        .member-avatar { cursor: pointer; }
+
+        .member-name {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .member-email {
+            font-size: 14px;
+            color: var(--text-secondary);
+            word-break: break-all;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .squad-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+            
+            .members-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-light);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" data-skip-accent>
+        <div class="sidebar-header">
+            <img src="IronBro.jpg" alt="BroSquad Logo" class="logo" onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTUwIDE1MCI+PHJlY3Qgd2lkdGg9IjE1MCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSI3NSIgeT0iODAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPkJyb1NxdWFkPC90ZXh0Pjwvc3ZnPg=='" data-themeable>
+            <h1 class="site-title">BROSQUAD</h1>
+            <p style="color: rgba(255,255,255,0.7); font-size: 14px; margin-top: -5px; letter-spacing: 2px;">GAMING LEGENDS</p>
+            <div style="height: 2px; background: linear-gradient(90deg, transparent, var(--primary), transparent); margin: 20px 0; width: 80%; margin-left: 10%;"></div>
+        </div>
+        
+        <nav class="nav-menu">
+            <a href="./index.html" id="homeLink" class="nav-link" style="background: rgba(255, 26, 26, 0.15); border-left: 3px solid var(--primary);">
+                <i style="color: var(--primary);">🏠</i> Home
+            </a>
+            <a href="#" id="squadLink" class="nav-link" data-section="squad">
+                <i>👥</i> Meet the Squad
+            </a>
+            <a href="games.html" class="nav-link">
+                <i>🎮</i> Games
+                <span style="margin-left: auto; font-size: 12px; background: rgba(255, 26, 26, 0.3); padding: 2px 8px; border-radius: 10px;">New</span>
+            </a>
+            <a href="https://www.youtube.com/watch?v=91CukCAOb8o&list=PLTJ9h1gG8tHnzvKt0C06Nf7WFD4NPZMDr" target="_blank" class="nav-link">
+                <i>🎬</i> Premium Videos
+            </a>
+            <a href="#" id="membersLink" class="nav-link" data-section="members">
+                <i>📝</i> Members
+            </a>
+            <a href="brosquad-settings.html" class="nav-link" style="background: rgba(26, 140, 255, 0.15); border-left: 3px solid #1a8cff;">
+                <i>⚙️</i> Bro Squad Settings
+            </a>
+        </nav>
+        
+                    <div style="margin-top: auto; padding: 20px 0; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                <p style="text-align: center; font-size: 14px; color: var(--text-secondary);">
+                    BroSquad &copy; 2025
+                </p>
+            </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+        <div class="color-change-overlay"></div>
+        <!-- Home Section -->
+        <section id="home" class="section active">
+            <h2 class="section-title">Welcome to BroSquad</h2>
+            <div class="card">
+                <p style="text-align: center; font-size: 1.1em; line-height: 1.8;">
+                    Welcome to <strong style="color: var(--primary);">BroSquad</strong>! 🚀<br>
+                    Join our gaming community, connect with fellow gamers, and enjoy exclusive content. 
+                    Whether you're here to chat, play games, or watch premium videos, we've got you covered!
+                </p>
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="#squad" class="btn" style="margin: 0 10px;">Meet the Squad</a>
+                    <a href="games.html" class="btn" style="margin: 0 10px; background: transparent; border: 2px solid var(--primary);">Play Games</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Squad Section -->
+        <section id="squad" class="section">
+            <h2 class="section-title">👥 Meet the Squad</h2>
+            <div class="squad-grid">
+                <div class="squad-member">
+                    <img src="IronBro.jpg" alt="IronBro" onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTUwIDE1MCI+PHJlY3Qgd2lkdGg9IjE1MCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSI3NSIgeT0iODAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPklyb25Ccm88L3RleHQ+PC9zdmc+'">
+                    <h3>IronBro</h3>
+                </div>
+                <div class="squad-member">
+                    <img src="Gigzy.jpg" alt="Gigzy" onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTUwIDE1MCI+PHJlY3Qgd2lkdGg9IjE1MCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSI3NSIgeT0iODAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPkdpZ3p5PC90ZXh0Pjwvc3ZnPg=='">
+                    <h3>Gigzy</h3>
+                </div>
+                <div class="squad-member">
+                    <img src="AL737.jpg" alt="AL737" onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTUwIDE1MCI+PHJlY3Qgd2lkdGg9IjE1MCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSI3NSIgeT0iODAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPkFMNzM3PC90ZXh0Pjwvc3ZnPg=='">
+                    <h3>AL737</h3>
+                </div>
+                <div class="squad-member">
+                    <img src="MonkeyBull1113.jpg" alt="MonkeyBull1113" onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTUwIDE1MCI+PHJlY3Qgd2lkdGg9IjE1MCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSI3NSIgeT0iODAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPis8L3RleHQ+PC9zdmc+'">
+                    <h3>MonkeyBull1113</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chat Section -->
+        <section id="chat" class="section">
+            <h2 class="section-title">💬 Chat Room</h2>
+            <div class="card">
+                <div class="chat-container" id="chatContainer">
+                    <!-- Chat messages will be dynamically added here -->
+                </div>
+                <div class="form-group">
+                    <input type="text" id="chatUsername" class="form-control" placeholder="Your Name" value="">
+                </div>
+                <div class="form-group">
+                    <textarea id="chatMessage" class="form-control" rows="3" placeholder="Type your message..."></textarea>
+                </div>
+                <button class="btn btn-block" id="sendMessageBtn">Send Message</button>
+            </div>
+        </section>
+
+                <!-- ================= MEMBERS SECTION ================= -->
+                <section id="members" class="section">
+                    <h2 class="members-title">� BroSquad Members</h2>
+                        <h2 class="members-title">💪 BroSquad Members</h2>
+                    <form id="joinForm" class="join-form glass-card">
+                        <input type="text" id="memberName" placeholder="Your Name" required>
+                        <input type="email" id="memberEmail" placeholder="Your Email" required>
+                        <label for="memberAvatar" class="upload-label">📷 Choose Avatar</label>
+                        <input type="file" id="memberAvatar" accept="image/*" hidden>
+                        <button type="submit" id="joinButton">🚀 Join the Squad</button>
+                    </form>
+
+                    <div id="memberList" class="member-list"></div>
+                </section>
+
+                <style>
+                    /* --- Premium look --- */
+                    .members-title {
+                        text-align: center;
+                        font-size: 2rem;
+                        color: #fff;
+                        margin-bottom: 20px;
+                        text-shadow: 0 0 10px #ff2020;
+                    }
+
+                    .glass-card {
+                        backdrop-filter: blur(12px);
+                        background: rgba(255, 255, 255, 0.08);
+                        border: 1px solid rgba(255,255,255,0.15);
+                        border-radius: 20px;
+                        padding: 20px;
+                        max-width: 360px;
+                        margin: 0 auto;
+                        box-shadow: 0 0 25px rgba(255, 0, 0, 0.2);
+                        animation: fadeIn 0.8s ease;
+                    }
+
+                    .join-form {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 12px;
+                    }
+
+                    .join-form input {
+                        padding: 10px 12px;
+                        border-radius: 12px;
+                        border: none;
+                        outline: none;
+                        font-size: 1rem;
+                        background: rgba(255,255,255,0.15);
+                        color: #fff;
+                    }
+
+                    .join-form input::placeholder {
+                        color: #ccc;
+                    }
+
+                    .upload-label {
+                        display: block;
+                        text-align: center;
+                        background: linear-gradient(90deg, #ff4444, #ff8800);
+                        padding: 10px;
+                        border-radius: 10px;
+                        color: #fff;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: transform 0.2s;
+                    }
+
+                    .upload-label:hover {
+                        transform: scale(1.05);
+                    }
+
+                    .join-form button {
+                        background: linear-gradient(90deg, #ff1a1a, #ff9900);
+                        color: white;
+                        border: none;
+                        padding: 10px;
+                        border-radius: 12px;
+                        font-weight: 700;
+                        font-size: 1rem;
+                        cursor: pointer;
+                        transition: all 0.3s;
+                        box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+                    }
+
+                    .join-form button:hover {
+                        background: linear-gradient(90deg, #ff4d4d, #ffaa33);
+                        transform: scale(1.05);
+                    }
+
+                    .member-list {
+                        margin-top: 25px;
+                        display: grid;
+                        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                        gap: 20px;
+                        padding: 10px;
+                    }
+
+                    .member-card {
+                        background: rgba(255, 255, 255, 0.08);
+                        border: 1px solid rgba(255,255,255,0.2);
+                        border-radius: 16px;
+                        padding: 15px;
+                        text-align: center;
+                        box-shadow: 0 0 20px rgba(255,0,0,0.2);
+                        transition: transform 0.3s, box-shadow 0.3s;
+                    }
+
+                    .member-card:hover {
+                        transform: translateY(-5px);
+                        box-shadow: 0 0 30px rgba(255,0,0,0.3);
+                    }
+
+                    .member-card img {
+                        width: 80px;
+                        height: 80px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        border: 2px solid #ff3333;
+                        margin-bottom: 10px;
+                    }
+
+                    .member-card span {
+                        display: block;
+                        color: #fff;
+                        font-weight: 700;
+                        margin-bottom: 4px;
+                    }
+
+                    .member-card small {
+                        color: #ccc;
+                        font-size: 0.8rem;
+                    }
+
+                    @keyframes fadeIn {
+                        from {opacity: 0; transform: translateY(10px);} 
+                        to {opacity: 1; transform: translateY(0);} 
+                    }
+                </style>
+
+                <script>
+                    // === Enhanced Member Join System ===
+                    const joinForm = document.getElementById("joinForm");
+                    const memberList = document.getElementById("memberList");
+                    const avatarInput = document.getElementById("memberAvatar");
+                    const uploadLabel = document.querySelector(".upload-label");
+
+                    let members = JSON.parse(localStorage.getItem("broSquadMembers")) || [];
+
+                    // Update label on file select
+                    avatarInput.addEventListener("change", () => {
+                        if (avatarInput.files.length > 0) {
+                            uploadLabel.textContent = "✅ Avatar Selected";
+                        } else {
+                            uploadLabel.textContent = "📷 Choose Avatar";
+                        }
+                    });
+
+                    function renderMembers() {
+                        memberList.innerHTML = "";
+                        members.forEach((m) => {
+                            const card = document.createElement('div');
+                            card.className = 'member-card';
+                            // Use a safe fallback image if avatar is undefined or falsy
+                            const avatarSrc = m.avatar || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDQ4IDQ4Ij48cmVjdCB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSIyNCIgeT0iMjgiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPkE8L3RleHQ+PC9zdmc+';
+                            card.innerHTML = `
+                                <img src="${avatarSrc}" alt="${m.name}">
+                                <span>${m.name}</span>
+                                <small>${m.email}</small>
+                            `;
+                            memberList.appendChild(card);
+                        });
+                    }
+
+                    joinForm.addEventListener("submit", (e) => {
+                        e.preventDefault();
+
+                        const name = document.getElementById("memberName").value.trim();
+                        const email = document.getElementById("memberEmail").value.trim();
+                        const file = avatarInput.files[0];
+
+                        if (!name || !email) return alert("Please fill out all fields.");
+
+                        const newMember = { name, email, avatar: "" };
+
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = () => {
+                                newMember.avatar = reader.result;
+                                members.push(newMember);
+                                localStorage.setItem("broSquadMembers", JSON.stringify(members));
+                                renderMembers();
+                                joinForm.reset();
+                                uploadLabel.textContent = "📷 Choose Avatar";
+                            };
+                            reader.readAsDataURL(file);
+                        } else {
+                            newMember.avatar = "https://i.imgur.com/8Km9tLL.png";
+                            members.push(newMember);
+                            localStorage.setItem("broSquadMembers", JSON.stringify(members));
+                            renderMembers();
+                            joinForm.reset();
+                            uploadLabel.textContent = "📷 Choose Avatar";
+                        }
+                    });
+
+                    renderMembers();
+                </script>
+
+        <!-- BroSquad Settings Section -->
+        <section id="bro-squad-settings" class="section">
+            <div style="position: relative; display: inline-block;">
+                <h2 class="section-title">⚙️ Theme Settings</h2>
+                <span style="
+                    position: absolute;
+                    top: -10px;
+                    right: -10px;
+                    background: var(--accent);
+                    color: #000;
+                    font-weight: bold;
+                    padding: 2px 8px;
+                    border-radius: 10px;
+                    font-size: 12px;">NEW</span>
+            </div>
+            <div class="card">
+                <p>Customize your BroSquad experience with these theme settings.</p>
+                                <div class="theme-options" style="margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 15px;">
+                        <div class="theme-option" data-theme="random" style="cursor: pointer; text-align: center;">
+                            <div style="width: 100%; height: 60px; border-radius: 8px; background: linear-gradient(135deg, #ff1a1a, #00cc66, #3366ff, #ffcc00); background-size: 400% 400%; animation: gradientBG 10s ease infinite; margin-bottom: 8px;"></div>
+                            <div>Random</div>
+                        </div>
+                    <!-- Standard Themes -->
+                    <div class="theme-option" data-theme="red">
+                        <div style="width: 100%; height: 60px; border-radius: 8px; background: linear-gradient(135deg, #ff1a1a, #660000); margin-bottom: 8px;"></div>
+                        <div>Red</div>
+                    </div>
+                    <div class="theme-option" data-theme="yellow">
+                        <div style="width: 100%; height: 60px; border-radius: 8px; background: linear-gradient(135deg, #ffcc00, #b38f00); margin-bottom: 8px;"></div>
+                        <div>Yellow</div>
+                    </div>
+                    <div class="theme-option" data-theme="blue">
+                        <div style="width: 100%; height: 60px; border-radius: 8px; background: linear-gradient(135deg, #3366ff, #0033cc); margin-bottom: 8px;"></div>
+                        <div>Blue</div>
+                    </div>
+                    <div class="theme-option" data-theme="green">
+                        <div style="width: 100%; height: 60px; border-radius: 8px; background: linear-gradient(135deg, #00cc66, #008040); margin-bottom: 8px;"></div>
+                        <div>Green</div>
+                    </div>
+                    <div class="theme-option" data-theme="orange">
+                        <div style="width: 100%; height: 60px; border-radius: 8px; background: linear-gradient(135deg, #ff6b1a, #cc5200); margin-bottom: 8px;"></div>
+                        <div>Orange</div>
+                    </div>
+                    <div class="theme-option" data-theme="pink">
+                        <div style="width: 100%; height: 60px; border-radius: 8px; background: linear-gradient(135deg, #ff1a8c, #b3005c); margin-bottom: 8px;"></div>
+                        <div>Pink</div>
+                    </div>
+                    <div class="theme-option" data-theme="gold">
+                        <div style="width: 100%; height: 60px; border-radius: 8px; background: linear-gradient(135deg, #ffd700, #b38f00); margin-bottom: 8px;"></div>
+                        <div>Gold</div>
+                    </div>
+    </main>
+
+    <script>
+        // Navigation and UI Management
+        document.addEventListener('DOMContentLoaded', () => {
+    let selectedMember = null;
+
+    // Add click handler to select squad members
+    document.addEventListener('click', (e) => {
+        const memberElement = e.target.closest('.squad-member');
+        if (memberElement) {
+            // Remove selection from all members
+            document.querySelectorAll('.squad-member').forEach(el => {
+                el.classList.remove('selected');
+            });
+            // Select clicked member
+            memberElement.classList.add('selected');
+            selectedMember = memberElement;
+        } else if (!e.target.closest('.squad-member')) {
+            // Clicked outside any member, deselect all
+            document.querySelectorAll('.squad-member').forEach(el => {
+                el.classList.remove('selected');
+            });
+            selectedMember = null;
+        }
+    });
+
+    // Handle keyboard events
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Delete' && selectedMember) {
+            if (confirm('Are you sure you want to remove this member?')) {
+                selectedMember.remove();
+                selectedMember = null;
+                // Optional: Add code here to update your data store if needed
+            }
+        }
+    });
+ // Add click handler to select members
+    document.addEventListener('click', (e) => {
+        const memberElement = e.target.closest('.squad-member');
+        if (memberElement) {
+            // Remove selection from all members
+            document.querySelectorAll('.squad-member').forEach(el => {
+                el.classList.remove('selected');
+            });
+            // Select clicked member
+            memberElement.classList.add('selected');
+            selectedMember = memberElement;
+        } else if (!e.target.closest('.squad-member')) {
+            // Clicked outside any member, deselect all
+            document.querySelectorAll('.squad-member').forEach(el => {
+                el.classList.remove('selected');
+            });
+            selectedMember = null;
+        }
+    });
+            // Show home section by default
+            showSection('home');
+            
+            // Render initial data
+            function renderMembers() {
+                const membersList = document.getElementById('members-list');
+                if (membersList) {
+                    // Get members from localStorage or use an empty array if none exist
+                    const members = JSON.parse(localStorage.getItem('members') || '[]');
+                    
+                    // Clear existing members
+                    membersList.innerHTML = '';
+                    
+                    // Add each member to the list
+                    members.forEach((member, index) => {
+                        const memberElement = document.createElement('div');
+                        memberElement.className = 'member-item';
+                        memberElement.dataset.id = index;
+                        
+                        // Create avatar element
+                        const avatar = document.createElement('img');
+                        avatar.src = member.avatar || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDQ4IDQ4Ij48cmVjdCB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSIyNCIgeT0iMjgiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPkE8L3RleHQ+PC9zdmc+';
+                        avatar.className = 'member-avatar';
+                        avatar.alt = 'Avatar';
+                        
+                        // Create name element
+                        const name = document.createElement('span');
+                        name.textContent = member.name || member.email || 'Unnamed Member';
+                        name.className = 'member-name';
+                        
+                        // Append elements
+                        memberElement.appendChild(avatar);
+                        memberElement.appendChild(name);
+                        
+                        // Add right-click event for context menu
+                        memberElement.addEventListener('contextmenu', (e) => {
+                            e.preventDefault();
+                            showAvatarMenu(e, index);
+                        });
+                        
+                        membersList.appendChild(memberElement);
+                    });
+                }
+            }
+            
+            // Initial render
+            renderMembers();
+            
+            // Setup navigation
+            function setupNavigation() {
+                // Handle section navigation
+                document.querySelectorAll('.nav-link[data-section]').forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const sectionId = this.getAttribute('data-section');
+                        showSection(sectionId);
+                        // Update URL without page reload
+                        history.pushState(null, '', `#${sectionId}`);
+                    });
+                });
+
+                // Handle section navigation
+                document.querySelectorAll('[data-section]').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const sectionId = link.getAttribute('data-section');
+                        showSection(sectionId);
+                    });
+                });
+
+                // Show initial section based on URL hash
+                const initialSection = window.location.hash.substring(1) || 'home';
+                showSection(initialSection);
+            }
+
+            // Show the specified section and hide others
+            function showSection(sectionId) {
+                // Hide all sections
+                document.querySelectorAll('.section').forEach(section => {
+                    section.classList.remove('active');
+                });
+
+                // Show the requested section
+                const targetSection = document.getElementById(sectionId);
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                } else {
+                    // Fallback to home if section not found
+                    document.getElementById('home').classList.add('active');
+                }
+
+                // Update active nav link
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-section') === sectionId) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            // Initialize theme manager
+            function setupThemeManager() {
+                // Wait for ThemeManager to be available
+                const checkThemeManager = setInterval(() => {
+                    if (window.ThemeManager && typeof window.ThemeManager.initThemeManager === 'function') {
+                        clearInterval(checkThemeManager);
+                        try {
+                            window.ThemeManager.initThemeManager();
+                        } catch (e) {
+                            console.error('Error initializing theme manager:', e);
+                        }
+                        
+                        // Set up theme toggle if it exists
+                        const themeToggle = document.getElementById('themeToggle');
+                        if (themeToggle) {
+                            themeToggle.addEventListener('click', () => {
+                                const currentTheme = window.ThemeManager.getCurrentTheme();
+                                const themes = Object.keys(window.themeDefinitions || {});
+                                const currentIndex = themes.indexOf(currentTheme);
+                                const nextIndex = (currentIndex + 1) % themes.length;
+                                window.ThemeManager.changeTheme(themes[nextIndex]);
+                            });
+                        }
+                    }
+                }, 100);
+            }
+
+            // Initialize everything
+            setupNavigation();
+            setupThemeManager();
+            
+            // Avatar context menu
+            let currentMemberIndex = null;
+            
+            function showAvatarMenu(e, index) {
+                currentMemberIndex = index;
+                
+                // Create menu if it doesn't exist
+                let menu = document.getElementById('avatarContextMenu');
+                if (!menu) {
+                    menu = document.createElement('div');
+                    menu.id = 'avatarContextMenu';
+                    menu.style.position = 'fixed';
+                    menu.style.background = 'var(--bg-light)';
+                    menu.style.border = '1px solid var(--accent)';
+                    menu.style.borderRadius = '8px';
+                    menu.style.padding = '10px';
+                    menu.style.zIndex = '1000';
+                    menu.style.boxShadow = '0 2px 10px rgba(0,0,0,0.5)';
+                    
+                    const changeAvatarBtn = document.createElement('button');
+                    changeAvatarBtn.textContent = 'Change Avatar';
+                    changeAvatarBtn.style.display = 'block';
+                    changeAvatarBtn.style.width = '100%';
+                    changeAvatarBtn.style.padding = '8px 12px';
+                    changeAvatarBtn.style.marginBottom = '5px';
+                    changeAvatarBtn.style.background = 'var(--accent)';
+                    changeAvatarBtn.style.border = 'none';
+                    changeAvatarBtn.style.borderRadius = '4px';
+                    changeAvatarBtn.style.cursor = 'pointer';
+                    changeAvatarBtn.style.color = '#000';
+                    changeAvatarBtn.style.fontWeight = 'bold';
+                    
+                    changeAvatarBtn.onclick = () => {
+                        const input = document.createElement('input');
+                        input.type = 'file';
+                        input.accept = 'image/*';
+                        input.onchange = (e) => {
+                            const file = e.target.files[0];
+                            if (file) {
+                                const reader = new FileReader();
+                                reader.onload = (event) => {
+                                    updateMemberAvatar(currentMemberIndex, event.target.result);
+                                };
+                                reader.readAsDataURL(file);
+                            }
+                        };
+                        input.click();
+                        hideAvatarMenu();
+                    };
+                    
+                    menu.appendChild(changeAvatarBtn);
+                    document.body.appendChild(menu);
+                }
+                
+                // Position and show menu
+                menu.style.display = 'block';
+                menu.style.left = `${e.pageX}px`;
+                menu.style.top = `${e.pageY}px`;
+                
+                // Hide menu when clicking elsewhere
+                const hideMenu = (e) => {
+                    if (!menu.contains(e.target)) {
+                        hideAvatarMenu();
+                        document.removeEventListener('click', hideMenu);
+                    }
+                };
+                
+                setTimeout(() => {
+                    document.addEventListener('click', hideMenu);
+                }, 100);
+            }
+            
+            function hideAvatarMenu() {
+                const menu = document.getElementById('avatarContextMenu');
+                if (menu) {
+                    menu.style.display = 'none';
+                }
+            }
+            
+            function updateMemberAvatar(index, avatarData) {
+                const members = JSON.parse(localStorage.getItem('members') || '[]');
+                if (members[index]) {
+                    members[index].avatar = avatarData;
+                    localStorage.setItem('members', JSON.stringify(members));
+                    renderMembers();
+                }
+            }
+            
+            // Handle browser back/forward buttons
+            window.addEventListener('popstate', () => {
+                const sectionId = window.location.hash.substring(1) || 'home';
+                showSection(sectionId);
+            });
+            initializeComponents();
+        });
+        
+        function setupNavigation() {
+            // Handle section navigation
+            document.querySelectorAll('.nav-link[data-section]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.getAttribute('data-section');
+                    showSection(sectionId);
+                });
+            });
+            
+            // Handle external links
+            document.querySelectorAll('.nav-link[href^="http"], .nav-link[href^="mailto:"]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Let default behavior handle external links
+                });
+            });
+            
+            // Show initial section based on URL hash
+            const hash = window.location.hash.substring(1);
+            showSection(hash || 'home');
+        }
+        
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show the selected section
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.classList.add('active');
+                // Update URL hash without page reload
+                history.pushState(null, null, `#${sectionId}`);
+            }
+        }
+        
+        function initializeComponents() {
+            // Initialize any components that need it
+            if (typeof renderMembers === 'function') {
+                renderMembers();
+            }
+            if (typeof renderChat === 'function') {
+                renderChat();
+            }
+        }
+        
+        // Theme Management
+        function setupThemeManager() {
+            // Wait for ThemeManager to be available
+            const initThemeManager = setInterval(() => {
+                if (window.ThemeManager) {
+                    clearInterval(initThemeManager);
+                    initializeThemeManager();
+                }
+            }, 100);
+            
+            function initializeThemeManager() {
+            const themeToggle = document.getElementById('themeToggle');
+            const themeOptions = document.getElementById('themeOptions');
+            
+            // Populate theme options
+            function populateThemeOptions() {
+                if (!window.themes) return;
+                
+                themeOptions.innerHTML = '';
+                const currentTheme = ThemeManager.getCurrentTheme();
+                
+                Object.entries(window.themes).forEach(([id, theme]) => {
+                    const themeOption = document.createElement('div');
+                    themeOption.className = `theme-option ${id === currentTheme ? 'active' : ''}`;
+                    themeOption.innerHTML = `
+                        <div class="theme-preview" style="background: ${theme.accent};"></div>
+                        <span>${theme.name}</span>
+                    `;
+                    
+                    themeOption.addEventListener('click', () => {
+                        ThemeManager.changeTheme(id);
+                        themeOptions.classList.remove('show');
+                        showThemeNotification(theme.name);
+                    });
+                    
+                    themeOptions.appendChild(themeOption);
+                });
+            }
+            
+            // Toggle theme options
+            themeToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                themeOptions.classList.toggle('show');
+            });
+            
+            // Close theme options when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!themeToggle.contains(e.target) && !themeOptions.contains(e.target)) {
+                    themeOptions.classList.remove('show');
+                }
+            });
+            
+            // Handle theme changes
+            document.addEventListener('themeChange', (e) => {
+                const { theme, themeData } = e.detail;
+                updateThemeUI(theme, themeData);
+            });
+            
+            // Initial setup
+            populateThemeOptions();
+            updateThemeUI(ThemeManager.getCurrentTheme(), window.themes[ThemeManager.getCurrentTheme()]);
+        }
+        
+        function updateThemeUI(themeId, themeData) {
+            if (!themeData) return;
+            
+            // Update active theme in theme options
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.classList.remove('active');
+                if (option.querySelector('.theme-preview').style.background === themeData.accent) {
+                    option.classList.add('active');
+                }
+            });
+            
+            // Update theme toggle button
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                themeToggle.innerHTML = `
+                    <span class="theme-icon">🎨</span>
+                    <span class="theme-text">${themeData.name}</span>
+                `;
+            }
+        }
+        
+        function showThemeNotification(themeName) {
+            // Create notification element if it doesn't exist
+            let notification = document.getElementById('theme-notification');
+            if (!notification) {
+                notification = document.createElement('div');
+                notification.id = 'theme-notification';
+                notification.style.position = 'fixed';
+                notification.style.bottom = '20px';
+                notification.style.left = '50%';
+                notification.style.transform = 'translateX(-50%)';
+                notification.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+                notification.style.color = 'white';
+                notification.style.padding = '10px 20px';
+                notification.style.borderRadius = '5px';
+                notification.style.zIndex = '9999';
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.3s ease';
+                document.body.appendChild(notification);
+            }
+            
+            // Show notification
+            notification.textContent = `Theme changed to ${themeName}`;
+            notification.style.opacity = '1';
+            
+            // Hide after delay
+            setTimeout(() => {
+                notification.style.opacity = '0';
+            }, 2000);
+        }
+        
+        // DOM Elements
+        const sections = document.querySelectorAll('.section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const chatContainer = document.getElementById('chatContainer');
+        
+        // Initialize data from localStorage or set defaults
+        let chatMessages = JSON.parse(localStorage.getItem('chatMessages') || '[]');
+        let members = [
+            { displayName: 'IronBro26', email: 'krfuchs11@icloud.com' }
+        ];
+        
+        // Load saved members if they exist
+        const savedMembers = JSON.parse(localStorage.getItem('members'));
+        if (savedMembers && savedMembers.length > 0) {
+            members = savedMembers;
+        } else {
+            localStorage.setItem('members', JSON.stringify(members));
+        }
+
+        // Navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (this.getAttribute('href') && this.getAttribute('href').startsWith('#')) {
+                    e.preventDefault();
+                    const sectionId = this.getAttribute('href');
+                    showSection(sectionId.substring(1));
+                    
+                    // Update active link
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        // Show section function
+        function showSection(sectionId) {
+            sections.forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Special handling for chat section
+            if (sectionId === 'chat') {
+                renderChat();
+                setTimeout(() => {
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }, 100);
+            }
+        }
+
+        // Make sendChat globally available
+        window.sendChat = function() {
+            const username = document.getElementById('chatUsername').value.trim();
+            const message = document.getElementById('chatMessage').value.trim();
+            
+            if (!username || !message) {
+                alert('Please enter both your name and a message!');
+                return;
+            }
+            
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const chatMessage = {
+                username: username,
+                message: message,
+                time: time
+            };
+            
+            // Add to chat messages
+            chatMessages.push(chatMessage);
+            
+            // Save to localStorage
+            localStorage.setItem('chatMessages', JSON.stringify(chatMessages));
+            
+            // Clear message input
+            document.getElementById('chatMessage').value = '';
+            
+            // Update chat display
+            renderChat();
+            
+            // Auto-scroll to bottom
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        // Chat functionality
+        function renderChat() {
+            chatContainer.innerHTML = '';
+            chatMessages.forEach(msg => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message';
+                messageDiv.innerHTML = `
+                    <div class="message-header">
+                        <span class="message-user">${msg.username}</span>
+                        <span class="message-time">${msg.time}</span>
+                    </div>
+                    <div class="message-content">${msg.message}</div>
+                `;
+                chatContainer.appendChild(messageDiv);
+            });
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function sendChat() {
+            const username = document.getElementById('chatUsername').value.trim();
+            const message = document.getElementById('chatMessage').value.trim();
+            
+            if (!username || !message) {
+                alert('Please enter both your name and a message!');
+                return;
+            }
+            
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            chatMessages.push({ username, message, time });
+            
+            // Save to localStorage
+            localStorage.setItem('chatMessages', JSON.stringify(chatMessages));
+            
+            // Clear message input
+            document.getElementById('chatMessage').value = '';
+            
+            // Update chat display
+            renderChat();
+        }
+
+        // Members functionality
+        function renderMembers() {
+            const membersList = document.getElementById('members-list');
+            if (membersList) membersList.innerHTML = '';
+            
+            members.forEach(member => {
+                const memberCard = document.createElement('div');
+                memberCard.className = 'member-card';
+                memberCard.innerHTML = `
+                    <div class="member-avatar" data-email="${member.email}" style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden; margin: 0 auto 10px; border: 3px solid var(--primary);">
+                        <img src="${member.avatar || `data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgdmlld0JveD0iMCAwIDgwIDgwIj48cmVjdCB3aWR0aD0iODAiIGhlaWdodD0iODAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSI0MCIgeT0iNDUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIzMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPiR7bWVtYmVyLmRpc3BsYXlOYW1lLmNoYXJBdCgwKX08L3RleHQ+PC9zdmc+`}" alt="${member.displayName}" style="width: 100%; height: 100%; object-fit: cover; display:block;">
+                    </div>
+                    <div class="member-name" style="text-align: center; font-weight: 600; margin-bottom: 5px;">${member.displayName}</div>
+                    ${member.email.toLowerCase() !== 'krfuchs11@icloud.com' ? `<div class="member-email" style="font-size: 0.9em; color: var(--text-secondary); text-align: center;">${member.email}</div>` : ''}
+                `;
+                membersList.appendChild(memberCard);
+            });
+        }
+
+        // Make addMember globally available
+        window.addMember = function() {
+            const name = document.getElementById('memberName').value.trim();
+            const email = document.getElementById('memberEmail').value.trim();
+            
+            if (!name || !email) {
+                alert('Please enter both name and email!');
+                return;
+            }
+            
+            // Check if email already exists
+            if (members.some(m => m.email.toLowerCase() === email.toLowerCase())) {
+                alert('This email is already registered!');
+                return;
+            }
+            
+            
+            // Add new member
+            // Use selected avatar if provided, else fallback to any saved userAvatar, else placeholder
+            const avatarUrl = (window.__pendingMemberAvatarDataUrl || localStorage.getItem('userAvatar')) || `data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTUwIDE1MCI+PHJlY3Qgd2lkdGg9IjE1MCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSI3NSIgeT0iODAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSI0MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPiR7bmFtZS5jaGFyQXQoMCl8fCcrJ308L3RleHQ+PC9zdmc+`;
+            
+            members.push({
+                displayName: name,
+                email: email,
+                avatar: avatarUrl
+            });
+            
+            // Save to localStorage
+            localStorage.setItem('members', JSON.stringify(members));
+            
+            // Clear form
+            document.getElementById('memberName').value = '';
+            document.getElementById('memberEmail').value = '';
+            
+            // Clear pending avatar state
+            if (window.__pendingMemberAvatarDataUrl) {
+                delete window.__pendingMemberAvatarDataUrl;
+            }
+            
+            // Refresh members list if the function exists
+            if (typeof renderMembers === 'function') {
+                renderMembers();
+            } else {
+                // If renderMembers isn't available, reload the page
+                window.location.reload();
+            }
+            window.__pendingMemberAvatarDataUrl = null;
+            const prevEl = document.getElementById('memberAvatarPreview');
+            if (prevEl) { prevEl.style.display = 'none'; prevEl.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDQ4IDQ4Ij48cmVjdCB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSIyNCIgeT0iMjgiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPis8L3RleHQ+PC9zdmc+'; }
+            const nameEl = document.getElementById('memberAvatarName');
+            if (nameEl) { nameEl.textContent = ''; }
+
+            // Update display
+            renderMembers();
+            
+            // Show success message
+            alert('Successfully joined the squad!');
+        }
+
+        // Hidden file input for avatar picking
+        const avatarPicker = document.createElement('input');
+        avatarPicker.type = 'file';
+        avatarPicker.accept = 'image/*';
+        avatarPicker.style.display = 'none';
+        document.body.appendChild(avatarPicker);
+
+        let pendingAvatarEmail = null;
+
+        // Handle click on member avatar to trigger picker
+        document.addEventListener('click', (e) => {
+            const avatarEl = e.target.closest('.member-avatar');
+            if (!avatarEl) return;
+            const email = avatarEl.getAttribute('data-email');
+            if (!email) return;
+            pendingAvatarEmail = email;
+            avatarPicker.value = '';
+            avatarPicker.click();
+        });
+
+        // When file selected, read and save to the corresponding member
+        avatarPicker.addEventListener('change', () => {
+            const file = avatarPicker.files && avatarPicker.files[0];
+            if (!file || !pendingAvatarEmail) return;
+            if (file.size > 2 * 1024 * 1024) { // 2MB limit
+                alert('Please choose an image under 2MB.');
+                avatarPicker.value = '';
+                pendingAvatarEmail = null;
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = () => {
+                const dataUrl = reader.result;
+                // Update in-memory list
+                members = members.map(m =>
+                    (m.email && m.email.toLowerCase() === pendingAvatarEmail.toLowerCase())
+                        ? { ...m, avatar: dataUrl }
+                        : m
+                );
+                // Persist
+                localStorage.setItem('members', JSON.stringify(members));
+                // Re-render
+                renderMembers();
+                // Reset state
+                avatarPicker.value = '';
+                pendingAvatarEmail = null;
+            };
+            reader.readAsDataURL(file);
+            
+            // Initialize theme manager if available
+            if (window.themeManager && typeof window.themeManager.initializeThemeManager === 'function') {
+                // Initialize theme manager
+                window.themeManager.initializeThemeManager();
+                
+                // Get theme toggle button
+                const themeToggle = document.getElementById('themeToggle');
+                if (!themeToggle) return;
+                
+                // Function to update the theme button text
+                const updateThemeButton = () => {
+                    const currentTheme = window.themeManager.getCurrentTheme();
+                    const themeName = window.themes && window.themes[currentTheme] ? 
+                        window.themes[currentTheme].name : 'Theme';
+                    
+                    // Update the badge text
+                    const badge = themeToggle.querySelector('.premium-badge');
+                    if (badge) {
+                        badge.textContent = themeName;
+                    }
+                };
+                
+                // Set up theme toggle click handler
+                themeToggle.addEventListener('click', () => {
+                    const currentTheme = window.themeManager.getCurrentTheme();
+                    const allThemes = Object.keys(window.themes || {});
+                    
+                    if (allThemes.length === 0) return;
+                    
+                    // Find the next theme
+                    const currentIndex = allThemes.indexOf(currentTheme);
+                    const nextIndex = (currentIndex + 1) % allThemes.length;
+                    const nextTheme = allThemes[nextIndex];
+                    
+                    // Change to the next theme
+                    window.themeManager.changeTheme(nextTheme);
+                    
+                    // Show notification for the new theme
+                    showThemeNotification(window.themes[nextTheme]?.name || 'Theme');
+                });
+                
+                // Initial update of the button text
+                updateThemeButton();
+                
+                // Listen for theme changes to update the button
+                document.addEventListener('themeChanged', updateThemeButton);
+            }
+        });
+        
+        // Show theme notification
+        function showThemeNotification(themeName) {
+            const notification = document.createElement('div');
+            notification.textContent = `Theme: ${themeName}`;
+            notification.style.position = 'fixed';
+            notification.style.bottom = '20px';
+            notification.style.right = '20px';
+            notification.style.background = 'var(--card-bg, rgba(0, 0, 0, 0.8))';
+            notification.style.color = 'var(--text, white)';
+            notification.style.padding = '10px 20px';
+            notification.style.borderRadius = '20px';
+            notification.style.border = '1px solid var(--accent, #1a8cff)';
+            notification.style.zIndex = '1000';
+            notification.style.animation = 'fadeIn 0.3s';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'fadeOut 0.3s';
+                setTimeout(() => notification.remove(), 300);
+            }, 2000);
+        }
+
+        // Add custom animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0% { transform: rotate(15deg) scale(1); box-shadow: 0 0 0 0 rgba(255, 200, 0, 0.7); }
+                70% { transform: rotate(15deg) scale(1.05); box-shadow: 0 0 0 5px rgba(255, 200, 0, 0); }
+                100% { transform: rotate(15deg) scale(1); box-shadow: 0 0 0 0 rgba(255, 200, 0, 0); }
+            }
+            
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes fadeOut {
+                from { opacity: 1; transform: translateY(0); }
+                to { opacity: 0; transform: translateY(-10px); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+    // Make sendChat globally available
+        window.sendChat = function() {
+            const username = document.getElementById('chatUsername')?.value.trim();
+            const message = document.getElementById('chatMessage')?.value.trim();
+            
+            if (!username || !message) {
+                alert('Please enter both your name and a message!');
+                return;
+            }
+            
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const chatMessage = {
+                username: username,
+                message: message,
+                time: time
+            };
+            
+            // Add to chat messages
+            chatMessages.push(chatMessage);
+            
+            // Save to localStorage
+            localStorage.setItem('chatMessages', JSON.stringify(chatMessages));
+            
+            // Clear message input
+            document.getElementById('chatMessage').value = '';
+            
+            // Update chat display
+            renderChat();
+            
+            // Auto-scroll to bottom
+            const chatContainer = document.getElementById('chatContainer');
+            if (chatContainer) {
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+        };
+        
+        // Initialize chat functionality when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load saved chat messages
+            const savedChatMessages = JSON.parse(localStorage.getItem('chatMessages') || '[]');
+            if (savedChatMessages && savedChatMessages.length > 0) {
+                chatMessages = savedChatMessages;
+                renderChat();
+            }
+            
+            // Handle Enter key in chat message input
+            const chatMessageInput = document.getElementById('chatMessage');
+            if (chatMessageInput) {
+                chatMessageInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        window.sendChat();
+                    }
+                });
+            }
+            
+            // Click handler for send button
+            const sendButton = document.querySelector('#chat button.btn');
+            if (sendButton) {
+                sendButton.removeAttribute('onclick');
+                sendButton.addEventListener('click', window.sendChat);
+            }
+        });
+
+        // Initialize theme manager if available
+        if (window.ThemeManager) {
+            // Apply saved theme or default to brosquad-blue
+            const savedTheme = localStorage.getItem('theme') || 'brosquad-blue';
+            window.ThemeManager.applyTheme(savedTheme);
+            // Make sure the theme is applied to the root element
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+    }
+</script>
+<!-- Small initializer: wire buttons and inputs that previously didn't have handlers -->
+<script>
+    (function(){
+        // Wire Send Message button to sendChat
+        const sendBtn = document.getElementById('sendMessageBtn');
+        if (sendBtn && typeof window.sendChat === 'function') {
+            sendBtn.addEventListener('click', window.sendChat);
+        }
+
+        // Wire choose avatar button to file input
+        const chooseBtn = document.getElementById('chooseAvatarBtn');
+        const fileInput = document.getElementById('memberAvatarInput');
+        const preview = document.getElementById('memberAvatarPreview');
+
+        if (chooseBtn && fileInput) {
+            chooseBtn.addEventListener('click', function(){ fileInput.click(); });
+        }
+
+        if (fileInput) {
+            fileInput.addEventListener('change', function(e){
+                const f = fileInput.files && fileInput.files[0];
+                if (!f) return;
+                if (f.size > 2 * 1024 * 1024) { alert('Please choose an image under 2MB.'); fileInput.value=''; return; }
+                const r = new FileReader();
+                r.onload = function(ev){
+                    // Store pending avatar for addMember to pick up
+                    window.__pendingMemberAvatarDataUrl = ev.target.result;
+                    if (preview) { preview.src = ev.target.result; preview.style.display = 'inline-block'; }
+                    const nameEl = document.getElementById('memberAvatarName'); if (nameEl) nameEl.textContent = f.name;
+                };
+                r.readAsDataURL(f);
+            });
+        }
+
+        // Ensure nav links that use data-section or hashes work
+        document.querySelectorAll('.nav-link[data-section]').forEach(link => {
+            link.addEventListener('click', function(e){ e.preventDefault(); const id=this.getAttribute('data-section'); if(id) showSection(id); });
+        });
+
+        // Make sure initial renderMembers runs
+        if (typeof renderMembers === 'function') renderMembers();
+    })();
+</script>
+</body>
+</html>

@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="IronBro26 Members Area - Sign up or log in to access exclusive content" />
+  <title>IronBro26 Members Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --panel: #111;
+      --text: #fff;
+      --accent: #ff1a1a;
+      --accent-light: #ff6666;
+      --accent-dark: #660000;
+      --transition-speed: 0.3s;
+      --error: #ff4d4d;
+      --success: #4caf50;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Poppins', Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+      line-height: 1.6;
+      transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+    }
+    
+    h1, h2 {
+      margin-bottom: 20px;
+      text-shadow: 0 0 5px var(--accent), 0 0 15px var(--accent-light);
+      text-align: center;
+      transition: text-shadow var(--transition-speed) ease;
+    }
+    
+    .container {
+      background: rgba(255, 26, 26, 0.06);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 0 20px var(--accent), 0 0 40px var(--accent-light) inset;
+      text-align: center;
+      width: 100%;
+      max-width: 500px;
+      margin: 20px auto;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: box-shadow var(--transition-speed) ease, border-color var(--transition-speed) ease;
+    }
+    
+    input {
+      display: block;
+      width: 100%;
+      max-width: 300px;
+      margin: 10px auto;
+      padding: 12px 15px;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 16px;
+      transition: all var(--transition-speed) ease;
+    }
+    input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    button {
+      display: inline-block;
+      padding: 12px 25px;
+      margin: 15px 5px;
+      border: none;
+      border-radius: 8px;
+      background-color: var(--accent);
+      color: #fff;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-speed) ease;
+      box-shadow: 0 0 10px var(--accent);
+    }
+    
+    button:hover {
+      background-color: var(--accent-light);
+      box-shadow: 0 0 15px var(--accent), 0 0 30px var(--accent-light);
+      transform: translateY(-2px);
+    }
+    
+    button.secondary {
+      background-color: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+    }
+    
+    button.secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    a {
+      color: var(--accent-light);
+      text-decoration: none;
+      transition: color var(--transition-speed) ease;
+    }
+    
+    a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+    
+    .alert {
+      padding: 12px 20px;
+      margin: 15px 0;
+      border-radius: 8px;
+      font-size: 14px;
+      text-align: center;
+    }
+    
+    .alert-error {
+      background-color: rgba(255, 77, 77, 0.15);
+      color: var(--error);
+      border-left: 4px solid var(--error);
+    }
+    
+    .alert-success {
+      background-color: rgba(76, 175, 80, 0.15);
+      color: var(--success);
+      border-left: 4px solid var(--success);
+    }
+    
+    #onlineUsers {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #aaa;
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 20px 0 0;
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px 15px;
+        margin: 10px;
+      }
+      
+      h1 {
+        font-size: 24px;
+      }
+      
+      h2 {
+        font-size: 20px;
+      }
+    }
+  </style>
+ 
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>IronBro26 Members Area</h1>
+
+  <!-- Sign Up Form -->
+  <div id="signupDiv">
+    <h2>Sign Up</h2>
+    <input type="email" id="signupEmail" placeholder="Email" required><br>
+    <input type="password" id="signupPassword" placeholder="Password" required><br>
+    <button onclick="signup()">Sign Up</button>
+    <p>Already have an account? <a href="#" onclick="showLogin()">Log in</a></p>
+  </div>
+
+  <!-- Login Form -->
+  <div id="loginDiv" class="hidden">
+    <h2>Login</h2>
+    <input type="email" id="loginEmail" placeholder="Email" required><br>
+    <input type="password" id="loginPassword" placeholder="Password" required><br>
+    <button onclick="login()">Log In</button>
+    <p>Don't have an account? <a href="#" onclick="showSignup()">Sign up</a></p>
+  </div>
+
+  <!-- Members Area -->
+  <div id="membersDiv" class="hidden">
+    <h2>Welcome <span id="userEmail"></span>!</h2>
+    <p>Your role: <span id="userRole"></span></p>
+    <button onclick="goToWebsite()">Go to Website</button>
+    <button onclick="logout()">Log Out</button>
+    <div id="onlineUsers"></div>
+  </div>
+
+</div>
+
+<script>
+let users = JSON.parse(localStorage.getItem('users')) || [];
+let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+
+// Show/hide forms
+function showSignup() {
+  document.getElementById('signupDiv').classList.remove('hidden');
+  document.getElementById('loginDiv').classList.add('hidden');
+  document.getElementById('membersDiv').classList.add('hidden');
+}
+
+function showLogin() {
+  document.getElementById('signupDiv').classList.add('hidden');
+  document.getElementById('loginDiv').classList.remove('hidden');
+  document.getElementById('membersDiv').classList.add('hidden');
+}
+
+// Signup function
+function signup() {
+  const email = document.getElementById('signupEmail').value;
+  const password = document.getElementById('signupPassword').value;
+
+  if (users.find(u => u.email === email)) {
+    alert('Email already registered.');
+    return;
+  }
+
+  const role = email === 'Krfuchs11@icloud.com' ? 'owner' : 'user';
+  users.push({ email, password, role, lastActive: Date.now() });
+  localStorage.setItem('users', JSON.stringify(users));
+  alert('Account created! You can log in now.');
+  showLogin();
+}
+
+// Login function
+function login() {
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+  const user = users.find(u => u.email === email && u.password === password);
+
+  if (!user) { alert('Wrong email or password.'); return; }
+
+  currentUser = user;
+  user.lastActive = Date.now();
+  localStorage.setItem('users', JSON.stringify(users));
+  localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+  displayMemberArea();
+}
+
+// Logout function
+function logout() {
+  currentUser = null;
+  localStorage.removeItem('currentUser');
+  showLogin();
+}
+
+// Show online users
+function showOnlineUsers() {
+  const now = Date.now();
+  const online = users.filter(u => now - u.lastActive < 300000); // 5 min
+  document.getElementById('onlineUsers').innerText = 
+    "Online now: " + (online.map(u => u.email).join(", ") || "Nobody");
+}
+
+// Display member area after login
+function displayMemberArea() {
+  if (!currentUser) return;
+  document.getElementById('userEmail').textContent = currentUser.email;
+  document.getElementById('userRole').textContent = currentUser.role;
+  document.getElementById('signupDiv').classList.add('hidden');
+  document.getElementById('loginDiv').classList.add('hidden');
+  document.getElementById('membersDiv').classList.remove('hidden');
+  showOnlineUsers();
+}
+
+// Keep user signed in on page reload
+window.onload = function() {
+  if (currentUser) {
+    displayMemberArea();
+  } else {
+    showSignup();
+  }
+}
+
+// Update current user activity every 30 sec
+setInterval(() => {
+  if (currentUser) {
+    currentUser.lastActive = Date.now();
+    localStorage.setItem('users', JSON.stringify(users));
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    showOnlineUsers();
+  }
+}, 30000);
+
+// Button to go to main website
+function goToWebsite() {
+ window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>
+
+</style>
+  <script src="js/theme-manager.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>IronBro26 Members Area</h1>
+    
+    <div id="alertBox"></div>
+
+    <div id="signupDiv">
+      <h2>Create an Account</h2>
+      <form id="signupForm" onsubmit="event.preventDefault(); signup();">
+        <input type="email" id="signupEmail" placeholder="Email address" required />
+        <input type="password" id="signupPassword" placeholder="Create a password" minlength="8" required />
+        <button type="submit">Sign Up</button>
+        <p>Already have an account? <a href="#" onclick="showLogin(); return false;">Log in</a></p>
+      </form>
+    </div>
+
+    <div id="loginDiv" class="hidden">
+      <h2>Welcome Back</h2>
+      <form id="loginForm" onsubmit="event.preventDefault(); login();">
+        <input type="email" id="loginEmail" placeholder="Email address" required />
+        <input type="password" id="loginPassword" placeholder="Password" required />
+        <button type="submit">Log In</button>
+        <p>Don't have an account? <a href="#" onclick="showSignup(); return false;">Sign up</a></p>
+      </form>
+    </div>
+
+    <div id="membersDiv" class="hidden">
+      <h2>Welcome, <span id="userEmail"></span>!</h2>
+      <p>Account type: <strong><span id="userRole"></span></strong></p>
+      
+      <div class="button-group">
+        <button onclick="goToWebsite()">Go to Website</button>
+        <a href="admin.html" id="adminBtn" class="hidden"><button>Admin Panel</button></a>
+        <button onclick="logout()" class="secondary">Log Out</button>
+      </div>
+      
+      <div id="onlineUsers"></div>
+    </div>
+  </div>
+
+  <script>
+    // Constants
+    const CONFIG = {
+      ownerEmail: 'krfuchs11@icloud.com',
+      onlineTimeout: 5 * 60 * 1000, // 5 minutes
+      userActivityInterval: 30000, // 30 seconds
+      localStorageKeys: {
+        users: 'users',
+        currentUser: 'currentUser',
+        onlineUsers: 'onlineUsers'
+      }
+    };
+
+    // State management
+    const state = {
+      users: [],
+      currentUser: null,
+      activityInterval: null
+    };
+
+    // DOM Elements
+    const elements = {
+      signupForm: document.getElementById('signupForm'),
+      loginForm: document.getElementById('loginForm'),
+      signupDiv: document.getElementById('signupDiv'),
+      loginDiv: document.getElementById('loginDiv'),
+      membersDiv: document.getElementById('membersDiv'),
+      alertBox: document.getElementById('alertBox'),
+      userEmail: document.getElementById('userEmail'),
+      userRole: document.getElementById('userRole'),
+      adminBtn: document.getElementById('adminBtn'),
+      onlineUsers: document.getElementById('onlineUsers')
+    };
+
+    // Initialize app
+    function init() {
+      loadUsers();
+      loadCurrentUser();
+      setupEventListeners();
+      
+      if (state.currentUser) {
+        displayMemberArea();
+        startUserActivityTracking();
+      } else {
+        showSignup();
+      }
+    }
+
+    // Data management
+    function loadUsers() {
+      try {
+        state.users = JSON.parse(localStorage.getItem(CONFIG.localStorageKeys.users)) || [];
+      } catch (e) {
+        console.error('Error loading users:', e);
+        state.users = [];
+      }
+    }
+
+    function loadCurrentUser() {
+      try {
+        state.currentUser = JSON.parse(localStorage.getItem(CONFIG.localStorageKeys.currentUser));
+      } catch (e) {
+        console.error('Error loading current user:', e);
+        state.currentUser = null;
+      }
+    }
+
+    function saveUsers() {
+      try {
+        localStorage.setItem(CONFIG.localStorageKeys.users, JSON.stringify(state.users));
+        return true;
+      } catch (e) {
+        console.error('Error saving users:', e);
+        showAlert('Error saving user data. Please try again.', 'error');
+        return false;
+      }
+    }
+
+    // UI Functions
+    function showSignup() {
+      elements.signupDiv.classList.remove('hidden');
+      elements.loginDiv.classList.add('hidden');
+      elements.membersDiv.classList.add('hidden');
+      
+      // Reset forms
+      if (elements.signupForm) elements.signupForm.reset();
+      if (elements.loginForm) elements.loginForm.reset();
+    }
+
+    function showLogin() {
+      elements.signupDiv.classList.add('hidden');
+      elements.loginDiv.classList.remove('hidden');
+      elements.membersDiv.classList.add('hidden');
+      
+      // Reset forms
+      if (elements.signupForm) elements.signupForm.reset();
+      if (elements.loginForm) elements.loginForm.reset();
+    }
+
+    function displayMemberArea() {
+      if (!state.currentUser) return;
+      
+      elements.userEmail.textContent = state.currentUser.email;
+      elements.userRole.textContent = state.currentUser.role === 'owner' ? 'Admin' : 'Member';
+      
+      elements.signupDiv.classList.add('hidden');
+      elements.loginDiv.classList.add('hidden');
+      elements.membersDiv.classList.remove('hidden');
+      
+      elements.adminBtn.classList.toggle('hidden', state.currentUser.role !== 'owner');
+      
+      updateOnlineStatus();
+    }
+
+    function showAlert(message, type = 'error') {
+      const alertBox = elements.alertBox;
+      alertBox.innerHTML = '';
+      
+      if (!message) return;
+      
+      const alertDiv = document.createElement('div');
+      alertDiv.className = `alert alert-${type}`;
+      alertDiv.textContent = message;
+      
+      alertBox.appendChild(alertDiv);
+      
+      // Auto-hide after 5 seconds
+      setTimeout(() => {
+        alertDiv.style.opacity = '0';
+        setTimeout(() => alertBox.removeChild(alertDiv), 300);
+      }, 5000);
+    }
+
+    // Authentication functions
+    function signup() {
+      const email = (document.getElementById('signupEmail').value || '').trim();
+      const password = (document.getElementById('signupPassword').value || '').trim();
+      
+      // Validation
+      if (!email || !password) {
+        showAlert('Please fill in all required fields.');
+        return;
+      }
+      
+      if (!isValidEmail(email)) {
+        showAlert('Please enter a valid email address.');
+        return;
+      }
+      
+      if (password.length < 8) {
+        showAlert('Password must be at least 8 characters long.');
+        return;
+      }
+      
+      // Check if email already exists
+      if (state.users.some(user => user.email.toLowerCase() === email.toLowerCase())) {
+        showAlert('An account with this email already exists. Please log in instead.');
+        return;
+      }
+      
+      // Create new user
+      const newUser = {
+        email: email.toLowerCase(),
+        password: password, // In a real app, this should be hashed
+        role: email.toLowerCase() === CONFIG.ownerEmail ? 'owner' : 'user',
+        createdAt: new Date().toISOString(),
+        lastActive: Date.now()
+      };
+      
+      state.users.push(newUser);
+      
+      if (saveUsers()) {
+        showAlert('Account created successfully! You can now log in.', 'success');
+        showLogin();
+      }
+    }
+
+    function login() {
+      const email = (document.getElementById('loginEmail').value || '').trim();
+      const password = (document.getElementById('loginPassword').value || '').trim();
+      
+      if (!email || !password) {
+        showAlert('Please enter both email and password.');
+        return;
+      }
+      
+      const user = state.users.find(u => 
+        u.email.toLowerCase() === email.toLowerCase() && 
+        u.password === password // In a real app, compare hashed passwords
+      );
+      
+      if (!user) {
+        showAlert('Invalid email or password. Please try again.');
+        return;
+      }
+      
+      // Update user's last active time
+      user.lastActive = Date.now();
+      state.currentUser = user;
+      
+      // Save to localStorage
+      try {
+        localStorage.setItem(CONFIG.localStorageKeys.currentUser, JSON.stringify(user));
+        saveUsers();
+        
+        // Start tracking user activity
+        startUserActivityTracking();
+        
+        // Update UI
+        displayMemberArea();
+        updateOnlineStatus();
+        
+      } catch (e) {
+        console.error('Error during login:', e);
+        showAlert('An error occurred during login. Please try again.');
+      }
+    }
+
+    function logout() {
+      // Remove from online users
+      updateOnlineStatus(true);
+      
+      // Clear current user
+      state.currentUser = null;
+      localStorage.removeItem(CONFIG.localStorageKeys.currentUser);
+      
+      // Stop activity tracking
+      stopUserActivityTracking();
+      
+      // Show login screen
+      showLogin();
+      showAlert('You have been logged out successfully.', 'success');
+    }
+
+    // Online status management
+    function updateOnlineStatus(isLoggingOut = false) {
+      if (!state.currentUser) {
+        if (isLoggingOut) {
+          // User is logging out, remove from online users
+          const onlineUsers = getOnlineUsers();
+          const updatedUsers = onlineUsers.filter(u => 
+            u.email.toLowerCase() !== (state.currentUser?.email || '').toLowerCase()
+          );
+          saveOnlineUsers(updatedUsers);
+        }
+        return;
+      }
+      
+      // Update user's last active time
+      state.currentUser.lastActive = Date.now();
+      
+      // Update online users list
+      const onlineUsers = getOnlineUsers();
+      const userIndex = onlineUsers.findIndex(u => 
+        u.email.toLowerCase() === state.currentUser.email.toLowerCase()
+      );
+      
+      const userData = {
+        email: state.currentUser.email,
+        role: state.currentUser.role,
+        lastActive: state.currentUser.lastActive
+      };
+      
+      if (userIndex === -1) {
+        onlineUsers.push(userData);
+      } else {
+        onlineUsers[userIndex] = userData;
+      }
+      
+      saveOnlineUsers(onlineUsers);
+      updateOnlineUsersDisplay();
+    }
+    
+    function getOnlineUsers() {
+      try {
+        return JSON.parse(localStorage.getItem(CONFIG.localStorageKeys.onlineUsers) || '[]');
+      } catch (e) {
+        console.error('Error getting online users:', e);
+        return [];
+      }
+    }
+    
+    function saveOnlineUsers(users) {
+      try {
+        localStorage.setItem(
+          CONFIG.localStorageKeys.onlineUsers, 
+          JSON.stringify(users)
+        );
+        return true;
+      } catch (e) {
+        console.error('Error saving online users:', e);
+        return false;
+      }
+    }
+    
+    function updateOnlineUsersDisplay() {
+      if (!elements.onlineUsers) return;
+      
+      const now = Date.now();
+      const onlineUsers = getOnlineUsers();
+      
+      // Filter out users who haven't been active recently
+      const activeUsers = onlineUsers.filter(
+        user => now - (user.lastActive || 0) < CONFIG.onlineTimeout
+      );
+      
+      if (activeUsers.length === 0) {
+        elements.onlineUsers.textContent = 'No one is currently online.';
+        return;
+      }
+      
+      // Format the online users list
+      const userList = activeUsers
+        .map(user => {
+          const isCurrentUser = state.currentUser && 
+            user.email.toLowerCase() === state.currentUser.email.toLowerCase();
+          return isCurrentUser ? `${user.email} (You)` : user.email;
+        })
+        .join(', ');
+      
+      elements.onlineUsers.textContent = `Online: ${userList}`;
+    }
+
+    // User activity tracking
+    function startUserActivityTracking() {
+      // Update immediately
+      updateOnlineStatus();
+      
+      // Set up interval for periodic updates
+      state.activityInterval = setInterval(() => {
+        if (state.currentUser) {
+          state.currentUser.lastActive = Date.now();
+          updateOnlineStatus();
+        }
+      }, CONFIG.userActivityInterval);
+      
+      // Update on user activity
+      document.addEventListener('mousemove', handleUserActivity);
+      document.addEventListener('keydown', handleUserActivity);
+    }
+    
+    function stopUserActivityTracking() {
+      if (state.activityInterval) {
+        clearInterval(state.activityInterval);
+        state.activityInterval = null;
+      }
+      
+      document.removeEventListener('mousemove', handleUserActivity);
+      document.removeEventListener('keydown', handleUserActivity);
+    }
+    
+    function handleUserActivity() {
+      if (state.currentUser) {
+        state.currentUser.lastActive = Date.now();
+      }
+    }
+
+    // Helper functions
+    function isValidEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(String(email).toLowerCase());
+    }
+    
+    function goToWebsite() {
+      window.location.href = 'index.html';
+    }
+
+    // Event Listeners
+    function setupEventListeners() {
+      // Handle page visibility changes
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible' && state.currentUser) {
+          updateOnlineStatus();
+        }
+      });
+      
+      // Handle beforeunload
+      window.addEventListener('beforeunload', () => {
+        if (state.currentUser) {
+          updateOnlineStatus();
+        }
+      });
+      
+      // Prevent form submission on enter key in input fields
+      const inputs = document.querySelectorAll('input');
+      inputs.forEach(input => {
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            const form = input.closest('form');
+            if (form) {
+              const submitBtn = form.querySelector('button[type="submit"]');
+              if (submitBtn) submitBtn.click();
+            }
+          }
+        });
+      });
+    }
+
+    // Theme Manager
+    class SimpleThemeManager {
+      constructor() {
+        this.currentTheme = localStorage.getItem('theme') || 'brosquad-blue';
+        this.themes = {
+          'brosquad-red': { name: 'Red', accent: '#ff1a1a', light: '#ff6666', dark: '#660000' },
+          'brosquad-blue': { name: 'Blue', accent: '#1a8cff', light: '#66b3ff', dark: '#0059b3' },
+          'brosquad-gold': { name: 'Gold', accent: '#ffd700', light: '#ffea80', dark: '#b38f00' },
+          'brosquad-neon': { name: 'Neon Green', accent: '#00ff9d', light: '#80ffce', dark: '#00b36b' },
+          'brosquad-purple': { name: 'Purple', accent: '#b026ff', light: '#d580ff', dark: '#7a00cc' },
+          'brosquad-cyan': { name: 'Cyan', accent: '#00f7ff', light: '#80fbff', dark: '#00b3b8' },
+          'brosquad-orange': { name: 'Orange', accent: '#ff6b1a', light: '#ffa366', dark: '#cc5200' },
+          'brosquad-pink': { name: 'Pink', accent: '#ff1a8c', light: '#ff80c1', dark: '#b3005c' }
+        };
+        this.init();
+      }
+      
+      init() {
+        this.applyTheme(this.currentTheme, 'init');
+        this.setupCrossTabSync();
+      }
+      
+      applyTheme(themeName, source = 'local') {
+        const theme = this.themes[themeName] || this.themes['brosquad-blue'];
+        const root = document.documentElement;
+        root.setAttribute('data-theme', themeName);
+        root.style.setProperty('--accent', theme.accent);
+        root.style.setProperty('--accent-light', theme.light);
+        root.style.setProperty('--accent-dark', theme.dark);
+        if (source === 'local') {
+          localStorage.setItem('theme', themeName);
+          this.currentTheme = themeName;
+        }
+      }
+      
+      setupCrossTabSync() {
+        window.addEventListener('storage', (e) => {
+          if (e.key === 'theme' && e.newValue) {
+            this.applyTheme(e.newValue, 'storage');
+          }
+        });
+      }
+    }
+    
+    // Initialize theme manager and app
+    document.addEventListener('DOMContentLoaded', () => {
+      const themeManager = new SimpleThemeManager();
+      init();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="300" viewBox="0 0 800 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <rect width="800" height="300" rx="20" fill="url(#paint0_linear)"/>
+  
+  <!-- Stars -->
+  <circle cx="100" cy="80" r="2" fill="#fff"/>
+  <circle cx="700" cy="100" r="1.5" fill="#fff"/>
+  <circle cx="650" cy="50" r="1" fill="#fff"/>
+  <circle cx="200" cy="40" r="1.5" fill="#fff"/>
+  <circle cx="300" cy="70" r="1" fill="#fff"/>
+  <circle cx="500" cy="30" r="1.5" fill="#fff"/>
+  
+  <!-- Ship -->
+  <path d="M150 150L100 200H50L80 150L50 100H100L150 150Z" fill="#ff1a1a" stroke="#ff9999" stroke-width="4"/>
+  <path d="M150 150L200 100H250L220 150L250 200H200L150 150Z" fill="#ff1a1a" stroke="#ff9999" stroke-width="4"/>
+  <path d="M150 150L130 130L150 110L170 130L150 150Z" fill="#ffcc00" stroke="#ffff00" stroke-width="2"/>
+  
+  <!-- Text -->
+  <path d="M300 80H350V85H355V95H350V90H300V95H295V85H300V80Z" fill="#ff1a1a"/>
+  <path d="M360 80H390V85H365V88H385V92H365V95H390V90H385V87H365V80H360Z" fill="#ff1a1a"/>
+  <path d="M395 80H420V85H400V88H415V92H400V95H420V90H415V80H410V87H400V80H395Z" fill="#ff1a1a"/>
+  <path d="M425 80H450V85H430V88H445V92H445V95H470V90H450V88H465V85H445V80H440V87H430V80H425Z" fill="#ff1a1a"/>
+  
+  <path d="M300 110H310V105H330V110H340V130H335V115H315V130H310V115H305V130H300V110Z" fill="#ff1a1a"/>
+  <path d="M345 105H355V110H360V130H355V125H345V130H340V105H345ZM350 120V110H345V120H350Z" fill="#ff1a1a"/>
+  <path d="M365 105H375V110H380V130H375V125H365V130H360V105H365ZM370 120V110H365V120H370Z" fill="#ff1a1a"/>
+  <path d="M385 105H395V110H400V130H390V125H395V120H385V115H395V110H385V105Z" fill="#ff1a1a"/>
+  <path d="M405 105H430V110H410V115H425V120H410V125H430V130H405V105Z" fill="#ff1a1a"/>
+  <path d="M435 105H455V110H460V130H450V125H455V120H445V115H455V110H445V115H435V105Z" fill="#ff1a1a"/>
+  <path d="M465 105H470V115H480V105H485V130H480V120H470V130H465V105Z" fill="#ff1a1a"/>
+  
+  <!-- Glow effects -->
+  <defs>
+    <radialGradient id="paint0_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(400 150) rotate(90) scale(200 400)">
+      <stop stop-color="#330000" stop-opacity="0.8"/>
+      <stop offset="1" stop-color="#110000" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="paint0_linear" x1="400" y1="0" x2="400" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1a0a0a"/>
+      <stop offset="1" stop-color="#330000"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%" filterUnits="userSpaceOnUse">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+</svg>

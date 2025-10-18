@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html data-theme="red" lang="en">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Bro Squad Premium Area</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/nav-lock.css">
+<style>
+  body {font-family:'Poppins', Arial, sans-serif; background:#0d0d0d; color:#fff; margin:0; display:flex; align-items:center; justify-content:center; height:100vh}
+  .card {background:#111; padding:30px; border-radius:16px; width:min(560px, 92vw); text-align:center; box-shadow:0 0 30px #ff1a1a}
+  h1 {color:#ff1a1a; text-shadow:0 0 10px #ff1a1a}
+  .btn {display:inline-block; margin:8px; padding:12px 18px; border-radius:10px; border:none; background:#ff1a1a; color:#000; font-weight:bold; text-decoration:none; box-shadow:0 0 10px #ff1a1a}
+  .btn:hover {background:#ff3333}
+</style>
+  <script src="js/theme-manager.js"></script>
+  </head>
+<body>
+  <div class="card">
+    <h1>Welcome to the Bro Squad 🔥</h1>
+    <p id="msg">Access granted.</p>
+    <p style="opacity:.85">Enjoy exclusive perks. Jump to premium content or head back home.</p>
+    <p>
+      <a class="btn" href="https://www.youtube.com/playlist?list=PLTJ9h1gG8tHnzvKt0C06Nf7WFD4NPZMDr" target="_blank" rel="noopener noreferrer">🎬 Premium Videos</a>
+      <a class="btn" href="brosquad-new.html">👥 BroSquad Hub</a>
+      <a class="btn" href="games.html">🎮 Games</a>
+      <a class="btn" href="index.html">🏠 Home</a>
+    </p>
+  </div>
+<script>
+  const ownerEmail = 'krfuchs11@icloud.com';
+  const broAccess = localStorage.getItem('broAccess') === 'granted';
+  const broEmail = (localStorage.getItem('broEmail')||'').toLowerCase();
+
+  // Also allow access if the `members` list contains an active member with matching email
+  let membersAllow = false;
+  try {
+    const members = JSON.parse(localStorage.getItem('members') || '[]');
+    const pending = (localStorage.getItem('pendingEmail') || '').toLowerCase();
+    if (Array.isArray(members)) {
+      const hasActive = members.some(m => (m.email||'').toLowerCase() === broEmail && (m.status === 'active' || m.status === undefined));
+      const pendingMatch = members.some(m => (m.email||'').toLowerCase() === pending && m.status === 'pending');
+      membersAllow = hasActive || pendingMatch;
+    }
+  } catch (e) { /* ignore parse errors */ }
+
+  if(!(broAccess || broEmail === ownerEmail || membersAllow)){
+    alert('Members only. Please join first.');
+    window.location.href = 'join.html';
+  }
+</script>
+</body>
+</html>

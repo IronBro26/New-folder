@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BroSquad Games</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bg2: #1a1a1a;
+      --bg3: #2a2a2a;
+      --panel: #111;
+      --text: #fff;
+      --text-secondary: #b3b3b3;
+      --accent: #ff1a1a;
+      --accent-light: #ff4d4d;
+      --accent-dark: #660000;
+      --accent-rgb: 255, 26, 26;
+      --premium-gold: #ffd700;
+      --neon-glow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--accent), 0 0 30px var(--accent), 0 0 40px var(--accent);
+      --neon-text-glow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--accent), 0 0 30px var(--accent);
+      --neon-box-glow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--accent);
+      --transition-speed: 0.3s;
+      --card-bg: rgba(30, 30, 30, 0.8);
+      --neon-flicker: flicker 1.5s infinite alternate;
+    }
+    
+    @keyframes flicker {
+      0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+        text-shadow: var(--neon-text-glow);
+        box-shadow: var(--neon-glow);
+      }
+      20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+        text-shadow: none;
+        box-shadow: none;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: 
+        background-color var(--transition-speed) ease,
+        color var(--transition-speed) ease,
+        border-color var(--transition-speed) ease;
+    }
+
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(135deg, var(--bg), var(--bg2));
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 0;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 4rem;
+      position: relative;
+      padding: 3rem 2rem;
+      background: linear-gradient(135deg, rgba(255,26,26,0.1) 0%, rgba(0,0,0,0.3) 100%);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      overflow: hidden;
+    }
+    
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--premium-gold), var(--accent));
+    }
+
+    .logo-container {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 1.5rem;
+      border-radius: 50%;
+      padding: 5px;
+      background: linear-gradient(135deg, var(--accent), var(--premium-gold));
+      box-shadow: var(--neon-glow);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      z-index: 1;
+      animation: var(--neon-flicker);
+    }
+
+    .logo-container::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      padding: 3px;
+      background: linear-gradient(135deg, var(--accent), var(--premium-gold));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .logo {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--bg);
+      transition: transform 0.3s ease;
+    }
+
+    .logo-container:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 10px 40px var(--accent), 0 0 60px var(--accent-light);
+    }
+
+    .logo-container:hover .logo {
+      transform: rotate(10deg);
+    }
+
+    h1 {
+      font-size: 3rem;
+      background: linear-gradient(90deg, #ff1a1a, #ffd700);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 15px rgba(255, 26, 26, 0.3);
+      margin: 1rem 0;
+      font-weight: 800;
+      letter-spacing: 1px;
+      position: relative;
+      display: inline-block;
+    }
+
+    h1::after {
+      content: 'PREMIUM';
+      position: absolute;
+      top: -15px;
+      right: -80px;
+      background: linear-gradient(45deg, #ffd700, #ff9500);
+      color: #000;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 2px 10px;
+      border-radius: 20px;
+      transform: rotate(15deg);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+      line-height: 1.8;
+      position: relative;
+      padding: 0 20px;
+    }
+
+    .subtitle::before,
+    .subtitle::after {
+      content: '✦';
+      color: var(--premium-gold);
+      margin: 0 10px;
+      position: relative;
+      top: 2px;
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2.5rem;
+      margin: 3rem 0;
+      padding: 0 1rem;
+    }
+
+    .game-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transform: translateY(0);
+    }
+
+    .game-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--premium-gold));
+      opacity: 0.8;
+      transition: all 0.4s ease;
+    }
+
+    .game-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 26, 26, 0.2);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .game-card:hover::before {
+      height: 6px;
+      opacity: 1;
+    }
+
+    .game-image {
+      height: 220px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+      position: relative;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 2rem;
+    }
+    
+    .game-image::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, rgba(255, 26, 26, 0.1), transparent);
+      z-index: 1;
+    }
+    
+    .game-image img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      transition: all 0.5s ease;
+      filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.1));
+    }
+    
+    .game-card:hover .game-image img {
+      transform: scale(1.05);
+      filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+    }
+    
+    .game-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: linear-gradient(45deg, #ffd700, #ff9500);
+      color: #000;
+      font-size: 10px;
+      font-weight: bold;
+      padding: 4px 12px;
+      border-radius: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      z-index: 2;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .game-content {
+      padding: 1.8rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(to bottom, rgba(40,40,40,0.9), rgba(30,30,30,0.95));
+      position: relative;
+    }
+
+    .game-title {
+      font-size: 1.5rem;
+      color: #fff;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      position: relative;
+      padding-bottom: 10px;
+    }
+    
+    .game-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--premium-gold));
+      border-radius: 3px;
+    }
+
+    .game-description {
+      color: var(--text-secondary);
+      margin: 0 0 1.5rem 0;
+      flex-grow: 1;
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+
+    .controls {
+      background: linear-gradient(135deg, rgba(30,30,30,0.8), rgba(40,40,40,0.9));
+      border-radius: 12px;
+      padding: 1.2rem 1.2rem 0.5rem 1.2rem;
+      margin: 1rem 0 1.5rem 0;
+      border: 1px solid rgba(255,255,255,0.05);
+      box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+      position: relative;
+      overflow: hidden;
+      transform: perspective(500px) rotateX(0);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .game-card:hover .controls {
+      transform: perspective(500px) rotateX(5deg) translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+    }
+    
+    .controls::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--premium-gold));
+      transform-origin: left;
+      transform: scaleX(0);
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .game-card:hover .controls::before {
+      transform: scaleX(1);
+    }
+
+    .controls h3 {
+      font-size: 0.9rem;
+      margin: 0 0 1rem 0;
+      color: var(--accent-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+      position: relative;
+      padding-left: 12px;
+    }
+    
+    .controls h3::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 16px;
+      background: linear-gradient(to bottom, var(--accent), var(--premium-gold));
+      border-radius: 2px;
+    }
+
+    .controls-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      list-style: none;
+      padding: 0.2rem 0 0.8rem 0;
+      margin: 0 -0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .control-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #fff;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(5px);
+      flex: 1;
+      min-width: calc(50% - 1.2rem);
+      margin: 0.3rem 0.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .control-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(255,26,26,0.1), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .control-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 5px 15px rgba(255, 26, 26, 0.15);
+      border-color: rgba(255, 26, 26, 0.3);
+    }
+    
+    .control-item:hover::before {
+      opacity: 1;
+    }
+    
+    .control-item i {
+      color: var(--premium-gold);
+      font-size: 1.1em;
+      min-width: 16px;
+      text-align: center;
+    }
+
+    .play-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(90deg, var(--accent), #ff4d4d);
+      color: #fff;
+      padding: 0.9rem 2rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      text-align: center;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      border: none;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.9rem;
+      box-shadow: 0 5px 20px rgba(255, 26, 26, 0.3);
+      margin-top: auto;
+      width: 100%;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .play-btn:hover {
+      background: var(--accent-light);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 26, 26, 0.4);
+    }
+
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    .feature {
+      background: rgba(255, 26, 26, 0.15);
+      color: var(--accent-light);
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+      .games-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .subtitle {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo-container">
+        <img src="IronBro.jpg" alt="BroSquad Logo" class="logo">
+        <h1>🎮 BroSquad Games</h1>
+        <a href="index.html" class="home-button">🏠 Home</a>
+        <div style="position:absolute; top:18px; right:18px; text-align:right;">
+          <label style="font-size:13px; color:var(--text-secondary); display:block;">Theme auto-rotate</label>
+          <button id="toggleAutoRotate" class="play-btn" style="padding:6px 10px; font-size:12px; width:auto;">Disable</button>
+        </div>
+      </div>
+      <p class="subtitle">Experience the ultimate gaming experience with our exclusive collection of action-packed games. Compete with friends and climb the leaderboards!</p>
+    </header>
+
+    <!-- Leaderboard -->
+    <section class="container" style="max-width:1200px;">
+      <div class="game-card" style="padding:18px; margin-bottom:2rem; display:flex; align-items:center; gap:18px;">
+        <div style="flex:1">
+          <h2 style="margin:0 0 8px 0;">Leaderboard — Cube Wars</h2>
+          <p style="margin:0 0 12px 0; color:var(--text-secondary);">Top players from local storage (per-account best scores).</p>
+          <div id="leaderboard" style="display:flex; gap:12px; flex-wrap:wrap;"></div>
+        </div>
+        <div style="width:220px; text-align:center;">
+          <div style="font-size:14px; color:var(--text-secondary);">Your best</div>
+          <div id="myBest" style="font-size:22px; font-weight:700; margin-top:8px;">—</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="games-grid">
+      <!-- Space Blasters -->
+      <div class="game-card" data-aos="fade-up">
+        <div class="game-image">
+          <span class="game-badge">Popular</span>
+          <img src="assets/images/space-blasters-logo.svg" alt="Space Blasters">
+        </div>
+        <div class="game-content">
+          <h2 class="game-title">
+            <span>🚀</span> Space Blasters
+          </h2>
+          <p class="game-description">
+            Defend the galaxy from endless waves of alien invaders in this intense space shooter. Collect power-ups, upgrade your ship, and compete for the top score in this action-packed adventure!
+          </p>
+          
+          <div class="features">
+            <span class="feature">★ Fast-Paced</span>
+            <span class="feature">★ Power-Ups</span>
+            <span class="feature">★ Endless Fun</span>
+          </div>
+          
+          <div class="controls">
+            <h3>🎮 Controls:</h3>
+            <ul class="controls-list">
+              <li class="control-item">
+                <i class="fas fa-arrows-alt-h"></i>
+                <span>A / D to Move</span>
+              </li>
+              <li class="control-item">
+                <i class="fas fa-space-shuttle"></i>
+                <span>SPACE to Shoot</span>
+              </li>
+              <li class="control-item">
+                <i class="fas fa-pause"></i>
+                <span>P to Pause</span>
+              </li>
+              <li class="control-item">
+                <i class="fas fa-bolt"></i>
+                <span>SHIFT for Boost</span>
+              </li>
+            </ul>
+          </div>
+          
+          <a href="https://www.greenfoot.org/scenarios/35419" class="play-btn" target="_blank"><i class="fas fa-rocket"></i> Play Space Blasters</a>
+        </div>
+      </div>
+
+      <!-- Cube Wars -->
+      <div class="game-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="game-image">
+          <span class="game-badge" style="background: linear-gradient(45deg, #00c6ff, #0072ff);">New</span>
+          <img src="assets/images/cube-wars-logo.svg" alt="Cube Wars">
+        </div>
+        <div class="game-content">
+          <h2 class="game-title">
+            <span>🎯</span> Cube Wars
+          </h2>
+          <p class="game-description">
+            Survive the onslaught of colorful cubes in this fast-paced arcade shooter. Dodge, shoot, and collect power-ups to achieve the highest score possible in this addictive game!
+          </p>
+          
+          <div class="features">
+            <span class="feature">★ Addictive</span>
+            <span class="feature">★ Progressive</span>
+            <span class="feature">★ Challenging</span>
+          </div>
+          
+          <div class="controls">
+            <h3>🎮 Controls:</h3>
+            <ul class="controls-list">
+              <li class="control-item">← → Move</li>
+              <li class="control-item">SPACE Shoot</li>
+              <li class="control-item">P Pause</li>
+            </ul>
+          </div>
+          <a href="cubewars.html" class="play-btn" target="_blank"><i class="fas fa-gamepad"></i> Play Cube Wars</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="js/theme-manager.js"></script>
+  
+  <script>
+    // Theme Manager
+    class SimpleThemeManager {
+      constructor() {
+        this.currentTheme = localStorage.getItem('theme') || 'brosquad-blue';
+        this.themes = {
+          'brosquad-red': { name: 'Red', accent: '#ff1a1a', light: '#ff6666', dark: '#660000' },
+          'brosquad-blue': { name: 'Blue', accent: '#1a8cff', light: '#66b3ff', dark: '#0059b3' },
+          'brosquad-gold': { name: 'Gold', accent: '#ffd700', light: '#ffea80', dark: '#b38f00' },
+          'brosquad-neon': { name: 'Neon Green', accent: '#00ff9d', light: '#80ffce', dark: '#00b36b' },
+          'brosquad-purple': { name: 'Purple', accent: '#b026ff', light: '#d580ff', dark: '#7a00cc' },
+          'brosquad-cyan': { name: 'Cyan', accent: '#00f7ff', light: '#80fbff', dark: '#00b3b8' },
+          'brosquad-orange': { name: 'Orange', accent: '#ff6b1a', light: '#ffa366', dark: '#cc5200' },
+          'brosquad-pink': { name: 'Pink', accent: '#ff1a8c', light: '#ff80c1', dark: '#b3005c' }
+        };
+        this.init();
+      }
+      
+      init() {
+        this.applyTheme(this.currentTheme, 'init');
+        this.setupCrossTabSync();
+      }
+      
+      applyTheme(themeName, source = 'local') {
+        const theme = this.themes[themeName] || this.themes['brosquad-blue'];
+        const root = document.documentElement;
+        root.setAttribute('data-theme', themeName);
+        root.style.setProperty('--accent', theme.accent);
+        root.style.setProperty('--accent-light', theme.light);
+        root.style.setProperty('--accent-dark', theme.dark);
+        root.style.setProperty('--accent-rgb', theme.accent.replace('#', '').match(/.{2}/g).map(x => parseInt(x, 16)).join(','));
+        if (source === 'local') {
+          localStorage.setItem('theme', themeName);
+          this.currentTheme = themeName;
+        }
+      }
+      
+      setupCrossTabSync() {
+        window.addEventListener('storage', (e) => {
+          if (e.key === 'theme' && e.newValue) {
+            this.applyTheme(e.newValue, 'storage');
+          }
+        });
+      }
+    }
+
+    // Initialize AOS and theme
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize theme manager
+      const themeManager = new SimpleThemeManager();
+      
+      // Initialize AOS animation
+      AOS.init({
+        duration: 800,
+        once: true,
+        easing: 'ease-out-cubic'
+      });
+      
+      // Add click handler for game cards
+      const gameCards = document.querySelectorAll('.game-card');
+      
+      gameCards.forEach(card => {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', (e) => {
+          // Don't trigger if clicking on links or buttons
+          if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
+          
+          const link = card.querySelector('a');
+          if (link) {
+            window.open(link.href, '_blank');
+          }
+        });
+      });
+      // Auto-rotate toggle
+      const toggleBtn = document.getElementById('toggleAutoRotate');
+      function updateToggleLabel() {
+        const v = localStorage.getItem('themeAutoRotate');
+        toggleBtn.textContent = (v === 'off') ? 'Enable' : 'Disable';
+      }
+      updateToggleLabel();
+      toggleBtn.addEventListener('click', () => {
+        const current = localStorage.getItem('themeAutoRotate');
+        const newVal = (current === 'off') ? 'on' : 'off';
+        localStorage.setItem('themeAutoRotate', newVal);
+        if (window.ThemeManager && typeof window.ThemeManager.setAutoRotate === 'function') {
+          window.ThemeManager.setAutoRotate(newVal === 'on');
+        }
+        updateToggleLabel();
+      });
+    });
+    // Leaderboard rendering
+    function renderLeaderboard() {
+      try {
+        const hs = JSON.parse(localStorage.getItem('highScores') || '{}');
+        const entries = Object.keys(hs).map(email => ({ email, score: parseInt(hs[email] || 0, 10) }));
+        entries.sort((a,b) => b.score - a.score);
+        const top = entries.slice(0,5);
+        const container = document.getElementById('leaderboard');
+        container.innerHTML = '';
+        if (top.length === 0) {
+          container.innerHTML = '<div style="color:var(--text-secondary)">No scores yet. Sign in and play Cube Wars to set a high score.</div>';
+        } else {
+          top.forEach((e, idx) => {
+            const el = document.createElement('div');
+            el.style.flex = '0 0 180px';
+            el.style.padding = '12px';
+            el.style.borderRadius = '8px';
+            el.style.background = 'linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))';
+            el.innerHTML = `<div style="font-size:14px;color:var(--text-secondary)">#${idx+1}</div><div style="font-weight:700;margin-top:6px">${e.email.split('@')[0]}</div><div style="color:var(--accent);margin-top:6px">${e.score} pts</div>`;
+            container.appendChild(el);
+          });
+        }
+
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+        const myBestEl = document.getElementById('myBest');
+        if (!currentUser) {
+          myBestEl.textContent = 'Sign in';
+        } else {
+          const s = hs[currentUser.email] || 0;
+          myBestEl.textContent = s + ' pts';
+        }
+      } catch(e) { /* ignore */ }
+    }
+
+    // Render on load and whenever storage changes from other tabs
+    window.addEventListener('load', renderLeaderboard);
+    window.addEventListener('storage', (e) => { if (e.key === 'highScores' || e.key === 'highScoresTimestamp') renderLeaderboard(); });
+  </script>
+</body>
+</html>

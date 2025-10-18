@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html data-theme="red" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cube Wars - Bro Squad</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="assets/images/cube-wars-logo.svg">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            background: #0a0a1a;
+            font-family: 'Orbitron', sans-serif;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+            overflow-y: auto;
+        }
+        .logo-container {
+            margin: 20px auto;
+            text-align: center;
+            max-width: 800px;
+        }
+        
+        .logo-container img {
+            height: 100px;
+            margin-bottom: 10px;
+        }
+        
+        #game-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 500px;
+            margin: 0 auto;
+            background: #000033;
+            border: 2px solid #1a1aff;
+            box-shadow: 0 0 30px #1a1aff, 0 0 60px #0044ff;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+        #game-canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        #score {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #00ffff;
+            font-size: 20px;
+            font-weight: bold;
+            z-index: 10;
+            text-shadow: 0 0 5px #00ffff;
+            font-family: 'Orbitron', sans-serif;
+            padding: 5px 10px;
+            background: rgba(0, 0, 51, 0.7);
+            border-radius: 5px;
+            border: 1px solid #00ffff;
+        }
+        #game-over {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #00ffff;
+            font-size: 36px;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 0 0 10px #00ffff, 0 0 20px #1a1aff;
+            z-index: 20;
+            background: rgba(0, 0, 51, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #00ffff;
+            box-shadow: 0 0 30px #1a1aff;
+        }
+        #restart-btn {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: #1a1aff;
+            color: #000;
+            border: 2px solid #00ffff;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px #1a1aff, 0 0 30px #00ffff;
+        }
+    </style>
+  <script src="js/theme-manager.js"></script>
+  </head>
+<body>
+    <div class="logo-container">
+        <div class="game-logo cube-wars-logo">
+  <svg width="200" height="120" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background Cube -->
+    <g class="cube">
+      <polygon points="80,40 120,20 160,40 120,60" fill="#ff00ff" opacity="0.6"/>
+      <polygon points="80,80 80,40 120,60 120,100" fill="#ff00ff" opacity="0.4"/>
+      <polygon points="120,60 160,40 160,80 120,100" fill="#ff00ff" opacity="0.8"/>
+    </g>
+    
+    <!-- Smaller Cubes -->
+    <rect x="40" y="50" width="20" height="20" fill="#00f7ff" class="float"/>
+    <rect x="140" y="30" width="15" height="15" fill="#00f7ff" class="float" style="animation-delay: 0.3s"/>
+    
+    <!-- Target -->
+    <circle cx="100" cy="70" r="8" fill="none" stroke="#ff00ff" stroke-width="2"/>
+    <circle cx="100" cy="70" r="4" fill="#ff00ff"/>
+    
+    <!-- Text -->
+    <text x="100" y="110" font-family="'Arial Black', sans-serif" font-size="16" fill="#fff" text-anchor="middle" class="game-title">CUBE WARS</text>
+  </svg>
+</div>
+
+<style>
+.cube-wars-logo {
+  display: inline-block;
+  padding: 20px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #2d00f7, #6a00f4, #8900f2);
+  box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes spin {
+  from { transform: rotateY(0); }
+  to { transform: rotateY(360deg); }
+}
+
+.cube {
+  transform-style: preserve-3d;
+  transform: rotateX(20deg) rotateY(20deg);
+  transform-origin: 100px 60px;
+  animation: spin 10s linear infinite;
+}
+
+.float {
+  animation: float 3s ease-in-out infinite;
+}
+</style>
+        <h1>CUBE WARS</h1>
+        <p>Dodge the enemy cubes and shoot them down! Collect power-ups for special abilities.</p>
+    </div>
+    <div id="game-container">
+        <div id="score">SCORE: 0</div>
+        <div class="bro-logo">BRO SQUAD</div>
+        <canvas id="game-canvas" width="600" height="500"></canvas>
+        <div id="game-over">
+            GAME OVER!<br>
+            <button id="restart-btn">PLAY AGAIN</button>
+        </div>
+    </div>
+    
+    <div class="controls-info">
+        <h3>HOW TO PLAY:</h3>
+        <p>🡄 🡆 - Move Left/Right</p>
+        <p>SPACE - Shoot</p>
+        <p>Collect power-ups for special abilities!</p>
+    </div>
+    
+    <style>
+        .controls-info {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 15px;
+            background: rgba(0, 0, 51, 0.5);
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #1a1aff;
+            box-shadow: 0 0 15px #1a1aff;
+        }
+        .controls-info h3 {
+            margin-top: 0;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+        }
+        .controls-info p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .bro-logo {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #1a1aff;
+            font-weight: bold;
+            font-size: 18px;
+            text-shadow: 0 0 5px #00ffff;
+            z-index: 10;
+        }
+                /* Gamey shake effect */
+                @keyframes shake { 
+                    0% { transform: translate(0,0); }
+                    20% { transform: translate(-6px,4px); }
+                    40% { transform: translate(6px,-4px); }
+                    60% { transform: translate(-4px,2px); }
+                    80% { transform: translate(4px,-2px); }
+                    100% { transform: translate(0,0); }
+                }
+                #game-container.shake { animation: shake 0.35s ease-in-out; }
+                .game-logo:hover { transform: translateY(-6px) scale(1.02); transition: transform 180ms; }
+    </style>
+
+    <script>
+        // Make game container scroll into view when page loads
+        window.addEventListener('load', function() {
+            document.getElementById('game-container').scrollIntoView({ behavior: 'smooth' });
+            // Focus the canvas for keyboard controls
+            const canvas = document.getElementById('game-canvas');
+            canvas.focus();
+        });
+
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+        const gameOverElement = document.getElementById('game-over');
+        const restartBtn = document.getElementById('restart-btn');
+        
+        // Make canvas focusable for keyboard controls
+        canvas.setAttribute('tabindex', '0');
+
+        // Game variables
+        let score = 0;
+        let gameRunning = true;
+        const keys = {};
+
+        // Player
+        const player = {
+            x: canvas.width / 2 - 25,
+            y: canvas.height - 60,
+            width: 40,
+            height: 40,
+            speed: 6,
+            color: '#1a1aff',
+            bullets: [],
+            lastShot: 0,
+            shootDelay: 250, // milliseconds
+
+            update: function() {
+                // Movement
+                if (keys['a'] || keys['ArrowLeft']) {
+                    this.x -= this.speed;
+                }
+                if (keys['d'] || keys['ArrowRight']) {
+                    this.x += this.speed;
+                }
+
+                // Keep player in bounds
+                if (this.x < 0) this.x = 0;
+                if (this.x + this.width > canvas.width) this.x = canvas.width - this.width;
+
+                // Shooting
+                const now = Date.now();
+                if ((keys[' '] || keys['Spacebar']) && now - this.lastShot > this.shootDelay) {
+                    this.shoot();
+                    this.lastShot = now;
+                }
+
+                // Update bullets
+                this.bullets = this.bullets.filter(bullet => {
+                    bullet.y -= 12;
+                    return bullet.y > 0;
+                });
+            },
+
+            shoot: function() {
+                this.bullets.push({
+                    x: this.x + this.width / 2 - 3,
+                    y: this.y,
+                    width: 6,
+                    height: 15,
+                    color: '#00ffff'
+                });
+            },
+
+            draw: function() {
+                // Draw player (cube)
+                ctx.fillStyle = this.color;
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+                
+                // Draw cube details
+                ctx.strokeStyle = '#00ffff';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(this.x + 5, this.y + 5, this.width - 10, this.height - 10);
+                ctx.fillStyle = 'rgba(0, 255, 255, 0.3)';
+                ctx.fillRect(this.x + 10, this.y + 10, this.width - 20, this.height - 20);
+
+                // Draw bullets
+                ctx.fillStyle = '#00ffff';
+                this.bullets.forEach(bullet => {
+                    ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+                });
+            }
+        };
+
+        // Enemies
+        const enemies = [];
+        let lastEnemySpawn = 0;
+        const enemySpawnRate = 800; // milliseconds
+
+        function spawnEnemy() {
+            const size = Math.random() * 30 + 25;
+            const hue = Math.random() * 60 + 200; // Blue to purple colors
+            enemies.push({
+                x: Math.random() * (canvas.width - size),
+                y: -size,
+                width: size,
+                height: size,
+                speed: Math.random() * 2 + 1,
+                color: `hsl(${hue}, 100%, 50%)`,
+                rotation: 0,
+                rotationSpeed: (Math.random() - 0.5) * 0.1
+            });
+        }
+
+        function updateEnemies() {
+            const now = Date.now();
+            if (now - lastEnemySpawn > enemySpawnRate) {
+                spawnEnemy();
+                lastEnemySpawn = now;
+            }
+
+            // Update enemies
+            for (let i = enemies.length - 1; i >= 0; i--) {
+                const enemy = enemies[i];
+                enemy.y += enemy.speed;
+                enemy.rotation += enemy.rotationSpeed;
+
+                // Check collision with player
+                if (isColliding(player, enemy)) {
+                    // player hit: spawn particles, play sound, shake, then end
+                    spawnParticles(player.x + player.width/2, player.y + player.height/2, '#ff0044', 26);
+                    playBeep(120, 0.28, 'sawtooth');
+                    const gc2 = document.getElementById('game-container');
+                    gc2.classList.add('shake');
+                    setTimeout(()=> gc2.classList.remove('shake'), 500);
+                    gameOver();
+                    return;
+                }
+
+                // Check collision with bullets
+                for (let j = player.bullets.length - 1; j >= 0; j--) {
+                    const bullet = player.bullets[j];
+                    if (isColliding(bullet, enemy)) {
+                        // Enemy destroyed
+                        player.bullets.splice(j, 1);
+                        enemies.splice(i, 1);
+                        score += 10;
+                        scoreElement.textContent = `SCORE: ${score}`;
+                        spawnParticles(enemy.x + enemy.width/2, enemy.y + enemy.height/2, enemy.color, 18);
+                        playBeep(900 + Math.random()*220, 0.06, 'square');
+                        const gc = document.getElementById('game-container');
+                        gc.classList.add('shake');
+                        setTimeout(()=> gc.classList.remove('shake'), 260);
+                        break;
+                    }
+                }
+
+                // Remove if off screen
+                if (enemy.y > canvas.height) {
+                    enemies.splice(i, 1);
+                }
+            }
+        }
+
+        function drawEnemies() {
+            enemies.forEach(enemy => {
+                ctx.save();
+                ctx.translate(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2);
+                ctx.rotate(enemy.rotation);
+                
+                // Draw enemy cube
+                ctx.fillStyle = enemy.color;
+                ctx.fillRect(-enemy.width/2, -enemy.height/2, enemy.width, enemy.height);
+                
+                // Draw cube details
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(-enemy.width/2 + 3, -enemy.height/2 + 3, enemy.width - 6, enemy.height - 6);
+                
+                ctx.restore();
+            });
+        }
+
+        // Particles for hits
+        const particles = [];
+        function spawnParticles(x, y, color, count = 12) {
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 6,
+                    vy: (Math.random() - 0.5) * 6,
+                    life: Math.random() * 40 + 20,
+                    color: color
+                });
+            }
+        }
+
+        function updateAndDrawParticles() {
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.12; // gravity
+                p.life--;
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, 2, 2);
+                if (p.life <= 0) particles.splice(i, 1);
+            }
+        }
+
+        // Simple sounds
+        let audioCtx;
+        function ensureAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+        function playBeep(freq, duration = 0.05, type = 'sine'){
+            try{
+                ensureAudio();
+                const o = audioCtx.createOscillator();
+                const g = audioCtx.createGain();
+                o.type = type; o.frequency.value = freq;
+                o.connect(g); g.connect(audioCtx.destination);
+                g.gain.value = 0.08;
+                o.start(); o.stop(audioCtx.currentTime + duration);
+            } catch(e) { /* ignore audio errors */ }
+        }
+
+        // High-score tracking per signed-in user (localStorage)
+        function getHighScores() {
+            try {
+                return JSON.parse(localStorage.getItem('highScores') || '{}');
+            } catch (e) { return {}; }
+        }
+
+        function setHighScores(obj) {
+            try { localStorage.setItem('highScores', JSON.stringify(obj)); } catch(e) {}
+        }
+
+        function saveHighScoreForCurrentUser(score) {
+            try {
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+                if (!currentUser || !currentUser.email) return;
+                const email = currentUser.email;
+                const hs = getHighScores();
+                const prev = parseInt(hs[email] || 0, 10);
+                if (score > prev) {
+                    hs[email] = score;
+                    setHighScores(hs);
+                    // notify other tabs
+                    localStorage.setItem('highScoresTimestamp', Date.now());
+                    // show small message
+                    if (gameOverElement) {
+                        const note = document.createElement('div');
+                        note.style.fontSize = '14px';
+                        note.style.marginTop = '12px';
+                        note.style.color = '#00ffd5';
+                        note.textContent = 'New personal best! ✦ ' + score;
+                        gameOverElement.appendChild(note);
+                    }
+                }
+            } catch (e) { /* ignore */ }
+        }
+
+        function isColliding(rect1, rect2) {
+            return rect1.x < rect2.x + rect2.width &&
+                   rect1.x + rect1.width > rect2.x &&
+                   rect1.y < rect2.y + rect2.height &&
+                   rect1.y + rect1.height > rect2.y;
+        }
+
+        function gameOver() {
+            gameRunning = false;
+            // Save high score for signed-in user (if any)
+            try { saveHighScoreForCurrentUser(score); } catch(e) {}
+            gameOverElement.style.display = 'block';
+        }
+
+        function gameLoop() {
+            if (!gameRunning) return;
+
+            // Clear canvas with slight fade effect
+            ctx.fillStyle = 'rgba(0, 0, 20, 0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw starfield background
+            drawStarfield();
+
+            // Update and draw game objects
+            player.update();
+            updateEnemies();
+            player.draw();
+            drawEnemies();
+            // particles
+            updateAndDrawParticles();
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Starfield effect
+        const stars = [];
+        const starCount = 100;
+        
+        // Initialize stars
+        for (let i = 0; i < starCount; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 1.5,
+                speed: Math.random() * 2 + 1
+            });
+        }
+        
+        function drawStarfield() {
+            ctx.fillStyle = 'white';
+            stars.forEach(star => {
+                star.y += star.speed;
+                if (star.y > canvas.height) {
+                    star.y = 0;
+                    star.x = Math.random() * canvas.width;
+                }
+                ctx.fillRect(star.x, star.y, star.size, star.size);
+            });
+        }
+
+        // Event listeners
+        window.addEventListener('keydown', (e) => {
+            keys[e.key] = true;
+            // Prevent spacebar from scrolling the page
+            if (e.code === 'Space') {
+                e.preventDefault();
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            keys[e.key] = false;
+        });
+
+        restartBtn.addEventListener('click', () => {
+            // Reset game state
+            score = 0;
+            scoreElement.textContent = 'SCORE: 0';
+            player.x = canvas.width / 2 - 25;
+            player.y = canvas.height - 60;
+            player.bullets = [];
+            enemies.length = 0;
+            gameOverElement.style.display = 'none';
+            gameRunning = true;
+            gameLoop();
+        });
+
+        // Start the game
+        gameLoop();
+    </script>
+</body>
+</html>

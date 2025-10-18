@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="300" viewBox="0 0 800 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <rect width="800" height="300" rx="20" fill="url(#paint0_linear)" />
+  
+  <!-- Cube 1 -->
+  <path d="M150 150L100 125V75L150 100L200 75V125L150 150Z" fill="#1a1aff" stroke="#00ffff" stroke-width="4"/>
+  <path d="M150 150V200L100 175V125L150 150Z" fill="#0044ff" stroke="#00ffff" stroke-width="4"/>
+  <path d="M200 125V175L150 200V150L200 125Z" fill="#0088ff" stroke="#00ffff" stroke-width="4"/>
+  
+  <!-- Cube 2 -->
+  <path d="M350 150L300 125V75L350 100L400 75V125L350 150Z" fill="#1a1aff" stroke="#00ffff" stroke-width="4"/>
+  <path d="M350 150V200L300 175V125L350 150Z" fill="#0044ff" stroke="#00ffff" stroke-width="4"/>
+  <path d="M400 125V175L350 200V150L400 125Z" fill="#0088ff" stroke="#00ffff" stroke-width="4"/>
+  
+  <!-- Cube 3 -->
+  <path d="M550 150L500 125V75L550 100L600 75V125L550 150Z" fill="#1a1aff" stroke="#00ffff" stroke-width="4"/>
+  <path d="M550 150V200L500 175V125L550 150Z" fill="#0044ff" stroke="#00ffff" stroke-width="4"/>
+  <path d="M600 125V175L550 200V150L600 125Z" fill="#0088ff" stroke="#00ffff" stroke-width="4"/>
+  
+  <!-- Text -->
+  <path d="M200 50H250V55H255V65H250V60H200V65H195V55H200V50Z" fill="#00ffff"/>
+  <path d="M265 50H270V65H265V50Z" fill="#00ffff"/>
+  <path d="M275 50H295V55H280V58H295V65H275V50Z" fill="#00ffff"/>
+  <path d="M300 50H330V55H305V58H325V62H305V65H330V60H325V57H305V50H300Z" fill="#00ffff"/>
+  <path d="M335 50H360V55H340V58H355V62H340V65H360V60H355V50H350V57H340V50H335Z" fill="#00ffff"/>
+  
+  <!-- Glow effects -->
+  <defs>
+    <radialGradient id="paint0_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(400 150) rotate(90) scale(200 400)">
+      <stop stop-color="#000033" stop-opacity="0.8"/>
+      <stop offset="1" stop-color="#000022" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="paint0_linear" x1="400" y1="0" x2="400" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0a0a1a"/>
+      <stop offset="1" stop-color="#000033"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%" filterUnits="userSpaceOnUse">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+</svg>

@@ -1,0 +1,10 @@
+/* nav-lock.css — Prevent theme variables from altering site navigation visuals */
+.sidebar, .topbar, .nav-link, .logo-img, .logo-text, .settings-link, .premium-link, .btn-theme {
+  --nav-accent-fixed: #ff1a1a;
+}
+.sidebar { background: linear-gradient(180deg, #ff1a1a, #660000) !important; }
+.topbar { background: #111 !important; }
+.nav-link { background: rgba(255,255,255,0.05) !important; color: #fff !important; }
+.nav-link.active { background: #ff1a1a !important; color: #000 !important; box-shadow: 0 0 10px #ff1a1a !important; }
+.logo-img { border-color: #ff1a1a !important; box-shadow: 0 0 15px #ff1a1a !important; }
+.settings-link, .premium-link { border-color: #ff1a1a !important; color: #ff1a1a !important; box-shadow: 0 0 10px #ff1a1a !important; }

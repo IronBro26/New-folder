@@ -1,0 +1,397 @@
+/* Base Theme Variables - Red Theme (Default) */
+:root {
+  /* Core Colors */
+  --accent: #ff1a1a;
+  --accent-light: #ff6666;
+  --accent-dark: #660000;
+  
+  /* Background Colors */
+  --bg: #111111;
+  --bg-secondary: #1a1a1a;
+  
+  /* Text Colors */
+  --text: #ffffff;
+  --text-secondary: #cccccc;
+  
+  /* UI Colors */
+  --border: #333333;
+  --success: #00cc66;
+  --warning: #ffcc00;
+  --error: #ff1a1a;
+  --info: #00aaff;
+  
+  /* Legacy Variables */
+  --glow-strength: 10px;
+  --text-color: var(--text);
+  --background: var(--bg);
+  --card-bg: var(--bg-secondary);
+  --card-border: var(--border);
+  --card-hover: rgba(255, 255, 255, 0.1);
+  
+  /* Transitions */
+  --transition-speed: 0.3s;
+}
+
+/* Smooth transitions for interactive elements */
+a, button, input, .btn, .card {
+  transition: all 0.2s ease;
+}
+
+/* Base Elements */
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text);
+  margin-top: 0;
+}
+
+p, li, td, th, label, input, select, textarea {
+  color: var(--text);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color var(--transition-speed) ease, 
+              text-shadow var(--transition-speed) ease;
+}
+
+a:hover, a:focus {
+  color: var(--accent-light);
+  text-shadow: 0 0 5px var(--accent), 0 0 10px var(--accent-light);
+}
+
+/* Buttons */
+button, 
+.btn, 
+.button, 
+input[type="button"], 
+input[type="submit"],
+input[type="reset"] {
+  background-color: var(--accent);
+  color: #000;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all var(--transition-speed) ease;
+}
+
+button:hover, 
+.btn:hover, 
+.button:hover, 
+input[type="button"]:hover, 
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+button:focus, 
+.btn:focus, 
+.button:focus, 
+input[type="button"]:focus, 
+input[type="submit"]:focus,
+input[type="reset"]:focus {
+  background-color: var(--accent-light);
+  box-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent-light);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+/* Forms */
+input,
+select,
+textarea {
+  background-color: var(--bg-secondary);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 8px 12px;
+  width: 100%;
+  max-width: 100%;
+  margin: 4px 0 16px;
+  transition: all var(--transition-speed) ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-light);
+  outline: none;
+}
+
+/* Cards and Containers */
+.card,
+.panel,
+.box {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  transition: all var(--transition-speed) ease;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+}
+
+th, td {
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  text-align: left;
+}
+
+th {
+  background-color: var(--bg-secondary);
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Utility Classes */
+.text-accent { color: var(--accent) !important; }
+.bg-accent { background-color: var(--accent) !important; }
+.border-accent { border-color: var(--accent) !important; }
+
+/* Status Colors */
+.success { color: var(--success) !important; }
+.warning { color: var(--warning) !important; }
+.error { color: var(--error) !important; }
+.info { color: var(--info) !important; }
+
+.bg-success { background-color: var(--success) !important; }
+.bg-warning { background-color: var(--warning) !important; }
+.bg-error { background-color: var(--error) !important; }
+.bg-info { background-color: var(--info) !important; }
+
+/* Selection */
+::selection {
+  background: var(--accent);
+  color: #000;
+  text-shadow: none;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-light);
+}
+
+/* Navigation */
+.navbar {
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 20px;
+}
+
+.nav-link {
+  color: var(--text);
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: all var(--transition-speed) ease;
+}
+
+.nav-link:hover, .nav-link:focus {
+  background-color: var(--accent);
+  color: #000;
+  text-decoration: none;
+}
+
+/* Alerts */
+.alert {
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin: 16px 0;
+  border: 1px solid transparent;
+}
+
+.alert-success {
+  background-color: rgba(0, 204, 102, 0.1);
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.alert-warning {
+  background-color: rgba(255, 204, 0, 0.1);
+  border-color: var(--warning);
+  color: var(--warning);
+}
+
+.alert-error {
+  background-color: rgba(255, 26, 26, 0.1);
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.alert-info {
+  background-color: rgba(0, 170, 255, 0.1);
+  border-color: var(--info);
+  color: var(--info);
+}
+
+/* Code Blocks */
+pre, code {
+  font-family: 'Courier New', monospace;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 4px;
+  color: var(--text);
+}
+
+pre {
+  padding: 12px;
+  overflow-x: auto;
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  body {
+    padding: 0 10px;
+  }
+  
+  .container {
+    width: 100%;
+    padding: 0 10px;
+  }
+}
+body {
+  color: var(--text-color);
+  background-color: var(--background);
+}
+
+a {
+  color: var(--accent-light);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--accent);
+  text-shadow: 0 0 10px var(--accent-light);
+}
+
+button, .button, input[type="button"], input[type="submit"] {
+  background-color: var(--accent);
+  color: #000;
+  border: 1px solid var(--accent-light);
+  transition: all 0.3s ease;
+}
+
+button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:hover {
+  background-color: var(--accent-light);
+  box-shadow: 0 0 15px var(--accent);
+  transform: translateY(-2px);
+}
+
+/* Card styles */
+.card, .theme-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  transition: all 0.3s ease;
+}
+
+.card:hover, .theme-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 15px var(--accent);
+  background: var(--card-hover);
+}
+
+/* Navigation */
+.nav-link, .sidebar-nav a {
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover, .sidebar-nav a:hover {
+  color: var(--accent-light);
+  background: rgba(102, 153, 255, 0.1);
+}
+
+/* Form elements */
+input, textarea, select {
+  background: rgba(0, 0, 51, 0.5);
+  border: 1px solid var(--card-border);
+  color: var(--text-color);
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+  outline: none;
+}
+
+/* Theme-specific overrides */
+[data-theme="brosquad-neon"] {
+  --accent: #00ff9d;
+  --accent-light: #80ffce;
+  --accent-dark: #00b36b;
+}
+
+[data-theme="brosquad-purple"] {
+  --accent: #b026ff;
+  --accent-light: #d580ff;
+  --accent-dark: #7a00cc;
+}
+
+[data-theme="brosquad-cyan"] {
+  --accent: #00f7ff;
+  --accent-light: #80fbff;
+  --accent-dark: #00b3b8;
+}
+
+[data-theme="brosquad-orange"] {
+  --accent: #ff6b1a;
+  --accent-light: #ffa366;
+  --accent-dark: #cc5200;
+}
+
+[data-theme="brosquad-pink"] {
+  --accent: #ff1a8c;
+  --accent-light: #ff80c1;
+  --accent-dark: #b3005c;
+}
+
+[data-theme="brosquad-blue"] {
+  --accent: #1a8cff;
+  --accent-light: #66b3ff;
+  --accent-dark: #0059b3;
+}
+
+[data-theme="brosquad-gold"] {
+  --accent: #ffd700;
+  --accent-light: #ffea80;
+  --accent-dark: #b38f00;
+}
