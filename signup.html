@@ -33,7 +33,7 @@ h2 { color:#ff1a1a; }
 </form>
 
 <script>
-// COMMON FUNCTION TO GET USERS
+// Get users from localStorage
 function getUsers() {
     return JSON.parse(localStorage.getItem('users') || '[]');
 }
@@ -69,7 +69,6 @@ document.getElementById('signupForm').addEventListener('submit', function(e){
     localStorage.setItem('currentUser', JSON.stringify(newUser));
 
     alert("Signup successful! You can now log in.");
-    // Optionally clear signup form
     document.getElementById('signupForm').reset();
 });
 
@@ -102,8 +101,6 @@ document.getElementById('loginForm').addEventListener('submit', function(e){
         window.location.href = "admin.html";
     } else {
         alert("You are logged in, but not admin.");
-        // Redirect to a normal user page if you have one
-        // window.location.href = "userpage.html";
     }
 
     document.getElementById('loginForm').reset();
