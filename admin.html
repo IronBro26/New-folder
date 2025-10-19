@@ -3,186 +3,90 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IronBro26 Members & Admin</title>
+<title>Admin Panel - IronBro26</title>
 <style>
-  :root {
-    --bg: #0a0a0a;
-    --text: #fff;
-    --accent: #ff1a1a;
-    --accent-light: #ff6666;
-  }
-  body {
-    font-family: Arial, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    margin: 0;
-    padding: 20px;
-  }
-  h1,h2 { color: var(--accent); }
-  input, button { padding: 10px; margin: 5px 0; border-radius: 6px; border: none; }
-  button { background: var(--accent); color:#fff; cursor:pointer; }
-  button.secondary { background:#222; color:#fff; }
-  table { border-collapse: collapse; width: 100%; margin-top: 15px; }
-  th,td { border: 1px solid var(--accent); padding: 10px; text-align:left; }
-  th { background: var(--accent); color:#000; }
-  .hidden { display:none; }
+  body { background:#0d0d0d; color:#fff; font-family:Arial,sans-serif; margin:0; padding:20px; }
+  h1 { color:#ff1a1a; text-shadow:0 0 10px #ff3333,0 0 25px #ff6666; }
+  a.home-btn { display:inline-block; padding:10px 20px; background:#ff1a1a; color:#000; font-weight:bold; border-radius:8px; text-decoration:none; box-shadow:0 0 15px #ff4444,0 0 25px #ff6666; margin:15px 0 25px; transition:0.3s; }
+  a.home-btn:hover { background:#ff3333; box-shadow:0 0 25px #ff6666,0 0 40px #ff9999; transform:scale(1.05); }
+  table { width:100%; border-collapse:collapse; margin-top:10px; }
+  th, td { border:1px solid #ff1a1a; padding:10px; text-align:left; }
+  th { background:#ff1a1a; color:#000; }
+  td { background:#222; }
 </style>
 </head>
 <body>
 
-<div id="signupDiv">
-  <h2>Sign Up</h2>
-  <input type="email" id="signupEmail" placeholder="Email">
-  <input type="password" id="signupPassword" placeholder="Password (min 8 chars)">
-  <button onclick="signup()">Sign Up</button>
-  <p>Already have an account? <a href="#" onclick="showLogin(); return false;">Log in</a></p>
-</div>
+<h1>🛡 Admin Panel</h1>
+<a href="index.html" class="home-btn">🏠 Go to Home Page</a>
 
-<div id="loginDiv" class="hidden">
-  <h2>Login</h2>
-  <input type="email" id="loginEmail" placeholder="Email">
-  <input type="password" id="loginPassword" placeholder="Password">
-  <button onclick="login()">Log In</button>
-  <p>Don't have an account? <a href="#" onclick="showSignup(); return false;">Sign up</a></p>
-</div>
+<h2>Signed Up Users</h2>
+<table id="usersTable">
+  <tr>
+    <th>Email</th>
+    <th>Signed Up At</th>
+  </tr>
+</table>
 
-<div id="membersDiv" class="hidden">
-  <h2>Welcome <span id="userEmail"></span>!</h2>
-  <p>Role: <span id="userRole"></span></p>
-  <button onclick="logout()" class="secondary">Log Out</button>
-  <button id="adminBtn" class="hidden" onclick="showAdmin()">Admin Panel</button>
-  <h3>Online Users:</h3>
-  <div id="onlineUsers"></div>
-</div>
-
-<div id="adminPanel" class="hidden">
-  <h1>🛡 Admin Panel</h1>
-  <button onclick="hideAdmin()">Close Admin Panel</button>
-  <h2>All Users</h2>
-  <table id="usersTable">
-    <tr><th>Email</th><th>Role</th><th>Signed Up</th></tr>
-  </table>
-  <h2>Currently Online</h2>
-  <table id="onlineTable">
-    <tr><th>Email</th><th>Last Active</th></tr>
-  </table>
-</div>
+<h2>Currently Online Users</h2>
+<table id="onlineTable">
+  <tr>
+    <th>Email</th>
+    <th>Last Active</th>
+  </tr>
+</table>
 
 <script>
 const adminEmail = "Krfuchs11@icloud.com";
+
+// Load current user from localStorage
+const currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
+
+// Check if current user is admin
+if (!currentUser || currentUser.email !== adminEmail) {
+  alert("Access Denied! Only admin can access this page.");
+  window.location.href = "signup.html";
+}
+
+// Load all signed-up users
 let users = JSON.parse(localStorage.getItem("users") || "[]");
-let currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
+const usersTable = document.getElementById("usersTable");
+users.forEach(u => {
+  let row = usersTable.insertRow();
+  row.insertCell(0).innerText = u.email;
+  row.insertCell(1).innerText = u.timestamp || "N/A";
+});
 
-function showSignup(){
-  document.getElementById("signupDiv").classList.remove("hidden");
-  document.getElementById("loginDiv").classList.add("hidden");
-  document.getElementById("membersDiv").classList.add("hidden");
-  document.getElementById("adminPanel").classList.add("hidden");
+// Load online users
+let onlineUsers = JSON.parse(localStorage.getItem("onlineUsers") || "[]");
+
+// Update current user as online
+const now = new Date().toLocaleString();
+const exists = onlineUsers.find(u => u.email === currentUser.email);
+if(!exists){
+  onlineUsers.push({email: currentUser.email, lastActive: now});
+}else{
+  exists.lastActive = now;
 }
-function showLogin(){
-  document.getElementById("signupDiv").classList.add("hidden");
-  document.getElementById("loginDiv").classList.remove("hidden");
-  document.getElementById("membersDiv").classList.add("hidden");
-  document.getElementById("adminPanel").classList.add("hidden");
-}
+localStorage.setItem("onlineUsers", JSON.stringify(onlineUsers));
 
-function signup(){
-  const email = document.getElementById("signupEmail").value.trim();
-  const password = document.getElementById("signupPassword").value.trim();
-  if(!email || !password){ alert("Fill all fields"); return; }
-  if(password.length<8){ alert("Password must be 8+ chars"); return; }
-  if(users.find(u=>u.email===email)){ alert("Email already registered"); return; }
-
-  const role = (email === adminEmail) ? "admin" : "user";
-  const newUser = { email, password, role, timestamp: new Date().toLocaleString(), lastActive: Date.now() };
-  users.push(newUser);
-  localStorage.setItem("users", JSON.stringify(users));
-  localStorage.setItem("currentUser", JSON.stringify(newUser));
-  currentUser = newUser;
-  displayMemberArea();
-}
-
-function login(){
-  const email = document.getElementById("loginEmail").value.trim();
-  const password = document.getElementById("loginPassword").value.trim();
-  const user = users.find(u=>u.email===email && u.password===password);
-  if(!user){ alert("Wrong email or password"); return; }
-  currentUser = user;
-  currentUser.lastActive = Date.now();
-  localStorage.setItem("currentUser", JSON.stringify(currentUser));
-  displayMemberArea();
-}
-
-function logout(){
-  currentUser=null;
-  localStorage.removeItem("currentUser");
-  showLogin();
-}
-
-function displayMemberArea(){
-  if(!currentUser) return;
-  document.getElementById("userEmail").innerText=currentUser.email;
-  document.getElementById("userRole").innerText=currentUser.role;
-  document.getElementById("signupDiv").classList.add("hidden");
-  document.getElementById("loginDiv").classList.add("hidden");
-  document.getElementById("membersDiv").classList.remove("hidden");
-  document.getElementById("adminBtn").classList.toggle("hidden", currentUser.role!=="admin");
-  updateOnline();
-}
-
-function showAdmin(){
-  if(currentUser.role!=="admin"){ alert("Access denied"); return; }
-  document.getElementById("adminPanel").classList.remove("hidden");
-  renderAdminTables();
-}
-
-function hideAdmin(){
-  document.getElementById("adminPanel").classList.add("hidden");
-}
-
-function updateOnline(){
-  let onlineUsers = users.filter(u => Date.now() - (u.lastActive||0) < 5*60*1000);
-  document.getElementById("onlineUsers").innerText = onlineUsers.map(u=>u.email).join(", ") || "Nobody";
-  renderOnlineTable(onlineUsers);
-}
-
-function renderAdminTables(){
-  const usersTable = document.getElementById("usersTable");
-  usersTable.innerHTML="<tr><th>Email</th><th>Role</th><th>Signed Up</th></tr>";
-  users.forEach(u=>{
-    let row=usersTable.insertRow();
-    row.insertCell(0).innerText=u.email;
-    row.insertCell(1).innerText=u.role;
-    row.insertCell(2).innerText=u.timestamp;
-  });
-  updateOnline();
-}
-
-function renderOnlineTable(onlineUsers){
-  const table = document.getElementById("onlineTable");
-  table.innerHTML="<tr><th>Email</th><th>Last Active</th></tr>";
-  onlineUsers.forEach(u=>{
-    let row=table.insertRow();
-    row.insertCell(0).innerText=u.email;
-    row.insertCell(1).innerText=new Date(u.lastActive).toLocaleString();
+// Render online users table
+function renderOnline() {
+  const onlineTable = document.getElementById("onlineTable");
+  onlineUsers.forEach(user => {
+    let row = onlineTable.insertRow();
+    row.insertCell(0).innerText = user.email;
+    row.insertCell(1).innerText = user.lastActive;
   });
 }
+renderOnline();
 
-// Update current user's lastActive every 30 sec
-setInterval(()=>{
-  if(currentUser){
-    currentUser.lastActive=Date.now();
-    localStorage.setItem("currentUser",JSON.stringify(currentUser));
-    users=users.map(u=>u.email===currentUser.email?currentUser:u);
-    localStorage.setItem("users",JSON.stringify(users));
-    updateOnline();
-  }
-},30000);
-
-// Keep user signed in on page reload
-window.onload=function(){
-  if(currentUser){ displayMemberArea(); } else { showSignup(); }
-};
+// Remove user from onlineUsers on tab close
+window.addEventListener("beforeunload", () => {
+  onlineUsers = onlineUsers.filter(u => u.email !== currentUser.email);
+  localStorage.setItem("onlineUsers", JSON.stringify(onlineUsers));
+});
 </script>
 </body>
 </html>
+s
