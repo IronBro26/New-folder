@@ -1,219 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="description" content="IronBro26 Members Area - Sign up or log in to access exclusive content" />
-<title>IronBro26 Members Login</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel - IronBro26</title>
 <style>
-:root {
-  --bg: #0a0a0a;
-  --text: #fff;
-  --accent: #ff1a1a;
-  --accent-light: #ff6666;
-  --success: #4caf50;
-  --error: #ff4d4d;
-}
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background-color: var(--bg);
-  color: var(--text);
-  font-family: 'Poppins', Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 20px;
-}
-.container {
-  background: rgba(255,26,26,0.05);
-  padding: 30px;
-  border-radius: 16px;
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-  border: 1px solid rgba(255,255,255,0.1);
-}
-input {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  margin: 10px auto;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.05);
-  color: var(--text);
-}
-button {
-  padding: 10px 20px;
-  margin: 10px 0;
-  border: none;
-  border-radius: 8px;
-  background-color: var(--accent);
-  color: #fff;
-  cursor: pointer;
-}
-button:hover { background-color: var(--accent-light); }
-.hidden { display: none; }
-.alert { padding: 10px; margin: 10px 0; border-radius: 8px; }
-.alert-error { background: rgba(255,77,77,0.15); color: var(--error); }
-.alert-success { background: rgba(76,175,80,0.15); color: var(--success); }
-#onlineUsers { font-size: 12px; color: #aaa; margin-top: 10px; }
+body{background:#0a0a0a;color:#fff;font-family:Arial,sans-serif;padding:20px;}
+h1{color:#ff1a1a;text-shadow:0 0 10px #ff3333;}
+table{width:100%;border-collapse:collapse;margin-top:20px;}
+th,td{padding:10px;border:1px solid #ff1a1a;text-align:left;}
+th{background:#ff1a1a;color:#000;}
+td{background:#222;}
+.status{width:20px;height:20px;border-radius:50%;display:inline-block;}
 </style>
 </head>
 <body>
+<h1>🛡 IronBro26 Admin Panel</h1>
+<p>Only admin can access this panel</p>
 
-<div class="container">
-  <h1>IronBro26 Members Area</h1>
-  <div id="alertBox"></div>
-
-  <!-- Signup -->
-  <div id="signupDiv">
-    <h2>Create Account</h2>
-    <input type="email" id="signupEmail" placeholder="Email" required>
-    <input type="password" id="signupPassword" placeholder="Password" required>
-    <button onclick="signup()">Sign Up</button>
-    <p>Already have an account? <a href="#" onclick="showLogin(); return false;">Log In</a></p>
-  </div>
-
-  <!-- Login -->
-  <div id="loginDiv" class="hidden">
-    <h2>Login</h2>
-    <input type="email" id="loginEmail" placeholder="Email" required>
-    <input type="password" id="loginPassword" placeholder="Password" required>
-    <button onclick="login()">Log In</button>
-    <p>Don't have an account? <a href="#" onclick="showSignup(); return false;">Sign Up</a></p>
-  </div>
-
-  <!-- Member Area -->
-  <div id="membersDiv" class="hidden">
-    <h2>Welcome, <span id="userEmail"></span>!</h2>
-    <p>Role: <span id="userRole"></span></p>
-    <button onclick="goToWebsite()">Go to Website</button>
-    <button onclick="logout()">Log Out</button>
-    <div id="onlineUsers"></div>
-  </div>
-</div>
+<table id="usersTable">
+<tr><th>Email</th><th>Signup Time</th><th>Status</th></tr>
+</table>
 
 <script>
-// Config
-const OWNER_EMAIL = "krfuchs11@icloud.com";
-const ONLINE_TIMEOUT = 5*60*1000; // 5 minutes
+const ADMIN_EMAIL="krfuchs11@icloud.com";
+const ONLINE_TIMEOUT=5*60*1000;
 
-// State
-let users = JSON.parse(localStorage.getItem('users')) || [];
-let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+let currentUser=JSON.parse(localStorage.getItem('currentUser'));
+if(!currentUser || currentUser.email!==ADMIN_EMAIL){ alert("Access denied!"); document.body.innerHTML="<h1>Access Denied</h1>"; }
 
-// Show/Hide Divs
-function showSignup() { 
-  document.getElementById('signupDiv').classList.remove('hidden');
-  document.getElementById('loginDiv').classList.add('hidden');
-  document.getElementById('membersDiv').classList.add('hidden');
-}
-function showLogin() { 
-  document.getElementById('signupDiv').classList.add('hidden');
-  document.getElementById('loginDiv').classList.remove('hidden');
-  document.getElementById('membersDiv').classList.add('hidden');
-}
-
-// Alerts
-function showAlert(message, type='error') {
-  const box = document.getElementById('alertBox');
-  box.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
-  setTimeout(()=>{ box.innerHTML = ''; }, 4000);
+function loadUsers(){
+  const users=JSON.parse(localStorage.getItem('users')||'[]');
+  const table=document.getElementById('usersTable');
+  table.innerHTML=`<tr><th>Email</th><th>Signup Time</th><th>Status</th></tr>`;
+  const now=Date.now();
+  users.forEach(user=>{
+    const row=table.insertRow();
+    row.insertCell(0).innerText=user.email;
+    row.insertCell(1).innerText=user.signupTime||new Date(user.lastActive).toLocaleString();
+    const statusCell=row.insertCell(2);
+    const dot=document.createElement('span');
+    dot.className='status';
+    dot.style.background=(now-(user.lastActive||0)<ONLINE_TIMEOUT)?'green':'red';
+    statusCell.appendChild(dot);
+  });
 }
 
-// Signup
-function signup() {
-  const email = document.getElementById('signupEmail').value.trim().toLowerCase();
-  const password = document.getElementById('signupPassword').value.trim();
-  if (!email || !password) { showAlert('Fill all fields'); return; }
-  if (users.find(u => u.email === email)) { showAlert('Email already exists'); return; }
+// Update table every 10s
+setInterval(loadUsers,10000);
 
-  const role = (email === OWNER_EMAIL) ? 'owner' : 'user';
-  const now = Date.now();
+// Update on storage event (signup/login)
+window.addEventListener('storage',e=>{
+  if(e.key==='usersUpdate'){ loadUsers(); }
+});
 
-  const newUser = {
-    email,
-    password,
-    role,
-    signedUpAt: now,   // ✅ Track signup timestamp
-    lastActive: now    // ✅ Track online activity
-  };
-
-  users.push(newUser);
-  localStorage.setItem('users', JSON.stringify(users));
-  showAlert('Account created successfully', 'success');
-  showLogin();
-}
-
-// Login
-function login() {
-  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
-  const password = document.getElementById('loginPassword').value.trim();
-  const user = users.find(u => u.email === email && u.password === password);
-  if (!user) { showAlert('Invalid email or password'); return; }
-
-  currentUser = user;
-  currentUser.lastActive = Date.now(); // ✅ update lastActive
-  localStorage.setItem('currentUser', JSON.stringify(currentUser));
-  localStorage.setItem('users', JSON.stringify(users));
-  displayMemberArea();
-}
-
-// Logout
-function logout() {
-  currentUser = null;
-  localStorage.removeItem('currentUser');
-  showLogin();
-  showAlert('Logged out', 'success');
-}
-
-// Display member area
-function displayMemberArea() {
-  if (!currentUser) return;
-  document.getElementById('userEmail').textContent = currentUser.email;
-  document.getElementById('userRole').textContent = currentUser.role === 'owner' ? 'Admin' : 'Member';
-  document.getElementById('signupDiv').classList.add('hidden');
-  document.getElementById('loginDiv').classList.add('hidden');
-  document.getElementById('membersDiv').classList.remove('hidden');
-  updateOnlineUsers();
-}
-
-// Online users
-function updateOnlineUsers() {
-  const now = Date.now();
-  const onlineUsers = users.filter(u => now - u.lastActive < ONLINE_TIMEOUT);
-  document.getElementById('onlineUsers').textContent = 
-    onlineUsers.length ? "Online: " + onlineUsers.map(u=>u.email).join(", ") : "No users online";
-}
-
-// Go to main website
-function goToWebsite() { window.location.href='index.html'; }
-
-// Auto-login
-window.onload = () => { 
-  if(currentUser){
-    displayMemberArea();
-  } else {
-    showSignup();
-  }
-};
-
-// Update activity every 30 seconds
-setInterval(()=>{
-  if(currentUser){
-    currentUser.lastActive = Date.now();
-    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    localStorage.setItem('users', JSON.stringify(users));
-    updateOnlineUsers();
-  }
-}, 30000);
+loadUsers();
 </script>
-
 </body>
 </html>
