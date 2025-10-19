@@ -12,6 +12,7 @@ th, td { padding:10px; border:1px solid #ff1a1a; text-align:left; }
 th { background:#ff1a1a; color:#000; }
 td { background:#222; }
 .status { width:20px; height:20px; border-radius:50%; display:inline-block; }
+.newUser { background:#33ff33; color:#000; font-weight:bold; }
 </style>
 </head>
 <body>
@@ -63,10 +64,10 @@ function loadUsers(){
     });
 }
 
-// Refresh every 30 seconds
-setInterval(loadUsers, 30000);
+// Refresh every 10 seconds
+setInterval(loadUsers, 10000);
 
-// Listen for localStorage changes
+// Listen for localStorage changes (new signups/logins)
 window.addEventListener('storage', function(e){
     if(e.key === 'users' || e.key === 'currentUser'){
         loadUsers();
