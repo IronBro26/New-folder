@@ -14,10 +14,8 @@
   --text: #fff;
   --accent: #ff1a1a;
   --accent-light: #ff6666;
-  --accent-dark: #660000;
   --success: #4caf50;
   --error: #ff4d4d;
-  --transition-speed: 0.3s;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -135,8 +133,18 @@ function signup() {
   const password = document.getElementById('signupPassword').value.trim();
   if (!email || !password) { showAlert('Fill all fields'); return; }
   if (users.find(u => u.email === email)) { showAlert('Email already exists'); return; }
+
   const role = (email === OWNER_EMAIL) ? 'owner' : 'user';
-  const newUser = { email, password, role, lastActive: Date.now() };
+  const now = Date.now();
+
+  const newUser = {
+    email,
+    password,
+    role,
+    signedUpAt: now,   // ✅ Track signup timestamp
+    lastActive: now    // ✅ Track online activity
+  };
+
   users.push(newUser);
   localStorage.setItem('users', JSON.stringify(users));
   showAlert('Account created successfully', 'success');
@@ -149,8 +157,9 @@ function login() {
   const password = document.getElementById('loginPassword').value.trim();
   const user = users.find(u => u.email === email && u.password === password);
   if (!user) { showAlert('Invalid email or password'); return; }
+
   currentUser = user;
-  currentUser.lastActive = Date.now();
+  currentUser.lastActive = Date.now(); // ✅ update lastActive
   localStorage.setItem('currentUser', JSON.stringify(currentUser));
   localStorage.setItem('users', JSON.stringify(users));
   displayMemberArea();
@@ -187,10 +196,23 @@ function updateOnlineUsers() {
 function goToWebsite() { window.location.href='index.html'; }
 
 // Auto-login
-window.onload = () => { if(currentUser) displayMemberArea(); else showSignup(); };
+window.onload = () => { 
+  if(currentUser){
+    displayMemberArea();
+  } else {
+    showSignup();
+  }
+};
 
-// Update activity
-setInterval(()=>{ if(currentUser){ currentUser.lastActive=Date.now(); localStorage.setItem('currentUser', JSON.stringify(currentUser)); updateOnlineUsers(); } }, 30000);
+// Update activity every 30 seconds
+setInterval(()=>{
+  if(currentUser){
+    currentUser.lastActive = Date.now();
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    localStorage.setItem('users', JSON.stringify(users));
+    updateOnlineUsers();
+  }
+}, 30000);
 </script>
 
 </body>
