@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>IronBro26 Members Area</title>
+<meta name="description" content="IronBro26 Members Area - Sign up or log in to access exclusive content" />
+<title>IronBro26 Members Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #0a0a0a;
@@ -13,201 +17,214 @@
   --success: #4caf50;
   --error: #ff4d4d;
 }
-*{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--text);font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px;}
-.container{background:rgba(255,26,26,0.05);padding:30px;border-radius:16px;width:100%;max-width:400px;text-align:center;border:1px solid rgba(255,255,255,0.1);}
-input{display:block;width:100%;padding:10px;margin:10px auto;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:var(--text);}
-button{padding:10px 20px;margin:10px 0;border:none;border-radius:8px;background-color:var(--accent);color:#fff;cursor:pointer;}
-button:hover{background-color:var(--accent-light);}
-.hidden{display:none;}
-.alert{padding:10px;margin:10px 0;border-radius:8px;}
-.alert-error{background:rgba(255,77,77,0.15);color:var(--error);}
-.alert-success{background:rgba(76,175,80,0.15);color:var(--success);}
-#onlineUsers{font-size:12px;color:#aaa;margin-top:10px;}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Poppins', Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+.container {
+  background: rgba(255,26,26,0.05);
+  padding: 30px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+input {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 10px auto;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.05);
+  color: var(--text);
+}
+button {
+  padding: 10px 20px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--accent);
+  color: #fff;
+  cursor: pointer;
+}
+button:hover { background-color: var(--accent-light); }
+.hidden { display: none; }
+.alert { padding: 10px; margin: 10px 0; border-radius: 8px; }
+.alert-error { background: rgba(255,77,77,0.15); color: var(--error); }
+.alert-success { background: rgba(76,175,80,0.15); color: var(--success); }
+#onlineUsers { font-size: 12px; color: #aaa; margin-top: 10px; }
 </style>
 </head>
 <body>
+
 <div class="container">
-<h1>IronBro26 Members Area</h1>
-<div id="alertBox"></div>
+  <h1>IronBro26 Members Area</h1>
+  <div id="alertBox"></div>
 
-<!-- Signup -->
-<div id="signupDiv">
-  <h2>Create Account</h2>
-  <input type="email" id="signupEmail" placeholder="Email">
-  <input type="password" id="signupPassword" placeholder="Password">
-  <button onclick="signup()">Sign Up</button>
-  <p>Already have an account? <a href="#" onclick="showLogin(); return false;">Log In</a></p>
-</div>
-
-<!-- Login -->
-<div id="loginDiv" class="hidden">
-  <h2>Login</h2>
-  <input type="email" id="loginEmail" placeholder="Email">
-  <input type="password" id="loginPassword" placeholder="Password">
-  <button onclick="login()">Log In</button>
-  <p>Don't have an account? <a href="#" onclick="showSignup(); return false;">Sign Up</a></p>
-</div>
-
-<!-- Member/Admin Area -->
-<div id="membersDiv" class="hidden">
-  <h2>Welcome, <span id="userEmail"></span>!</h2>
-  <p>Role: <span id="userRole"></span></p>
-  <button onclick="goToWebsite()">Go to Website</button>
-  <button onclick="logout()">Log Out</button>
-
-  <!-- Admin Panel -->
-  <div id="adminPanel" class="hidden" style="margin-top:20px;text-align:left;">
-    <h3>🛡 Admin Panel</h3>
-    <table border="1" cellspacing="0" cellpadding="6" style="width:100%;border-collapse:collapse;color:#fff;">
-      <thead>
-        <tr style="background:#ff1a1a;color:#000;">
-          <th>Email</th>
-          <th>Signed Up At</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody id="usersTable"></tbody>
-    </table>
+  <!-- Signup -->
+  <div id="signupDiv">
+    <h2>Create Account</h2>
+    <input type="email" id="signupEmail" placeholder="Email" required>
+    <input type="password" id="signupPassword" placeholder="Password" required>
+    <button onclick="signup()">Sign Up</button>
+    <p>Already have an account? <a href="#" onclick="showLogin(); return false;">Log In</a></p>
   </div>
 
-  <div id="onlineUsers"></div>
-</div>
+  <!-- Login -->
+  <div id="loginDiv" class="hidden">
+    <h2>Login</h2>
+    <input type="email" id="loginEmail" placeholder="Email" required>
+    <input type="password" id="loginPassword" placeholder="Password" required>
+    <button onclick="login()">Log In</button>
+    <p>Don't have an account? <a href="#" onclick="showSignup(); return false;">Sign Up</a></p>
+  </div>
+
+  <!-- Member Area -->
+  <div id="membersDiv" class="hidden">
+    <h2>Welcome, <span id="userEmail"></span>!</h2>
+    <p>Role: <span id="userRole"></span></p>
+    <button onclick="goToWebsite()">Go to Website</button>
+    <button onclick="logout()">Log Out</button>
+    <div id="onlineUsers"></div>
+  </div>
 </div>
 
 <script>
-// CONFIG
-const OWNER_EMAIL = "krfuchs11@icloud.com";
-const ONLINE_TIMEOUT = 5*60*1000; // 5 min
+// Config
+const OWNER_EMAIL = "krfuchs11@icloud.com"; // Your email = admin
+const ONLINE_TIMEOUT = 5*60*1000; // 5 minutes
 
-// STATE
+// State
 let users = JSON.parse(localStorage.getItem('users')) || [];
 let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
 
 // Show/Hide Divs
-function showSignup(){
+function showSignup() { 
   document.getElementById('signupDiv').classList.remove('hidden');
   document.getElementById('loginDiv').classList.add('hidden');
   document.getElementById('membersDiv').classList.add('hidden');
 }
-function showLogin(){
+function showLogin() { 
   document.getElementById('signupDiv').classList.add('hidden');
   document.getElementById('loginDiv').classList.remove('hidden');
   document.getElementById('membersDiv').classList.add('hidden');
 }
 
 // Alerts
-function showAlert(message,type='error'){
-  const box=document.getElementById('alertBox');
-  box.innerHTML=`<div class="alert alert-${type}">${message}</div>`;
-  setTimeout(()=>{box.innerHTML='';},4000);
+function showAlert(message, type='error') {
+  const box = document.getElementById('alertBox');
+  box.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+  setTimeout(()=>{ box.innerHTML = ''; }, 4000);
 }
 
-// SIGNUP
-function signup(){
-  const email=document.getElementById('signupEmail').value.trim().toLowerCase();
-  const password=document.getElementById('signupPassword').value.trim();
-  if(!email||!password){showAlert('Fill all fields');return;}
-  if(users.find(u=>u.email===email)){showAlert('Email already exists');return;}
+// Signup
+function signup() {
+  const email = document.getElementById('signupEmail').value.trim().toLowerCase();
+  const password = document.getElementById('signupPassword').value.trim();
+  if (!email || !password) { showAlert('Fill all fields'); return; }
+  if (users.find(u => u.email === email)) { showAlert('Email already exists'); return; }
 
-  const role=(email===OWNER_EMAIL)?'owner':'user';
-  const now=Date.now();
+  // ✅ Admin check
+  const role = (email === OWNER_EMAIL) ? 'admin' : 'member';
+  const now = Date.now();
 
-  const newUser={email,password,role,signedUpAt:now,lastActive:now};
+  const newUser = {
+    email,
+    password,
+    role,
+    signedUpAt: now,   // Signup timestamp
+    lastActive: now    // Online activity
+  };
+
   users.push(newUser);
-  localStorage.setItem('users',JSON.stringify(users));
-  showAlert('Account created successfully','success');
+  localStorage.setItem('users', JSON.stringify(users));
+  showAlert('Account created successfully', 'success');
   showLogin();
-  updateAdminPanel();
 }
 
-// LOGIN
-function login(){
-  const email=document.getElementById('loginEmail').value.trim().toLowerCase();
-  const password=document.getElementById('loginPassword').value.trim();
-  const user=users.find(u=>u.email===email && u.password===password);
-  if(!user){showAlert('Invalid email or password');return;}
+// Login
+function login() {
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const password = document.getElementById('loginPassword').value.trim();
+  const user = users.find(u => u.email === email && u.password === password);
+  if (!user) { showAlert('Invalid email or password'); return; }
 
-  currentUser=user;
-  currentUser.lastActive=Date.now();
-  localStorage.setItem('currentUser',JSON.stringify(currentUser));
-  localStorage.setItem('users',JSON.stringify(users));
+  currentUser = user;
+  currentUser.lastActive = Date.now(); 
+  localStorage.setItem('currentUser', JSON.stringify(currentUser));
+  localStorage.setItem('users', JSON.stringify(users));
   displayMemberArea();
 }
 
-// LOGOUT
-function logout(){
-  currentUser=null;
+// Logout
+function logout() {
+  currentUser = null;
   localStorage.removeItem('currentUser');
   showLogin();
-  showAlert('Logged out','success');
+  showAlert('Logged out', 'success');
 }
 
-// DISPLAY MEMBER AREA
-function displayMemberArea(){
-  if(!currentUser)return;
-  document.getElementById('userEmail').textContent=currentUser.email;
-  document.getElementById('userRole').textContent=(currentUser.role==='owner')?'Admin':'Member';
+// Display member area
+function displayMemberArea() {
+  if (!currentUser) return;
+  document.getElementById('userEmail').textContent = currentUser.email;
+  document.getElementById('userRole').textContent = currentUser.role === 'admin' ? 'Admin' : 'Member';
   document.getElementById('signupDiv').classList.add('hidden');
   document.getElementById('loginDiv').classList.add('hidden');
   document.getElementById('membersDiv').classList.remove('hidden');
   updateOnlineUsers();
-
-  if(currentUser.role==='owner'){
-    document.getElementById('adminPanel').classList.remove('hidden');
-    updateAdminPanel();
-  }
 }
 
-// UPDATE ONLINE USERS
-function updateOnlineUsers(){
-  const now=Date.now();
-  const onlineUsers=users.filter(u=>now-u.lastActive<ONLINE_TIMEOUT);
-  document.getElementById('onlineUsers').textContent=
-    onlineUsers.length?"Online: "+onlineUsers.map(u=>u.email).join(", "):"No users online";
-}
+// Online users
+function updateOnlineUsers() {
+  const now = Date.now();
+  const onlineUsers = users.map(u => {
+    const isOnline = now - u.lastActive < ONLINE_TIMEOUT;
+    return { email: u.email, online: isOnline, signedUpAt: u.signedUpAt };
+  });
 
-// ADMIN PANEL
-function updateAdminPanel(){
-  const tbody=document.getElementById('usersTable');
-  tbody.innerHTML='';
-  const now=Date.now();
-  users.forEach(u=>{
-    const tr=document.createElement('tr');
-    const emailTd=document.createElement('td'); emailTd.textContent=u.email;
-    const timeTd=document.createElement('td'); timeTd.textContent=new Date(u.signedUpAt).toLocaleString();
-    const statusTd=document.createElement('td');
-    const isOnline=(now-u.lastActive<ONLINE_TIMEOUT);
-    const statusBtn=document.createElement('button');
-    statusBtn.textContent=isOnline?'Online':'Offline';
-    statusBtn.style.background=isOnline?'#4caf50':'#ff4d4d';
-    statusBtn.style.color='#000';
-    statusTd.appendChild(statusBtn);
-    tr.appendChild(emailTd);
-    tr.appendChild(timeTd);
-    tr.appendChild(statusTd);
-    tbody.appendChild(tr);
+  const onlineDiv = document.getElementById('onlineUsers');
+  onlineDiv.innerHTML = '';
+  onlineUsers.forEach(u => {
+    const btnColor = u.online ? 'green' : 'red';
+    const date = new Date(u.signedUpAt).toLocaleString();
+    const span = document.createElement('div');
+    span.style.margin = '5px 0';
+    span.innerHTML = `<strong>${u.email}</strong> (Signed up: ${date}) 
+                      <button style="width:12px;height:12px;border-radius:50%;border:none;background:${btnColor};margin-left:10px;"></button>`;
+    onlineDiv.appendChild(span);
   });
 }
 
-// GO TO WEBSITE
-function goToWebsite(){window.location.href='index.html';}
+// Go to main website
+function goToWebsite() { window.location.href='index.html'; }
 
-// AUTO-LOGIN
-window.onload=()=>{
-  if(currentUser) displayMemberArea(); else showSignup();
+// Auto-login
+window.onload = () => { 
+  if(currentUser) displayMemberArea();
+  else showSignup();
 };
 
-// UPDATE ACTIVITY EVERY 30s
+// Update activity every 30 seconds
 setInterval(()=>{
   if(currentUser){
-    currentUser.lastActive=Date.now();
-    localStorage.setItem('currentUser',JSON.stringify(currentUser));
-    localStorage.setItem('users',JSON.stringify(users));
+    currentUser.lastActive = Date.now();
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    localStorage.setItem('users', JSON.stringify(users));
     updateOnlineUsers();
-    if(currentUser.role==='owner') updateAdminPanel();
   }
-},30000);
+}, 30000);
 </script>
+
 </body>
 </html>
