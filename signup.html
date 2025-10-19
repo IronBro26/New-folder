@@ -3,78 +3,111 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel - IronBro26</title>
+<title>IronBro26 - Signup/Login</title>
 <style>
-body { background:#0a0a0a; color:#fff; font-family:Arial,sans-serif; padding:20px; }
-h1 { color:#ff1a1a; text-shadow:0 0 10px #ff3333; }
-table { width:100%; border-collapse:collapse; margin-top:20px; }
-th, td { padding:10px; border:1px solid #ff1a1a; text-align:left; }
-th { background:#ff1a1a; color:#000; }
-td { background:#222; }
-.status { width:20px; height:20px; border-radius:50%; display:inline-block; }
+body { font-family: Arial,sans-serif; background:#111; color:#fff; padding:20px; }
+form { margin-bottom:20px; }
+input, button { padding:10px; margin:5px 0; width:100%; }
+button { background:#ff1a1a; color:#fff; border:none; cursor:pointer; }
+h2 { color:#ff1a1a; }
 </style>
 </head>
 <body>
 
-<h1>🛡 IronBro26 Admin Panel</h1>
-<p>Only admin can access this panel</p>
+<h1>IronBro26 - Signup/Login</h1>
 
-<table id="usersTable">
-  <tr>
-    <th>Email</th>
-    <th>Signup Time</th>
-    <th>Status</th>
-  </tr>
-</table>
+<!-- Signup Form -->
+<h2>Sign Up</h2>
+<form id="signupForm">
+    <input type="email" id="signupEmail" placeholder="Email" required />
+    <input type="password" id="signupPassword" placeholder="Password" required />
+    <button type="submit">Sign Up</button>
+</form>
+
+<!-- Login Form -->
+<h2>Login</h2>
+<form id="loginForm">
+    <input type="email" id="loginEmail" placeholder="Email" required />
+    <input type="password" id="loginPassword" placeholder="Password" required />
+    <button type="submit">Login</button>
+</form>
 
 <script>
-const ADMIN_EMAIL = "krfuchs11@icloud.com";
-const ONLINE_TIMEOUT = 5*60*1000; // 5 minutes
-
-let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-if(!currentUser || currentUser.email !== ADMIN_EMAIL){
-    alert("Access denied! Only admin can view this panel.");
-    document.body.innerHTML = "<h1>Access Denied</h1>";
+// COMMON FUNCTION TO GET USERS
+function getUsers() {
+    return JSON.parse(localStorage.getItem('users') || '[]');
 }
 
-// Load users
-function loadUsers(){
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const table = document.getElementById('usersTable');
-    table.innerHTML = `<tr>
-        <th>Email</th>
-        <th>Signup Time</th>
-        <th>Status</th>
-    </tr>`;
-    const now = Date.now();
+// SIGNUP
+document.getElementById('signupForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const email = document.getElementById('signupEmail').value.trim();
+    const password = document.getElementById('signupPassword').value.trim();
 
-    users.forEach(user => {
-        const row = table.insertRow();
-        row.insertCell(0).innerText = user.email;
-        row.insertCell(1).innerText = new Date(user.signupTime).toLocaleString();
-
-        const statusCell = row.insertCell(2);
-        const statusDot = document.createElement('span');
-        statusDot.className = 'status';
-        const lastActive = user.lastActive || new Date(user.signupTime).getTime();
-        const isOnline = now - lastActive < ONLINE_TIMEOUT;
-        statusDot.style.background = isOnline ? 'green' : 'red';
-        statusCell.appendChild(statusDot);
-    });
-}
-
-// Refresh every 30 seconds
-setInterval(loadUsers, 30000);
-
-// Listen for localStorage changes
-window.addEventListener('storage', function(e){
-    if(e.key === 'users' || e.key === 'currentUser'){
-        loadUsers();
+    if(!email || !password){
+        alert("Enter both email and password.");
+        return;
     }
+
+    let users = getUsers();
+
+    if(users.some(u => u.email === email)){
+        alert("Email already registered.");
+        return;
+    }
+
+    const now = Date.now();
+    const newUser = {
+        email: email,
+        password: password,
+        signupTime: new Date(now).toISOString(),
+        lastActive: now
+    };
+
+    users.push(newUser);
+    localStorage.setItem('users', JSON.stringify(users));
+    localStorage.setItem('currentUser', JSON.stringify(newUser));
+
+    alert("Signup successful! You can now log in.");
+    // Optionally clear signup form
+    document.getElementById('signupForm').reset();
 });
 
-// Initial load
-loadUsers();
+// LOGIN
+document.getElementById('loginForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value.trim();
+
+    let users = getUsers();
+    let user = users.find(u => u.email === email && u.password === password);
+
+    if(!user){
+        alert("Invalid credentials!");
+        return;
+    }
+
+    // Update lastActive
+    user.lastActive = Date.now();
+    localStorage.setItem('currentUser', JSON.stringify(user));
+
+    // Save updated user in users array
+    const index = users.findIndex(u => u.email === email);
+    users[index] = user;
+    localStorage.setItem('users', JSON.stringify(users));
+
+    alert("Login successful!");
+
+    if(email === "krfuchs11@icloud.com"){
+        window.location.href = "admin.html";
+    } else {
+        alert("You are logged in, but not admin.");
+        // Redirect to a normal user page if you have one
+        // window.location.href = "userpage.html";
+    }
+
+    document.getElementById('loginForm').reset();
+});
 </script>
 
 </body>
