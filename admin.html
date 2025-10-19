@@ -5,102 +5,75 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Panel - IronBro26</title>
 <style>
-body { background:#0d0d0d; color:#fff; font-family:Arial,sans-serif; margin:0; padding:20px; }
-h1 { color:#ff1a1a; text-shadow:0 0 10px #ff3333, 0 0 25px #ff6666; }
-table { width:100%; border-collapse:collapse; margin-top:10px; }
-th, td { border:1px solid #ff1a1a; padding:10px; text-align:left; }
+body { background:#0a0a0a; color:#fff; font-family:Arial,sans-serif; padding:20px; }
+h1 { color:#ff1a1a; text-shadow:0 0 10px #ff3333; }
+table { width:100%; border-collapse:collapse; margin-top:20px; }
+th, td { padding:10px; border:1px solid #ff1a1a; text-align:left; }
 th { background:#ff1a1a; color:#000; }
 td { background:#222; }
-.status-btn { padding:5px 10px; border:none; border-radius:6px; font-weight:bold; cursor:default; color:#fff; }
-.status-online { background:#4caf50; }
-.status-offline { background:#ff4d4d; }
+.status { width:20px; height:20px; border-radius:50%; display:inline-block; }
 </style>
 </head>
 <body>
 
-<h1>🛡 Admin Panel</h1>
+<h1>🛡 IronBro26 Admin Panel</h1>
+<p>Only admin can access this panel</p>
 
-<div id="adminContent" style="display:none;">
-  <h2>Users & Online Status</h2>
-  <table id="usersTable">
-    <tr>
-      <th>Email</th>
-      <th>Signed Up At</th>
-      <th>Status</th>
-    </tr>
-  </table>
-</div>
+<table id="usersTable">
+  <tr>
+    <th>Email</th>
+    <th>Signup Time</th>
+    <th>Status</th>
+  </tr>
+</table>
 
 <script>
-// ---------- CONFIG ----------
-const OWNER_EMAIL = "krfuchs11@icloud.com";
-const ONLINE_TIMEOUT = 5 * 60 * 1000; // 5 minutes
+const ADMIN_EMAIL = "krfuchs11@icloud.com";
+const ONLINE_TIMEOUT = 5*60*1000; // 5 minutes
 
-// ---------- ACCESS CHECK ----------
-const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-if(!currentUser || currentUser.email.toLowerCase() !== OWNER_EMAIL.toLowerCase()){
-    alert("Access Denied! Only the admin can view this panel.");
-    document.body.innerHTML = "<h1 style='color:red;text-align:center;margin-top:50px'>ACCESS DENIED</h1>";
-} else {
-    document.getElementById('adminContent').style.display = 'block';
-    loadUsers();
-    setInterval(updateOnlineStatus, 30000); // update every 30s
+// Verify admin
+let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+if(!currentUser || currentUser.email !== ADMIN_EMAIL){
+    alert("Access denied! Only admin can view this panel.");
+    document.body.innerHTML = "<h1>Access Denied</h1>";
 }
 
-// ---------- LOAD USERS ----------
+// Load users
 function loadUsers(){
-    const usersTable = document.getElementById('usersTable');
-    usersTable.innerHTML = `
-        <tr>
-            <th>Email</th>
-            <th>Signed Up At</th>
-            <th>Status</th>
-        </tr>
-    `;
-
-    let users = JSON.parse(localStorage.getItem('users') || '[]');
-
-    users.forEach(user => {
-        let row = usersTable.insertRow();
-        let emailCell = row.insertCell(0);
-        let timeCell = row.insertCell(1);
-        let statusCell = row.insertCell(2);
-
-        emailCell.innerText = user.email;
-        timeCell.innerText = user.lastActive ? new Date(user.lastActive).toLocaleString() : 'N/A';
-
-        let btn = document.createElement('button');
-        btn.className = 'status-btn';
-        btn.innerText = 'Offline';
-        btn.classList.add('status-offline');
-        statusCell.appendChild(btn);
-    });
-
-    updateOnlineStatus();
-}
-
-// ---------- ONLINE STATUS ----------
-function updateOnlineStatus(){
-    let users = JSON.parse(localStorage.getItem('users') || '[]');
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const table = document.getElementById('usersTable');
+    table.innerHTML = `<tr>
+        <th>Email</th>
+        <th>Signup Time</th>
+        <th>Status</th>
+    </tr>`; // reset table
     const now = Date.now();
 
-    const rows = document.getElementById('usersTable').rows;
-    for(let i=1; i<rows.length; i++){ // skip header row
-        const email = rows[i].cells[0].innerText;
-        const user = users.find(u => u.email === email);
-
-        const btn = rows[i].cells[2].querySelector('button');
-        if(user && user.lastActive && now - user.lastActive < ONLINE_TIMEOUT){
-            btn.innerText = 'Online';
-            btn.classList.remove('status-offline');
-            btn.classList.add('status-online');
-        } else {
-            btn.innerText = 'Offline';
-            btn.classList.remove('status-online');
-            btn.classList.add('status-offline');
-        }
-    }
+    users.forEach(user => {
+        const row = table.insertRow();
+        row.insertCell(0).innerText = user.email;
+        row.insertCell(1).innerText = user.signupTime || new Date(user.lastActive).toLocaleString();
+        const statusCell = row.insertCell(2);
+        const statusDot = document.createElement('span');
+        statusDot.className = 'status';
+        const isOnline = now - (user.lastActive || 0) < ONLINE_TIMEOUT;
+        statusDot.style.background = isOnline ? 'green' : 'red';
+        statusCell.appendChild(statusDot);
+    });
 }
+
+// Update online status every 30s
+setInterval(() => loadUsers(), 30000);
+
+// Listen for localStorage changes (signup/login from other tabs)
+window.addEventListener('storage', function(e){
+    if(e.key === 'users' || e.key === 'currentUser'){
+        loadUsers();
+    }
+});
+
+// Initial load
+loadUsers();
 </script>
 
 </body>
