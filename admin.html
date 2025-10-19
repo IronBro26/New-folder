@@ -36,6 +36,8 @@ let currentUser = JSON.parse(localStorage.getItem('currentUser'));
 if(!currentUser || currentUser.email !== ADMIN_EMAIL){
     alert("Access denied! Only admin can view this panel.");
     document.body.innerHTML = "<h1>Access Denied</h1>";
+} else {
+    loadUsers();
 }
 
 // Load users
@@ -52,11 +54,18 @@ function loadUsers(){
     users.forEach(user => {
         const row = table.insertRow();
         row.insertCell(0).innerText = user.email;
-        row.insertCell(1).innerText = user.signupTime || new Date(user.lastActive).toLocaleString();
+
+        // Ensure signupTime exists
+        if(!user.signupTime) user.signupTime = new Date().toISOString();
+        row.insertCell(1).innerText = new Date(user.signupTime).toLocaleString();
+
         const statusCell = row.insertCell(2);
         const statusDot = document.createElement('span');
         statusDot.className = 'status';
-        const isOnline = now - (user.lastActive || 0) < ONLINE_TIMEOUT;
+
+        // If lastActive is missing, set it to signupTime
+        const lastActive = user.lastActive ? user.lastActive : new Date(user.signupTime).getTime();
+        const isOnline = now - lastActive < ONLINE_TIMEOUT;
         statusDot.style.background = isOnline ? 'green' : 'red';
         statusCell.appendChild(statusDot);
     });
@@ -71,9 +80,6 @@ window.addEventListener('storage', function(e){
         loadUsers();
     }
 });
-
-// Initial load
-loadUsers();
 </script>
 
 </body>
