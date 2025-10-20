@@ -1,51 +1,119 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>NEON SIGNUP PORTAL — ironbro26fanclub</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Audiowide&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#000;--neon:#ff0033;--neon-green:#00ff88;}
-body{margin:0;font-family:'Orbitron',sans-serif;background:var(--bg);color:var(--neon);}
-h1{font-family:'Audiowide',sans-serif;font-size:36px;text-align:center;text-shadow:0 0 12px rgba(255,0,51,0.9),0 0 40px rgba(255,0,51,0.14);animation:pulse 2s infinite;}
-@keyframes pulse{0%{text-shadow:0 0 6px rgba(255,0,51,0.5);}50%{text-shadow:0 0 22px rgba(255,0,51,0.95);}100%{text-shadow:0 0 6px rgba(255,0,51,0.5);}}
-.container{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;}
-.form{display:flex;flex-direction:column;gap:12px;width:320px;margin-top:20px;}
-.input{padding:10px;border-radius:10px;border:1px solid rgba(255,0,51,0.2);background:transparent;color:#fff;outline:none;}
-.input:focus{box-shadow:0 0 20px rgba(255,0,51,0.4);}
-.btn{padding:12px;border-radius:10px;border:1px solid rgba(255,0,51,0.2);cursor:pointer;background:linear-gradient(180deg, rgba(255,0,51,0.06), rgba(255,0,51,0.01));color:#fff;font-weight:700;}
-.btn:hover{box-shadow:0 0 30px rgba(255,0,51,0.5);}
-.notice{margin-top:10px;padding:10px;border-radius:8px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,0,51,0.06);color:#fff;display:none;text-align:center;}
-.tabs{display:flex;gap:10px;justify-content:center;margin-top:20px;}
-.tab{cursor:pointer;padding:8px 14px;border-radius:8px;border:1px solid rgba(255,0,51,0.2);}
-.tab.active{box-shadow:0 0 20px rgba(255,0,51,0.5);}
+:root{
+  --bg:#000;
+  --neon:#ff0033;
+  --neon-weak:rgba(255,0,51,0.08);
+  --neon-green:#00ff88;
+}
+*{box-sizing:border-box}
+html,body{height:100%; margin:0; background:var(--bg); color:var(--neon); font-family:'Orbitron',sans-serif}
+canvas#sparks{position:fixed; inset:0; z-index:0; pointer-events:none}
+.container{position:relative; z-index:1; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px}
+.card{
+  width:980px; max-width:96%; display:grid; grid-template-columns:1fr 380px; gap:20px;
+  background:linear-gradient(180deg, rgba(255,0,51,0.02), rgba(0,0,0,0.5));
+  border:1px solid var(--neon-weak); border-radius:14px; padding:22px; box-shadow:0 30px 120px rgba(255,0,51,0.03);
+  backdrop-filter: blur(6px);
+}
+.brand{padding:8px 6px 0 6px;}
+.title{
+  font-family:'Audiowide','Orbitron'; font-size:34px; letter-spacing:2px; margin:6px 0;
+  text-shadow: 0 0 12px rgba(255,0,51,0.9), 0 0 40px rgba(255,0,51,0.14);
+  animation: pulse 2s infinite ease-in-out;
+}
+@keyframes pulse{
+  0%{text-shadow:0 0 6px rgba(255,0,51,0.5)}
+  50%{text-shadow:0 0 22px rgba(255,0,51,0.95)}
+  100%{text-shadow:0 0 6px rgba(255,0,51,0.5)}
+}
+.desc{color:rgba(255,255,255,0.8); font-size:13px; margin-bottom:12px}
+.tabs{display:flex; gap:12px; margin:14px 0}
+.tab{
+  padding:10px 16px; border-radius:10px; cursor:pointer; user-select:none;
+  border:1px solid rgba(255,0,51,0.06); background:linear-gradient(180deg, rgba(255,0,51,0.02), transparent);
+  transition: all .28s ease;
+}
+.tab.active{ transform:translateY(-3px); box-shadow:0 10px 40px rgba(255,0,51,0.06); border-color:rgba(255,0,51,0.3)}
+.side{
+  background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(255,0,51,0.01)); padding:18px; border-radius:12px; border:1px solid rgba(255,0,51,0.06)
+}
+form{display:flex; flex-direction:column; gap:10px}
+label{font-size:13px; color:rgba(255,255,255,0.85)}
+.input{
+  background:transparent; border:1px solid rgba(255,0,51,0.16); padding:12px 14px; border-radius:10px; color:#fff; outline:none; font-size:14px;
+  transition: box-shadow .18s, transform .12s;
+}
+.input:focus{ box-shadow:0 0 34px rgba(255,0,51,0.14); transform:translateY(-2px); border-color:rgba(255,0,51,0.32) }
+.btn{
+  padding:12px 14px; border-radius:10px; border:1px solid rgba(255,0,51,0.12); cursor:pointer; font-weight:700; color:white; background:linear-gradient(180deg, rgba(255,0,51,0.06), rgba(255,0,51,0.01));
+  transition: all .24s ease;
+}
+.btn:hover{ transform:translateY(-4px); box-shadow:0 30px 80px rgba(255,0,51,0.08) }
+.small{font-size:13px; color:rgba(255,255,255,0.75)}
+.notice{padding:10px; border-radius:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,0,51,0.06); color:rgba(255,255,255,0.9); margin-top:8px}
+@media (max-width:920px){
+  .card{grid-template-columns:1fr; padding:14px}
+  .title{font-size:26px}
+}
 </style>
 </head>
 <body>
-<h1>NEON SIGNUP PORTAL</h1>
-<div class="tabs">
-  <div class="tab active" data-tab="signup">SIGN UP</div>
-  <div class="tab" data-tab="login">LOGIN</div>
-</div>
+<canvas id="sparks"></canvas>
 
 <div class="container">
-  <div id="signupForm" class="form">
-    <input type="email" id="sEmail" class="input" placeholder="Email" required>
-    <input type="password" id="sPass" class="input" placeholder="Passcode" required>
-    <button class="btn" id="signupBtn">Create Account</button>
-  </div>
+  <div class="card">
+    <div class="brand">
+      <div class="title">NEON SIGNUP PORTAL</div>
+      <div class="desc">Join the ironbro26 fanclub. Accounts sync across devices via Firebase Firestore.</div>
 
-  <div id="loginForm" class="form" style="display:none;">
-    <input type="email" id="lEmail" class="input" placeholder="Email" required>
-    <input type="password" id="lPass" class="input" placeholder="Passcode" required>
-    <button class="btn" id="loginBtn">Log In</button>
-    <button class="btn" id="adminBtn" style="display:none;margin-top:10px;" onclick="goAdmin()">Access Admin Panel</button>
-  </div>
+      <div class="tabs">
+        <div class="tab active" data-tab="signup">SIGN UP</div>
+        <div class="tab" data-tab="login">LOGIN</div>
+      </div>
 
-  <div class="notice" id="notice"></div>
+      <div id="msg" class="notice" style="display:none;"></div>
+
+      <div class="footer">
+        <div class="small">Owner account: <strong>Krfuchs@icloud.com</strong></div>
+      </div>
+    </div>
+
+    <div class="side">
+      <!-- SIGNUP -->
+      <form id="signup-form" class="fade" autocomplete="off">
+        <label for="s-email">Email</label>
+        <input id="s-email" class="input" type="email" required placeholder="you@domain.com" autocomplete="email">
+        <label for="s-pass">Passcode</label>
+        <input id="s-pass" class="input" type="password" required placeholder="Enter passcode" autocomplete="new-password">
+        <div style="display:flex; gap:10px; margin-top:8px; align-items:center">
+          <button class="btn" type="submit">Create Account</button>
+          <div class="small">After signup you'll be redirected to Login</div>
+        </div>
+      </form>
+
+      <!-- LOGIN -->
+      <form id="login-form" class="fade" style="display:none" autocomplete="off">
+        <label for="l-email">Email</label>
+        <input id="l-email" class="input" type="email" required placeholder="you@domain.com" autocomplete="username">
+        <label for="l-pass">Passcode</label>
+        <input id="l-pass" class="input" type="password" required placeholder="Enter passcode" autocomplete="current-password">
+        <div style="display:flex; gap:10px; margin-top:8px; align-items:center">
+          <button class="btn" type="submit">Log In</button>
+          <a class="btn" id="go-site" href="https://ironbro26fanclub.co.za/index.html" target="_blank">Go to Website</a>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
+<!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
@@ -66,66 +134,14 @@ const db = getFirestore(app);
 const OWNER_EMAIL="Krfuchs@icloud.com";
 const OWNER_PASS="Krf11@2011";
 
-const notice=document.getElementById('notice');
-const signupFormDiv=document.getElementById('signupForm');
-const loginFormDiv=document.getElementById('loginForm');
-const signupBtn=document.getElementById('signupBtn');
-const loginBtn=document.getElementById('loginBtn');
-const adminBtn=document.getElementById('adminBtn');
-
+// Tabs
 const tabs=document.querySelectorAll('.tab');
-tabs.forEach(tab=>tab.addEventListener('click',()=>{
-  tabs.forEach(t=>t.classList.remove('active'));
-  tab.classList.add('active');
-  if(tab.dataset.tab==="signup"){signupFormDiv.style.display="flex"; loginFormDiv.style.display="none";}
-  else{signupFormDiv.style.display="none"; loginFormDiv.style.display="flex";}
-}));
+const signupForm=document.getElementById('signup-form');
+const loginForm=document.getElementById('login-form');
+const msg=document.getElementById('msg');
 
-function showNotice(msg){notice.style.display="block"; notice.textContent=msg; setTimeout(()=>{notice.style.display="none";},2000);}
-
-// SIGNUP
-signupBtn.addEventListener('click',async()=>{
-  const email=document.getElementById('sEmail').value.trim();
-  const pass=document.getElementById('sPass').value.trim();
-  if(!email || !pass){showNotice("Enter email and passcode"); return;}
-
-  // Check if email exists
-  const q=query(collection(db,'users'), where("email","==",email));
-  const existing=await getDocs(q);
-  if(!existing.empty){showNotice("Email already registered"); return;}
-
-  await addDoc(collection(db,'users'),{
-    email, passcode:pass, signupTime:new Date().toISOString(), lastOnline:new Date().toISOString(), online:true
-  });
-  showNotice("Account created! Please login.");
-  document.getElementById('sEmail').value=""; document.getElementById('sPass').value="";
-  tabs[1].click(); // switch to login
-});
-
-// LOGIN
-loginBtn.addEventListener('click',async()=>{
-  const email=document.getElementById('lEmail').value.trim();
-  const pass=document.getElementById('lPass').value.trim();
-  if(!email || !pass){showNotice("Enter email and passcode"); return;}
-
-  const q=query(collection(db,'users'), where("email","==",email), where("passcode","==",pass));
-  const res=await getDocs(q);
-  if(res.empty){showNotice("Invalid credentials"); return;}
-
-  const userDoc=res.docs[0];
-  await updateDoc(doc(db,'users',userDoc.id),{online:true,lastOnline:new Date().toISOString()});
-  if(email===OWNER_EMAIL && pass===OWNER_PASS){
-    showNotice("Owner logged in");
-    adminBtn.style.display="block";
-  }else{
-    showNotice("Member logged in");
-    adminBtn.style.display="none";
-  }
-
-  document.getElementById('lEmail').value=""; document.getElementById('lPass').value="";
-});
-
-function goAdmin(){window.location.href="admin.html";}
-</script>
-</body>
-</html>
+tabs.forEach(t=>{
+  t.addEventListener('click', ()=>{
+    tabs.forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    if(t.dataset.tab==="signup"){ signupForm.style.display="flex"; login
