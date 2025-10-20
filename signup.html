@@ -72,7 +72,7 @@ label{font-size:13px; color:rgba(255,255,255,0.85)}
   <div class="card">
     <div class="brand">
       <div class="title">NEON SIGNUP PORTAL</div>
-      <div class="desc">Join the ironbro26 fanclub. Accounts sync across devices via Firebase Firestore.</div>
+      <div class="desc">Join the ironbro26 fanclub. Accounts sync across devices via JSONBin.</div>
 
       <div class="tabs">
         <div class="tab active" data-tab="signup">SIGN UP</div>
@@ -114,32 +114,42 @@ label{font-size:13px; color:rgba(255,255,255,0.85)}
   </div>
 </div>
 
-<!-- Firebase -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, query, where, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCZ-kcVeGKjiQh4wgOe5yp-S9zxS8n3oZY",
-  authDomain: "ironbro26-708c4.firebaseapp.com",
-  projectId: "ironbro26-708c4",
-  storageBucket: "ironbro26-708c4.firebasestorage.app",
-  messagingSenderId: "47778309159",
-  appId: "1:47778309159:web:0caea70db87468ca959a02",
-  measurementId: "G-RWTEX313PX"
-};
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
+<script>
+const JSONBIN_ID = "YOUR_BIN_ID_HERE";  // replace with your bin ID
+const JSONBIN_KEY = "YOUR_API_KEY_HERE"; // replace with your API key
 const OWNER_EMAIL = "Krfuchs@icloud.com";
 const OWNER_PASS = "Krf11@2011";
 
-const signupForm = document.getElementById('signup-form');
-const loginForm = document.getElementById('login-form');
-const msg = document.getElementById('msg');
-const tabs = document.querySelectorAll('.tab');
+// Helpers
+function nowFormatted(){ 
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+async function loadUsers(){
+  const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
+    headers:{'X-Master-Key':JSONBIN_KEY}
+  });
+  const data = await res.json();
+  return data.record.users || [];
+}
+async function saveUsers(users){
+  await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}`, {
+    method:'PUT',
+    headers:{
+      'Content-Type':'application/json',
+      'X-Master-Key':JSONBIN_KEY,
+      'X-Bin-Versioning':'false'
+    },
+    body:JSON.stringify({users})
+  });
+}
 
-// Tabs toggle
+// Tabs
+const tabs=document.querySelectorAll('.tab');
+const signupForm=document.getElementById('signup-form');
+const loginForm=document.getElementById('login-form');
+const msg=document.getElementById('msg');
+
 tabs.forEach(t=>{
   t.addEventListener('click', ()=>{
     tabs.forEach(x=>x.classList.remove('active'));
@@ -154,24 +164,14 @@ signupForm.addEventListener('submit', async e=>{
   e.preventDefault();
   const email = document.getElementById('s-email').value.trim();
   const pass = document.getElementById('s-pass').value.trim();
-  if(!email || !pass) return;
+  if(!email||!pass) return;
 
-  // Check if email exists
-  const usersCol = collection(db,'users');
-  const q = query(usersCol, where("email","==",email));
-  const snapshot = await getDocs(q);
-  if(!snapshot.empty){
+  let users = await loadUsers();
+  if(users.find(u=>u.email===email)){
     msg.style.display="block"; msg.textContent="Email already registered"; return;
   }
-
-  await addDoc(usersCol,{
-    email: email,
-    passcode: pass,
-    signupTime: new Date().toISOString(),
-    lastOnline: new Date().toISOString(),
-    online: true
-  });
-
+  users.push({email, passcode:pass, signupTime:nowFormatted(), lastOnline:nowFormatted(), online:true});
+  await saveUsers(users);
   msg.style.display="block"; msg.textContent="Account created. Redirecting to Login...";
   setTimeout(()=>{ tabs[1].click(); msg.style.display="none"; signupForm.reset(); },1200);
 });
@@ -181,17 +181,15 @@ loginForm.addEventListener('submit', async e=>{
   e.preventDefault();
   const email = document.getElementById('l-email').value.trim();
   const pass = document.getElementById('l-pass').value.trim();
-  if(!email || !pass) return;
+  if(!email||!pass) return;
 
-  const usersCol = collection(db,'users');
-  const q = query(usersCol, where("email","==",email), where("passcode","==",pass));
-  const snapshot = await getDocs(q);
-  if(snapshot.empty){ msg.style.display="block"; msg.textContent="Invalid credentials"; return; }
+  const users = await loadUsers();
+  const user = users.find(u=>u.email===email && u.passcode===pass);
+  if(!user){ msg.style.display="block"; msg.textContent="Invalid credentials"; return; }
 
-  let userDoc;
-  snapshot.forEach(docSnap => { userDoc = docSnap; });
-
-  await updateDoc(userDoc.ref,{ lastOnline:new Date().toISOString(), online:true });
+  user.online=true;
+  user.lastOnline=nowFormatted();
+  await saveUsers(users);
 
   if(email===OWNER_EMAIL && pass===OWNER_PASS){
     msg.style.display="block"; msg.textContent="Owner logged in. Access Admin Panel available.";
@@ -200,20 +198,3 @@ loginForm.addEventListener('submit', async e=>{
     msg.style.display="block"; msg.textContent="Member logged in. Admin Panel hidden.";
     localStorage.setItem('currentUserRole','Member');
   }
-
-  loginForm.reset();
-  setTimeout(()=>{ msg.style.display="none"; },1200);
-});
-</script>
-
-<script>
-// Sparks background
-const canvas=document.getElementById('sparks'); const ctx=canvas.getContext('2d');
-canvas.width=innerWidth; canvas.height=innerHeight;
-const sparks=[]; for(let i=0;i<120;i++){ sparks.push({x:Math.random()*innerWidth, y:Math.random()*innerHeight, r:Math.random()*2+1, dx:(Math.random()-0.5)*0.5, dy:(Math.random()-0.5)*0.5})}
-function drawS(){ctx.fillStyle="#000"; ctx.fillRect(0,0,canvas.width,canvas.height); sparks.forEach(p=>{ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle='rgba(255,0,51,0.5)'; ctx.fill(); p.x+=p.dx; p.y+=p.dy; if(p.x<0||p.x>canvas.width)p.dx*=-1;if(p.y<0||p.y>canvas.height)p.dy*=-1}); requestAnimationFrame(drawS);}
-drawS(); window.addEventListener('resize',()=>{canvas.width=innerWidth; canvas.height=innerHeight;});
-</script>
-
-</body>
-</html>
