@@ -1,38 +1,112 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Sign Up / Login</title>
+  <meta charset="UTF-8">
+  <title>IronBro26 | Sign Up / Login</title>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
+
   <style>
     body {
-      font-family: Arial, sans-serif;
+      background-color: #000;
+      font-family: 'Orbitron', sans-serif;
+      color: #ff1b1b;
       text-align: center;
-      margin-top: 80px;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      overflow: hidden;
     }
+
+    h2 {
+      font-size: 2.5em;
+      text-shadow: 0 0 10px #ff1b1b, 0 0 20px #ff0000, 0 0 40px #ff1b1b;
+      margin-bottom: 30px;
+      animation: pulse 2s infinite;
+    }
+
     input {
-      margin: 5px;
-      padding: 8px;
+      background: #111;
+      border: 2px solid #ff1b1b;
+      border-radius: 8px;
+      padding: 10px;
+      color: #ff1b1b;
+      font-size: 1.1em;
+      width: 250px;
+      outline: none;
+      margin: 10px;
+      box-shadow: 0 0 10px #ff0000;
+      transition: 0.3s;
     }
+
+    input:focus {
+      box-shadow: 0 0 20px #ff1b1b, 0 0 40px #ff0000;
+    }
+
     button {
-      padding: 8px 15px;
-      margin: 5px;
+      background: transparent;
+      border: 2px solid #ff1b1b;
+      border-radius: 10px;
+      color: #ff1b1b;
+      font-size: 1.1em;
+      padding: 10px 20px;
       cursor: pointer;
+      margin: 8px;
+      transition: 0.3s;
+      text-transform: uppercase;
+      box-shadow: 0 0 10px #ff0000;
     }
+
+    button:hover {
+      background-color: #ff1b1b;
+      color: black;
+      box-shadow: 0 0 20px #ff1b1b, 0 0 40px #ff0000;
+    }
+
     #userSection {
       display: none;
+      text-shadow: 0 0 10px #ff0000;
+    }
+
+    #welcomeMessage {
+      font-size: 1.3em;
+      margin-bottom: 20px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { text-shadow: 0 0 10px #ff1b1b, 0 0 20px #ff0000; }
+      50% { text-shadow: 0 0 30px #ff0000, 0 0 60px #ff1b1b; }
+    }
+
+    .neon-line {
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #ff0000, transparent);
+      animation: scan 3s linear infinite;
+      position: absolute;
+      top: 0;
+    }
+
+    @keyframes scan {
+      0% { top: 0; }
+      100% { top: 100%; }
     }
   </style>
 </head>
 <body>
-  <h2>Sign Up / Login</h2>
+  <div class="neon-line"></div>
+  <h2>IronBro26 Secure Login</h2>
 
   <!-- Login/SignUp Form -->
   <div id="authSection">
-    <input type="email" id="email" placeholder="Email">
+    <input type="email" id="email" placeholder="Enter Email">
     <br>
-    <input type="password" id="password" placeholder="Password">
+    <input type="password" id="password" placeholder="Enter Password">
     <br>
     <button onclick="signUp()">Sign Up</button>
     <button onclick="login()">Login</button>
@@ -46,7 +120,7 @@
   </div>
 
   <script>
-    // ✅ Your Firebase configuration
+    // 🚀 Firebase config (yours)
     const firebaseConfig = {
       apiKey: "AIzaSyDTw5KYBkamqhvZsCVB9pqm2VTnEaRIdeM",
       authDomain: "ironbro26-ca6e8.firebaseapp.com",
@@ -57,7 +131,6 @@
       measurementId: "G-17C00FNW0B"
     };
 
-    // ✅ Initialize Firebase (no imports needed)
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
@@ -78,7 +151,7 @@
           lastLogin: new Date().toLocaleString(),
           online: true
         });
-        alert('Signed up successfully!');
+        alert('🎉 Signed up successfully!');
       } catch (err) {
         alert(err.message);
       }
@@ -93,7 +166,7 @@
           lastLogin: new Date().toLocaleString(),
           online: true
         });
-        alert('Logged in!');
+        alert('✅ Logged in successfully!');
       } catch (err) {
         alert(err.message);
       }
@@ -104,18 +177,17 @@
       if (user) {
         await db.collection('users').doc(user.uid).update({ online: false });
         await auth.signOut();
-        alert('Logged out successfully!');
+        alert('👋 Logged out successfully!');
       }
     }
 
     function goToWebsite() {
-      // 🌐 Change this link to your actual website page
+      // 🌐 Change to your real website page
       window.location.href = "https://yourwebsite.com";
     }
 
     auth.onAuthStateChanged(async user => {
       if (user) {
-        // Logged in
         authSection.style.display = "none";
         userSection.style.display = "block";
         welcomeMessage.textContent = `Welcome, ${user.email}!`;
@@ -123,7 +195,6 @@
           await db.collection('users').doc(user.uid).update({ online: false });
         });
       } else {
-        // Logged out
         authSection.style.display = "block";
         userSection.style.display = "none";
       }
