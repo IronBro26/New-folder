@@ -66,12 +66,11 @@ label{font-size:13px; color:rgba(255,255,255,0.85)}
 </head>
 <body>
 <canvas id="sparks"></canvas>
-
 <div class="container">
   <div class="card">
     <div class="brand">
       <div class="title">NEON SIGNUP PORTAL</div>
-      <div class="desc">Join the ironbro26 fanclub. Accounts sync across devices via JSONBin.</div>
+      <div class="desc">Join the ironbro26 fanclub. Accounts sync via JSONBin.</div>
 
       <div class="tabs">
         <div class="tab active" data-tab="signup">SIGN UP</div>
@@ -79,7 +78,6 @@ label{font-size:13px; color:rgba(255,255,255,0.85)}
       </div>
 
       <div id="msg" class="notice" style="display:none;"></div>
-
       <div class="footer">
         <div class="small">Owner account: <strong>Krfuchs@icloud.com</strong></div>
       </div>
@@ -114,8 +112,8 @@ label{font-size:13px; color:rgba(255,255,255,0.85)}
 </div>
 
 <script>
-const JSONBIN_KEY = "$2a$10$vgqNwrdJzRZIE1VzmCfNK.45JxnPigpvytYN/O19s6hq8kNSVzIBK"; 
-const JSONBIN_USERS_BIN = "68f659daae596e708f1f742f"; // your bin ID
+const JSONBIN_KEY = "$2a$10$vgqNwrdJzRZIE1VzmCfNK.45JxnPigpvytYN/O19s6hq8kNSVzIBK"; // your key
+const JSONBIN_USERS_BIN = "68f659daae596e708f1f742f"; // signup bin id
 const OWNER_EMAIL = "Krfuchs@icloud.com";
 const OWNER_PASS = "Krf11@2011";
 
@@ -133,28 +131,26 @@ tabs.forEach(t=>{
   });
 });
 
-// Fetch users from JSONBin
 async function fetchUsers(){
   const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_USERS_BIN}/latest`, {
-    headers: {"X-Access-Key": JSONBIN_KEY}
+    headers: {"X-Master-Key": JSONBIN_KEY}
   });
   const data = await res.json();
   return data.record.users || [];
 }
 
-// Save users to JSONBin
-async function saveUsers(users){
+async function updateUsers(users){
   await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_USERS_BIN}`, {
     method: "PUT",
-    headers: {
-      "X-Access-Key": JSONBIN_KEY,
+    headers:{
+      "X-Master-Key": JSONBIN_KEY,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({users})
   });
 }
 
-// Signup
+/* SIGNUP */
 signupForm.addEventListener('submit', async e=>{
   e.preventDefault();
   const email = document.getElementById('s-email').value.trim();
@@ -162,16 +158,18 @@ signupForm.addEventListener('submit', async e=>{
   if(!email || !pass) return;
 
   const users = await fetchUsers();
-  if(users.find(u=>u.email===email)){ msg.style.display="block"; msg.textContent="Email already registered"; return; }
+  if(users.find(u=>u.email===email)){
+    msg.style.display="block"; msg.textContent="Email already registered"; return;
+  }
 
   users.push({email, passcode:pass, signupTime:new Date().toISOString(), lastOnline:new Date().toISOString(), online:true});
-  await saveUsers(users);
+  await updateUsers(users);
 
   msg.style.display="block"; msg.textContent="Account created. Redirecting to Login...";
   setTimeout(()=>{ tabs[1].click(); msg.style.display="none"; signupForm.reset(); },1200);
 });
 
-// Login
+/* LOGIN */
 loginForm.addEventListener('submit', async e=>{
   e.preventDefault();
   const email = document.getElementById('l-email').value.trim();
@@ -184,22 +182,21 @@ loginForm.addEventListener('submit', async e=>{
 
   user.lastOnline = new Date().toISOString();
   user.online = true;
-  await saveUsers(users);
+  await updateUsers(users);
 
   if(email===OWNER_EMAIL && pass===OWNER_PASS){
-    msg.style.display="block"; msg.textContent="Owner logged in. Admin access available.";
-    localStorage.setItem('currentUserRole','Owner');
+    localStorage.setItem('currentOwner', OWNER_EMAIL);
+    msg.style.display="block"; msg.textContent="Owner logged in. Access Admin Panel available.";
   } else {
+    localStorage.setItem('currentOwner',''); // member
     msg.style.display="block"; msg.textContent="Member logged in. Admin Panel hidden.";
-    localStorage.setItem('currentUserRole','Member');
   }
+
   loginForm.reset();
   setTimeout(()=>{ msg.style.display="none"; },1200);
 });
-</script>
 
-<script>
-// Sparks animation
+/* Sparks animation */
 const canvas=document.getElementById('sparks'); const ctx=canvas.getContext('2d');
 canvas.width=innerWidth; canvas.height=innerHeight;
 const sparks=[]; for(let i=0;i<120;i++){ sparks.push({x:Math.random()*innerWidth, y:Math.random()*innerHeight, r:Math.random()*2+1, dx:(Math.random()-0.5)*0.5, dy:(Math.random()-0.5)*0.5})}
