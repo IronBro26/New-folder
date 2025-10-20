@@ -8,85 +8,134 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Audiowide&display=swap" rel="stylesheet">
 
 <style>
-  :root{
-    --bg:#000;
-    --neon:#ff0033;
-    --green:#00ff88;
-  }
-  html,body{height:100%; margin:0; background:var(--bg); color:var(--neon); font-family:'Orbitron',sans-serif}
-  #sparks{position:fixed; inset:0; z-index:0; pointer-events:none}
-  .wrap{position:relative; z-index:1; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:40px}
-  .panel{width:980px; max-width:96%; border-radius:16px; padding:28px; display:grid; grid-template-columns:1fr 360px; gap:20px; background:linear-gradient(180deg, rgba(255,0,51,0.02), rgba(0,0,0,0.45)); border:1px solid rgba(255,0,51,0.1); box-shadow:0 0 80px rgba(255,0,51,0.03); backdrop-filter:blur(6px)}
-  .title{font-family:'Audiowide', 'Orbitron'; font-size:34px; letter-spacing:2px; color:var(--neon); text-shadow:0 0 8px rgba(255,0,51,0.8), 0 0 40px rgba(255,0,51,0.14); animation:pulse 2s infinite}
-  @keyframes pulse{0%{text-shadow:0 0 6px rgba(255,0,51,0.5)}50%{text-shadow:0 0 18px rgba(255,0,51,0.9)}100%{text-shadow:0 0 6px rgba(255,0,51,0.5)}}
-  .tabs{display:flex; gap:12px; margin:18px 0 12px; justify-content:center}
-  .tab{padding:10px 18px; border-radius:10px; cursor:pointer; border:1px solid rgba(255,0,51,0.12); background:linear-gradient(180deg, rgba(255,0,51,0.02), transparent); transition:all .25s}
-  .tab.active{transform:translateY(-2px); border-color:rgba(255,0,51,0.4)}
-  .card{background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(255,0,51,0.01)); padding:18px; border-radius:12px; border:1px solid rgba(255,0,51,0.06)}
-  form{display:flex; flex-direction:column; gap:12px}
-  label{font-size:12px; color:rgba(255,255,255,0.85)}
-  input{background:transparent; border:1px solid rgba(255,0,51,0.16); padding:12px; border-radius:8px; color:white; font-size:14px; outline:none}
-  input:focus{box-shadow:0 0 40px rgba(255,0,51,0.12); border-color:rgba(255,0,51,0.36)}
-  .btn{padding:12px 16px; border-radius:10px; border:1px solid rgba(255,0,51,0.16); cursor:pointer; font-weight:700; color:white; background:linear-gradient(180deg, rgba(255,0,51,0.06), rgba(255,0,51,0.01))}
-  .btn:hover{transform:translateY(-3px)}
-  .notice{padding:10px; border-radius:8px; border:1px solid rgba(255,0,51,0.06); background:rgba(0,0,0,0.45); color:rgba(255,255,255,0.9)}
-  .muted{color:rgba(255,255,255,0.6); font-size:13px}
-  @media (max-width:900px){ .panel{grid-template-columns:1fr; padding:18px} .title{font-size:26px} }
+:root{
+  --bg:#000;
+  --neon:#ff0033;
+  --neon-weak:rgba(255,0,51,0.08);
+  --neon-green:#00ff88;
+}
+*{box-sizing:border-box}
+html,body{height:100%; margin:0; background:var(--bg); color:var(--neon); font-family:'Orbitron',sans-serif}
+a{color:inherit}
+canvas#sparks{position:fixed; inset:0; z-index:0; pointer-events:none}
+.container{position:relative; z-index:1; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px}
+.card{
+  width:980px; max-width:96%; display:grid; grid-template-columns:1fr 380px; gap:20px;
+  background:linear-gradient(180deg, rgba(255,0,51,0.02), rgba(0,0,0,0.5));
+  border:1px solid var(--neon-weak); border-radius:14px; padding:22px; box-shadow:0 30px 120px rgba(255,0,51,0.03);
+  backdrop-filter: blur(6px);
+}
+
+/* Left area */
+.brand{
+  padding:8px 6px 0 6px;
+}
+.title{
+  font-family:'Audiowide', 'Orbitron'; font-size:34px; letter-spacing:2px; margin:6px 0;
+  text-shadow: 0 0 12px rgba(255,0,51,0.9), 0 0 40px rgba(255,0,51,0.14);
+  animation: pulse 2s infinite ease-in-out;
+}
+@keyframes pulse{
+  0%{text-shadow: 0 0 6px rgba(255,0,51,0.5)}
+  50%{text-shadow: 0 0 22px rgba(255,0,51,0.95)}
+  100%{text-shadow: 0 0 6px rgba(255,0,51,0.5)}
+}
+.desc{color:rgba(255,255,255,0.8); font-size:13px; margin-bottom:12px}
+
+/* Tabs */
+.tabs{display:flex; gap:12px; margin:14px 0}
+.tab{
+  padding:10px 16px; border-radius:10px; cursor:pointer; user-select:none;
+  border:1px solid rgba(255,0,51,0.06); background:linear-gradient(180deg, rgba(255,0,51,0.02), transparent);
+  transition: all .28s ease;
+}
+.tab.active{ transform:translateY(-3px); box-shadow:0 10px 40px rgba(255,0,51,0.06); border-color:rgba(255,0,51,0.3)}
+
+/* Right form card */
+.side{
+  background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(255,0,51,0.01)); padding:18px; border-radius:12px; border:1px solid rgba(255,0,51,0.06)
+}
+form{display:flex; flex-direction:column; gap:10px}
+label{font-size:13px; color:rgba(255,255,255,0.85)}
+.input{
+  background:transparent; border:1px solid rgba(255,0,51,0.16); padding:12px 14px; border-radius:10px; color:#fff; outline:none; font-size:14px;
+  transition: box-shadow .18s, transform .12s;
+}
+.input:focus{ box-shadow: 0 0 34px rgba(255,0,51,0.14); transform:translateY(-2px); border-color:rgba(255,0,51,0.32) }
+
+.btn{
+  padding:12px 14px; border-radius:10px; border:1px solid rgba(255,0,51,0.12); cursor:pointer; font-weight:700; color:white; background:linear-gradient(180deg, rgba(255,0,51,0.06), rgba(255,0,51,0.01));
+  transition: all .24s ease;
+}
+.btn:hover{ transform:translateY(-4px); box-shadow:0 30px 80px rgba(255,0,51,0.08) }
+
+.small{font-size:13px; color:rgba(255,255,255,0.75)}
+.notice{padding:10px; border-radius:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,0,51,0.06); color:rgba(255,255,255,0.9); margin-top:8px}
+
+.footer{margin-top:12px; display:flex; gap:10px; align-items:center; flex-wrap:wrap; color:rgba(255,255,255,0.7); font-size:13px}
+
+/* status dots */
+.dot{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:8px;vertical-align:middle}
+.online{background:var(--neon-green); box-shadow:0 0 12px rgba(0,255,136,0.1)}
+.offline{background:var(--neon); box-shadow:0 0 12px rgba(255,0,51,0.12)}
+
+/* transitions */
+.fade{transition: opacity .3s ease, transform .3s ease}
+
+/* responsive */
+@media (max-width:920px){
+  .card{grid-template-columns:1fr; padding:14px}
+  .title{font-size:26px}
+}
 </style>
 </head>
 <body>
 <canvas id="sparks"></canvas>
 
-<div class="wrap">
-  <div class="panel" role="main">
-    <div>
+<div class="container">
+  <div class="card" role="main">
+    <div class="brand">
       <div class="title">NEON SIGNUP PORTAL</div>
-      <div class="muted" style="margin-top:8px">Official fan club portal — <strong>ironbro26fanclub.co.za</strong></div>
+      <div class="desc">Join the ironbro26 fanclub. Create an account and sign in. Admin panel syncs via localStorage using <code>neon_users</code>.</div>
 
       <div class="tabs" role="tablist" aria-label="auth-tabs">
         <div class="tab active" data-tab="signup">SIGN UP</div>
         <div class="tab" data-tab="login">LOGIN</div>
       </div>
 
-      <div id="msg" class="notice" style="display:none; margin-top:12px"></div>
+      <div id="msg" class="notice" style="display:none;"></div>
 
-      <div style="margin-top:16px" id="forms-area">
-        <!-- signup form -->
-        <form id="signup-form" autocomplete="off">
-          <label for="s-email">Email</label>
-          <input id="s-email" type="email" required placeholder="you@domain.com" autocomplete="email">
-          <label for="s-pass">Passcode</label>
-          <input id="s-pass" type="password" required placeholder="Create a passcode" autocomplete="new-password" minlength="4">
-          <div style="display:flex; gap:10px; align-items:center; margin-top:6px">
-            <button class="btn" type="submit">Create Account</button>
-            <div class="muted">Owner email: <strong>Krfuchs@icloud.com</strong></div>
-          </div>
-        </form>
-
-        <!-- login form -->
-        <form id="login-form" style="display:none" autocomplete="off">
-          <label for="l-email">Email</label>
-          <input id="l-email" type="email" required placeholder="you@domain.com" autocomplete="username">
-          <label for="l-pass">Passcode</label>
-          <input id="l-pass" type="password" required placeholder="Enter passcode" autocomplete="current-password">
-          <div style="display:flex; gap:10px; align-items:center; margin-top:6px">
-            <button class="btn" type="submit">Log In</button>
-            <a class="btn" id="go-website" href="https://ironbro26fanclub.co.za/index.html" target="_blank">Go to Website</a>
-          </div>
-        </form>
+      <div class="footer">
+        <div class="small">Owner account: <strong>Krfuchs@icloud.com</strong></div>
+        <div class="small">Session stored in <code>neon_current</code></div>
       </div>
     </div>
 
-    <div class="card" aria-labelledby="panelinfo">
-      <div id="panelinfo">
-        <div style="font-size:13px; margin-bottom:10px">Member management (client-side). Data stored under <code>neon_users</code>. Current session stored under <code>neon_current</code>.</div>
-        <div class="muted">Why hashing? We save passcodes as SHA-256 hashes to avoid storing raw passcodes client-side. For production-grade auth, implement a server with secure HTTPS and server-side password hashing.</div>
-        <div style="margin-top:16px; display:flex; gap:8px">
-          <button id="btn-clear" class="btn" title="Clear local users (owner only)">Clear All Users</button>
-          <button id="btn-export" class="btn" title="Export users.json">Export JSON</button>
+    <div class="side">
+      <!-- SIGNUP -->
+      <form id="signup-form" class="fade" autocomplete="off">
+        <label for="s-email">Email</label>
+        <input id="s-email" class="input" type="email" required placeholder="you@domain.com" autocomplete="email">
+        <label for="s-pass">Passcode</label>
+        <input id="s-pass" class="input" type="text" required placeholder="Enter passcode (will be stored)" autocomplete="new-password">
+        <div style="display:flex; gap:10px; margin-top:8px; align-items:center">
+          <button class="btn" type="submit">Create Account</button>
+          <div class="small">After signup you'll be redirected to Login</div>
         </div>
-        <div style="margin-top:12px; font-size:13px" class="muted">Signed in status persists across tabs. Admins should log in with the owner email to access Admin Panel.</div>
-      </div>
+      </form>
+
+      <!-- LOGIN -->
+      <form id="login-form" class="fade" style="display:none" autocomplete="off">
+        <label for="l-email">Email</label>
+        <input id="l-email" class="input" type="email" required placeholder="you@domain.com" autocomplete="username">
+        <label for="l-pass">Passcode</label>
+        <input id="l-pass" class="input" type="text" required placeholder="Enter passcode" autocomplete="current-password">
+        <div style="display:flex; gap:10px; margin-top:8px; align-items:center">
+          <button class="btn" type="submit">Log In</button>
+          <a class="btn" id="go-site" href="https://ironbro26fanclub.co.za/index.html" target="_blank">Go to Website</a>
+        </div>
+        <div style="margin-top:8px;" class="small">Log out clears session and updates <code>lastOnline</code>.</div>
+      </form>
     </div>
   </div>
 </div>
@@ -95,9 +144,9 @@
 /* Keys */
 const USERS_KEY = "neon_users";
 const CURRENT_KEY = "neon_current";
-const OWNER_EMAIL = "krfuchs@icloud.com";
+const OWNER_EMAIL = "Krfuchs@icloud.com";
 
-/* Utilities */
+/* Time formatter */
 function nowFormatted(){
   const d = new Date();
   const Y = d.getFullYear();
@@ -107,138 +156,148 @@ function nowFormatted(){
   const m = String(d.getMinutes()).padStart(2,'0');
   return `${Y}-${M}-${D} ${h}:${m}`;
 }
-function loadUsers(){ try { return JSON.parse(localStorage.getItem(USERS_KEY) || "[]"); } catch(e){ return []; } }
+
+/* localStorage helpers */
+function loadUsers(){ try{ return JSON.parse(localStorage.getItem(USERS_KEY) || "[]"); } catch(e){ return []; } }
 function saveUsers(arr){ localStorage.setItem(USERS_KEY, JSON.stringify(arr)); }
 function setCurrent(email){ localStorage.setItem(CURRENT_KEY, email); localStorage.setItem('neon_last_activity', Date.now().toString()); }
-function clearMsg(){ msg.style.display='none'; msg.innerText=''; }
-function showMsg(text, good=false){ msg.style.display='block'; msg.innerText=text; msg.style.borderColor = good? 'rgba(0,255,136,0.12)' : 'rgba(255,0,51,0.08)'; }
+function clearCurrent(){ localStorage.removeItem(CURRENT_KEY); localStorage.setItem('neon_last_activity', Date.now().toString()); }
 
-/* crypto hash helper (SHA-256 -> hex) */
-async function sha256hex(str){
-  const enc = new TextEncoder();
-  const data = enc.encode(str);
-  const hash = await crypto.subtle.digest('SHA-256', data);
-  // convert to hex
-  const bytes = new Uint8Array(hash);
-  return Array.from(bytes).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-
-/* DOM */
+/* DOM elements */
 const tabs = document.querySelectorAll('.tab');
 const signupForm = document.getElementById('signup-form');
 const loginForm = document.getElementById('login-form');
 const msg = document.getElementById('msg');
 
-tabs.forEach(t => t.addEventListener('click', ()=> {
-  tabs.forEach(x=>x.classList.remove('active')); t.classList.add('active');
-  if(t.dataset.tab === 'signup'){ signupForm.style.display='block'; loginForm.style.display='none'; clearMsg(); }
-  else { signupForm.style.display='none'; loginForm.style.display='block'; clearMsg(); }
-}));
+/* Tab switching */
+tabs.forEach(t=>{
+  t.addEventListener('click', ()=>{
+    tabs.forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    if(t.dataset.tab === 'signup'){ signupForm.style.display='block'; loginForm.style.display='none'; }
+    else { signupForm.style.display='none'; loginForm.style.display='block'; }
+    msg.style.display='none';
+  });
+});
 
-/* INIT */
+/* Ensure users key exists */
 if(!localStorage.getItem(USERS_KEY)) localStorage.setItem(USERS_KEY, JSON.stringify([]));
 
-/* SIGNUP flow: hash passcode -> store user with hashed passcode */
-signupForm.addEventListener('submit', async (e)=>{
+/* Signup */
+signupForm.addEventListener('submit', (e)=>{
   e.preventDefault();
-  const email = document.getElementById('s-email').value.trim().toLowerCase();
+  const email = document.getElementById('s-email').value.trim();
   const pass = document.getElementById('s-pass').value;
-  if(!email || !pass){ showMsg('Enter both email & passcode.'); return; }
+  if(!email || !pass){ showMsg('Enter both email and passcode.'); return; }
   let users = loadUsers();
-  if(users.find(u=>u.email === email)){ showMsg('Account exists — please log in.'); document.querySelector('.tab[data-tab="login"]').click(); document.getElementById('l-email').value = email; return; }
-  // basic email sanity
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showMsg('Enter a valid email address.'); return; }
-
-  const hash = await sha256hex(pass);
+  if(users.find(u=>u.email.toLowerCase() === email.toLowerCase())){
+    showMsg('Account already exists. Please use Login.', false);
+    // switch to login and prefill
+    document.querySelector('.tab[data-tab="login"]').click();
+    document.getElementById('l-email').value = email;
+    return;
+  }
   const now = nowFormatted();
-  const user = { email, passhash: hash, signupTime: now, lastOnline: now, online: true };
+  const user = {
+    email,
+    passcode: pass,
+    signupTime: now,
+    lastOnline: now,
+    online: true
+  };
   users.push(user);
   saveUsers(users);
   setCurrent(email);
-  showMsg('Account created — proceed to login.', true);
-  // switch to login, prefill email
-  setTimeout(()=>{ document.querySelector('.tab[data-tab="login"]').click(); document.getElementById('l-email').value = email; clearMsg(); }, 700);
-});
+  showMsg('Account created. Redirecting to login...', true);
 
-/* LOGIN flow: hash given pass -> compare to stored hash; mark online and persist current */
-loginForm.addEventListener('submit', async (e)=>{
-  e.preventDefault();
-  const email = document.getElementById('l-email').value.trim().toLowerCase();
-  const pass = document.getElementById('l-pass').value;
-  if(!email || !pass){ showMsg('Enter both email & passcode.'); return; }
-  let users = loadUsers();
-  const idx = users.findIndex(u => u.email === email);
-  if(idx === -1){ showMsg('No account found. Please sign up first.'); return; }
-  const hash = await sha256hex(pass);
-  if(users[idx].passhash !== hash){ showMsg('Incorrect passcode.'); return; }
-  // success
-  users[idx].online = true;
-  users[idx].lastOnline = nowFormatted();
-  saveUsers(users);
-  setCurrent(email);
-
-  const role = (email === OWNER_EMAIL) ? 'Owner' : 'Member';
-  showMsg(`Signed in as ${role}. Redirecting...`, true);
-
-  // Owner: offer Admin Panel button; Member: just stay on portal
-  setTimeout(()=>{
-    if(role === 'Owner'){
-      // Open admin panel in new tab
-      window.open('admin.html', '_blank');
-    }
-    clearMsg();
+  // switch to login
+  setTimeout(()=> {
+    document.querySelector('.tab[data-tab="login"]').click();
+    document.getElementById('l-email').value = email;
+    msg.style.display='none';
   }, 700);
 });
 
-/* Clear users (owner only) */
-document.getElementById('btn-clear').addEventListener('click', ()=>{
-  const current = localStorage.getItem(CURRENT_KEY) || '';
-  if(current.toLowerCase() !== OWNER_EMAIL) return alert('Only the owner can clear users.');
-  if(!confirm('Clear all users from localStorage? This cannot be undone.')) return;
-  saveUsers([]);
-  localStorage.setItem('neon_last_activity', Date.now().toString());
-  alert('All users cleared.');
+/* Login */
+loginForm.addEventListener('submit', (e)=>{
+  e.preventDefault();
+  const email = document.getElementById('l-email').value.trim();
+  const pass = document.getElementById('l-pass').value;
+  if(!email || !pass){ showMsg('Enter both email and passcode.'); return; }
+  let users = loadUsers();
+  const idx = users.findIndex(u=>u.email.toLowerCase() === email.toLowerCase());
+  if(idx === -1){ showMsg('No account found. Please sign up first.'); return; }
+  const u = users[idx];
+  if(u.passcode !== pass){ showMsg('Incorrect passcode.'); return; }
+
+  // valid login
+  u.online = true;
+  u.lastOnline = nowFormatted();
+  users[idx] = u;
+  saveUsers(users);
+  setCurrent(u.email);
+
+  const role = (u.email.toLowerCase() === OWNER_EMAIL.toLowerCase()) ? 'Owner' : 'Member';
+
+  // show owner/admin button for Owner, hide for Member
+  const box = document.createElement('div');
+  box.className = 'notice';
+  box.innerHTML = `<strong>Signed in as ${role}</strong>
+    <div style="margin-top:10px; display:flex; gap:10px; align-items:center;">
+      ${role === 'Owner' ? '<button id="access-admin" class="btn">Access Admin Panel</button>' : ''}
+      <a class="btn" id="go-site-btn" href="https://ironbro26fanclub.co.za/index.html" target="_blank">Go to Website</a>
+      <button id="logout-btn" class="btn">Log Out</button>
+    </div>
+  `;
+  msg.style.display='block'; msg.innerHTML=''; msg.appendChild(box);
+
+  if(role === 'Owner'){
+    document.getElementById('access-admin').addEventListener('click', ()=> window.open('admin.html','_blank'));
+  }
+  document.getElementById('logout-btn').addEventListener('click', ()=> doLogout(u.email));
 });
 
-/* Export JSON */
-document.getElementById('btn-export').addEventListener('click', ()=>{
-  const users = loadUsers();
-  const blob = new Blob([JSON.stringify(users, null, 2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'neon_users.json'; a.click();
-  URL.revokeObjectURL(url);
-});
-
-/* Logout helper (click the Go to Website anchor instead to leave) */
+/* Logout routine */
 function doLogout(email){
   let users = loadUsers();
-  const idx = users.findIndex(u=>u.email === (email || '').toLowerCase());
+  const idx = users.findIndex(u => u.email.toLowerCase() === (email||'').toLowerCase());
   if(idx !== -1){
     users[idx].online = false;
     users[idx].lastOnline = nowFormatted();
     saveUsers(users);
   }
-  localStorage.removeItem(CURRENT_KEY);
-  localStorage.setItem('neon_last_activity', Date.now().toString());
+  clearCurrent();
+  showMsg('Logged out. Returning to login...', true);
+  setTimeout(()=>{
+    msg.style.display='none';
+    document.querySelector('.tab[data-tab="login"]').click();
+    document.getElementById('l-email').value = '';
+    document.getElementById('l-pass').value = '';
+  }, 700);
 }
 
-/* Storage event sync: small UI pulse when other tabs change data */
+/* showMsg helper */
+function showMsg(text, ok){
+  msg.style.display='block'; msg.innerText = text;
+  msg.style.borderColor = ok ? 'rgba(0,255,136,0.12)' : 'rgba(255,0,51,0.08)';
+}
+
+/* storage event listener: visual pulse */
 window.addEventListener('storage', (e)=>{
   if(e.key === USERS_KEY || e.key === 'neon_last_activity'){
-    document.querySelector('.title').style.transform = 'translateY(-2px)';
+    document.querySelector('.title').style.transform = 'translateY(-3px)';
     setTimeout(()=> document.querySelector('.title').style.transform = '', 220);
   }
 });
 
-/* Canvas sparks effect (lightweight) */
+/* small sparks canvas effect */
 const canvas = document.getElementById('sparks');
 const ctx = canvas.getContext('2d');
 let w = canvas.width = innerWidth, h = canvas.height = innerHeight;
 window.addEventListener('resize', ()=>{ w = canvas.width = innerWidth; h = canvas.height = innerHeight; });
 const particles = [];
 function spawn(){
-  if(particles.length < 24) particles.push({ x: Math.random()*w, y: Math.random()*h, vx:(Math.random()-0.5)*0.6, vy:(Math.random()-0.5)*0.6 - 0.1, life: Math.random()*140+80, size: Math.random()*2+0.8 });
+  if(particles.length < 30) particles.push({ x: Math.random()*w, y: Math.random()*h, vx:(Math.random()-0.5)*0.6, vy:(Math.random()-0.5)*0.6 - 0.12, life: Math.random()*140+80, size: Math.random()*1.8+0.6 });
 }
 function draw(){
   ctx.clearRect(0,0,w,h);
@@ -247,7 +306,7 @@ function draw(){
     const p = particles[i];
     p.x += p.vx; p.y += p.vy; p.life--;
     ctx.beginPath();
-    ctx.fillStyle = `rgba(255,0,51,${Math.max(p.life/220,0)})`;
+    ctx.fillStyle = `rgba(255,0,51,${Math.max(0, p.life/180)})`;
     ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
     ctx.fill();
     if(p.life<=0) particles.splice(i,1);
