@@ -1,82 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel - IronBro26</title>
-<style>
-body { background:#0a0a0a; color:#fff; font-family:Arial,sans-serif; padding:20px; }
-h1 { color:#ff1a1a; text-shadow:0 0 10px #ff3333; }
-table { width:100%; border-collapse:collapse; margin-top:20px; }
-th, td { padding:10px; border:1px solid #ff1a1a; text-align:left; }
-th { background:#ff1a1a; color:#000; }
-td { background:#222; }
-.status { width:20px; height:20px; border-radius:50%; display:inline-block; }
-.newUser { background:#33ff33; color:#000; font-weight:bold; }
-</style>
+  <title>Admin Panel</title>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
 </head>
 <body>
-
-<h1>🛡 IronBro26 Admin Panel</h1>
-<p>Only admin can access this panel</p>
-
-<table id="usersTable">
-  <tr>
-    <th>Email</th>
-    <th>Signup Time</th>
-    <th>Status</th>
-  </tr>
-</table>
-
-<script>
-const ADMIN_EMAIL = "krfuchs11@icloud.com";
-const ONLINE_TIMEOUT = 5*60*1000; // 5 minutes
-
-let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-if(!currentUser || currentUser.email !== ADMIN_EMAIL){
-    alert("Access denied! Only admin can view this panel.");
-    document.body.innerHTML = "<h1>Access Denied</h1>";
-}
-
-// Load users
-function loadUsers(){
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const table = document.getElementById('usersTable');
-    table.innerHTML = `<tr>
+  <h2>Admin Panel</h2>
+  <table border="1">
+    <thead>
+      <tr>
         <th>Email</th>
-        <th>Signup Time</th>
+        <th>Last Login</th>
         <th>Status</th>
-    </tr>`;
-    const now = Date.now();
+      </tr>
+    </thead>
+    <tbody id="userTable"></tbody>
+  </table>
 
-    users.forEach(user => {
-        const row = table.insertRow();
-        row.insertCell(0).innerText = user.email;
-        row.insertCell(1).innerText = new Date(user.signupTime).toLocaleString();
+  <script>
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+    };
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-        const statusCell = row.insertCell(2);
-        const statusDot = document.createElement('span');
-        statusDot.className = 'status';
-        const lastActive = user.lastActive || new Date(user.signupTime).getTime();
-        const isOnline = now - lastActive < ONLINE_TIMEOUT;
-        statusDot.style.background = isOnline ? 'green' : 'red';
-        statusCell.appendChild(statusDot);
+    const userTable = document.getElementById('userTable');
+
+    db.collection('users').onSnapshot(snapshot => {
+      userTable.innerHTML = '';
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const row = `<tr>
+          <td>${data.email}</td>
+          <td>${data.lastLogin}</td>
+          <td style="color:${data.online ? 'green' : 'red'};">
+            ${data.online ? 'Online' : 'Offline'}
+          </td>
+        </tr>`;
+        userTable.innerHTML += row;
+      });
     });
-}
-
-// Refresh every 10 seconds
-setInterval(loadUsers, 10000);
-
-// Listen for localStorage changes (new signups/logins)
-window.addEventListener('storage', function(e){
-    if(e.key === 'users' || e.key === 'currentUser'){
-        loadUsers();
-    }
-});
-
-// Initial load
-loadUsers();
-</script>
-
+  </script>
 </body>
 </html>
