@@ -34,68 +34,55 @@ canvas#sparks{position:fixed; inset:0; z-index:0; pointer-events:none}
 </div>
 
 <script>
-const JSONBIN_ID = "68f6570dae596e708f1f6daa";
-const JSONBIN_KEY = "$2a$10$szwEmZ8N1E54bEC.rq/y5.u8Pg4rs2sMbdZMYjV3D2IfXLkI5i34u";
+const JSONBIN_USERS_BIN = "68f659daae596e708f1f742f";
+const JSONBIN_READ_KEY = "PASTE_YOUR_READ_KEY_HERE";      // replace with your read key
 const OWNER_EMAIL = "Krfuchs@icloud.com";
 
-function goHome(){ window.location.href="https://ironbro26fanclub.co.za/index.html"; }
-
-function getCurrentUserRole(){
-  return localStorage.getItem('currentUserRole') || "Member";
-}
-
-// Check if owner is logged in
-if(getCurrentUserRole() !== "Owner"){
+// Redirect if not owner
+const currentUserRole = localStorage.getItem('currentUserRole');
+if(currentUserRole !== 'Owner'){
   alert("Access Denied: Admins Only.");
   window.location.href="signup.html";
 }
 
+function goHome(){window.location.href="https://ironbro26fanclub.co.za/index.html";}
+
+// Fetch and display users
 async function fetchUsers(){
-  const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
-    headers: { "X-Master-Key": JSONBIN_KEY }
+  const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_USERS_BIN}/latest`, {
+    headers: { "X-Access-Key": JSONBIN_READ_KEY }
   });
   const data = await res.json();
-  return data.record.users || [];
-}
+  const users = data.record.users || [];
 
-async function updateTable(){
-  const users = await fetchUsers();
   const tbody = document.querySelector('#usersTable tbody');
   tbody.innerHTML = "";
-  users.forEach(u=>{
-    const tr=document.createElement('tr');
-    const emailTd=document.createElement('td'); emailTd.textContent=u.email; tr.appendChild(emailTd);
-    const passTd=document.createElement('td'); passTd.textContent='*****'; tr.appendChild(passTd);
-    const signupTd=document.createElement('td'); signupTd.textContent=new Date(u.signupTime).toLocaleString(); tr.appendChild(signupTd);
-    const onlineTd=document.createElement('td'); onlineTd.textContent=u.online?'Online':'Offline'; onlineTd.className=u.online?'online':'offline'; tr.appendChild(onlineTd);
-    const lastTd=document.createElement('td'); lastTd.textContent=new Date(u.lastOnline).toLocaleString(); tr.appendChild(lastTd);
+
+  users.forEach(u => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${u.email}</td>
+      <td>*****</td>
+      <td>${new Date(u.signupTime).toLocaleString()}</td>
+      <td class="${u.online?'online':'offline'}">${u.online?'Online':'Offline'}</td>
+      <td>${new Date(u.lastOnline).toLocaleString()}</td>
+    `;
     tbody.appendChild(tr);
   });
 }
 
-// Update every 5 seconds to mimic real-time
-updateTable();
-setInterval(updateTable, 5000);
+// Initial fetch
+fetchUsers();
+// Auto-refresh every 10s
+setInterval(fetchUsers, 10000);
 
-// Sparks background
-const canvas = document.getElementById('sparks');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-const sparks = [];
-for(let i=0;i<100;i++){sparks.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-0.5)*0.5,vy:(Math.random()-0.5)*0.5,r:Math.random()*2+1})}
-function animate(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  sparks.forEach(s=>{
-    s.x+=s.vx; s.y+=s.vy;
-    if(s.x<0||s.x>canvas.width)s.vx*=-1;
-    if(s.y<0||s.y>canvas.height)s.vy*=-1;
-    ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fillStyle='rgba(255,0,51,0.7)'; ctx.fill();
-  });
-  requestAnimationFrame(animate);
-}
+// Sparks animation
+const canvas=document.getElementById('sparks'); const ctx=canvas.getContext('2d');
+canvas.width=innerWidth; canvas.height=innerHeight;
+const sparks=[]; for(let i=0;i<100;i++){sparks.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-0.5)*0.5,vy:(Math.random()-0.5)*0.5,r:Math.random()*2+1})}
+function animate(){ctx.fillStyle="#000"; ctx.fillRect(0,0,canvas.width,canvas.height); sparks.forEach(s=>{s.x+=s.vx;s.y+=s.vy;if(s.x<0||s.x>canvas.width)s.vx*=-1;if(s.y<0||s.y>canvas.height)s.vy*=-1;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='rgba(255,0,51,0.7)';ctx.fill()}); requestAnimationFrame(animate);}
 animate();
-window.addEventListener('resize',()=>{canvas.width=window.innerWidth; canvas.height=window.innerHeight;});
+window.addEventListener('resize',()=>{canvas.width=innerWidth; canvas.height=innerHeight;});
 </script>
 </body>
 </html>
