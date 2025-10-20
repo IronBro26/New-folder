@@ -71,7 +71,7 @@ label{font-size:13px; color:rgba(255,255,255,0.85)}
   <div class="card">
     <div class="brand">
       <div class="title">NEON SIGNUP PORTAL</div>
-      <div class="desc">Join the ironbro26 fanclub. Accounts sync across devices via JSONBin.</div>
+      <div class="desc">Join the ironbro26 fanclub. Accounts sync via JSONBin.</div>
 
       <div class="tabs">
         <div class="tab active" data-tab="signup">SIGN UP</div>
@@ -79,19 +79,15 @@ label{font-size:13px; color:rgba(255,255,255,0.85)}
       </div>
 
       <div id="msg" class="notice" style="display:none;"></div>
-
-      <div class="footer">
-        <div class="small">Owner account: <strong>Krfuchs@icloud.com</strong></div>
-      </div>
     </div>
 
     <div class="side">
       <!-- SIGNUP -->
       <form id="signup-form" class="fade" autocomplete="off">
         <label for="s-email">Email</label>
-        <input id="s-email" class="input" type="email" required placeholder="you@domain.com">
+        <input id="s-email" class="input" type="email" required placeholder="you@domain.com" autocomplete="email">
         <label for="s-pass">Passcode</label>
-        <input id="s-pass" class="input" type="password" required placeholder="Enter passcode">
+        <input id="s-pass" class="input" type="password" required placeholder="Enter passcode" autocomplete="new-password">
         <div style="display:flex; gap:10px; margin-top:8px; align-items:center">
           <button class="btn" type="submit">Create Account</button>
           <div class="small">After signup you'll be redirected to Login</div>
@@ -101,9 +97,9 @@ label{font-size:13px; color:rgba(255,255,255,0.85)}
       <!-- LOGIN -->
       <form id="login-form" class="fade" style="display:none" autocomplete="off">
         <label for="l-email">Email</label>
-        <input id="l-email" class="input" type="email" required placeholder="you@domain.com">
+        <input id="l-email" class="input" type="email" required placeholder="you@domain.com" autocomplete="username">
         <label for="l-pass">Passcode</label>
-        <input id="l-pass" class="input" type="password" required placeholder="Enter passcode">
+        <input id="l-pass" class="input" type="password" required placeholder="Enter passcode" autocomplete="current-password">
         <div style="display:flex; gap:10px; margin-top:8px; align-items:center">
           <button class="btn" type="submit">Log In</button>
           <a class="btn" id="go-site" href="https://ironbro26fanclub.co.za/index.html" target="_blank">Go to Website</a>
@@ -114,17 +110,20 @@ label{font-size:13px; color:rgba(255,255,255,0.85)}
 </div>
 
 <script>
-const JSONBIN_ID = "68f6570dae596e708f1f6daa";
-const JSONBIN_KEY = "$2a$10$szwEmZ8N1E54bEC.rq/y5.u8Pg4rs2sMbdZMYjV3D2IfXLkI5i34u";
+// --- JSONBin Configuration ---
+const JSONBIN_USERS_BIN = "68f659daae596e708f1f742f";
+const JSONBIN_READ_KEY = "PASTE_YOUR_READ_KEY_HERE";      // replace with your read key
+const JSONBIN_WRITE_KEY = "PASTE_YOUR_MASTER_KEY_HERE";    // replace with your master key
+
 const OWNER_EMAIL = "Krfuchs@icloud.com";
 const OWNER_PASS = "Krf11@2011";
 
-const tabs = document.querySelectorAll('.tab');
 const signupForm = document.getElementById('signup-form');
 const loginForm = document.getElementById('login-form');
 const msg = document.getElementById('msg');
+const tabs = document.querySelectorAll('.tab');
 
-// Tab toggle
+// --- Tabs toggle ---
 tabs.forEach(t=>{
   t.addEventListener('click', ()=>{
     tabs.forEach(x=>x.classList.remove('active'));
@@ -134,71 +133,75 @@ tabs.forEach(t=>{
   });
 });
 
-async function fetchUsers(){
-  const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
-    headers: { "X-Master-Key": JSONBIN_KEY }
+// --- Fetch users from JSONBin ---
+async function fetchUsers() {
+  const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_USERS_BIN}/latest`, {
+    headers: { "X-Access-Key": JSONBIN_READ_KEY }
   });
   const data = await res.json();
   return data.record.users || [];
 }
 
-async function saveUsers(users){
-  await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}`, {
-    method: "PUT",
-    headers: {
+// --- Save users to JSONBin ---
+async function saveUsers(users) {
+  await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_USERS_BIN}`, {
+    method:"PUT",
+    headers:{
       "Content-Type":"application/json",
-      "X-Master-Key": JSONBIN_KEY
+      "X-Master-Key":JSONBIN_WRITE_KEY,
+      "X-Bin-Versioning":"false"
     },
-    body: JSON.stringify({ users })
+    body: JSON.stringify({users})
   });
 }
 
-// Signup
-signupForm.addEventListener('submit', async e=>{
+// --- Signup ---
+signupForm.addEventListener('submit', async e => {
   e.preventDefault();
   const email = document.getElementById('s-email').value.trim();
   const pass = document.getElementById('s-pass').value.trim();
-  if(!email||!pass) return;
+  if(!email || !pass) return;
+
   let users = await fetchUsers();
-  if(users.find(u=>u.email===email)){
+  if(users.find(u => u.email === email)) {
     msg.style.display="block"; msg.textContent="Email already registered"; return;
   }
-  users.push({
-    email, passcode: pass,
-    signupTime: new Date().toISOString(),
-    lastOnline: new Date().toISOString(),
-    online:true
-  });
+
+  users.push({ email, passcode: pass, signupTime: new Date().toISOString(), lastOnline: new Date().toISOString(), online:true });
   await saveUsers(users);
+
   msg.style.display="block"; msg.textContent="Account created. Redirecting to Login...";
   setTimeout(()=>{ tabs[1].click(); msg.style.display="none"; signupForm.reset(); },1200);
 });
 
-// Login
-loginForm.addEventListener('submit', async e=>{
+// --- Login ---
+loginForm.addEventListener('submit', async e => {
   e.preventDefault();
   const email = document.getElementById('l-email').value.trim();
   const pass = document.getElementById('l-pass').value.trim();
-  if(!email||!pass) return;
+  if(!email || !pass) return;
+
   let users = await fetchUsers();
-  const user = users.find(u=>u.email===email && u.passcode===pass);
+  const user = users.find(u => u.email === email && u.passcode === pass);
   if(!user){ msg.style.display="block"; msg.textContent="Invalid credentials"; return; }
+
   user.lastOnline = new Date().toISOString();
   user.online = true;
   await saveUsers(users);
 
-  loginForm.reset();
-  if(email===OWNER_EMAIL && pass===OWNER_PASS){
+  if(email === OWNER_EMAIL && pass === OWNER_PASS){
+    msg.style.display="block"; msg.textContent="Owner logged in. Access Admin Panel available.";
     localStorage.setItem('currentUserRole','Owner');
-    msg.style.display="block"; msg.textContent="Owner logged in. Admin Panel available.";
-  } else{
-    localStorage.setItem('currentUserRole','Member');
+  } else {
     msg.style.display="block"; msg.textContent="Member logged in. Admin Panel hidden.";
+    localStorage.setItem('currentUserRole','Member');
   }
+
+  loginForm.reset();
   setTimeout(()=>{ msg.style.display="none"; },1200);
 });
 
-// Sparks background
+// --- Sparks background ---
 const canvas=document.getElementById('sparks'); const ctx=canvas.getContext('2d');
 canvas.width=innerWidth; canvas.height=innerHeight;
 const sparks=[]; for(let i=0;i<120;i++){ sparks.push({x:Math.random()*innerWidth, y:Math.random()*innerHeight, r:Math.random()*2+1, dx:(Math.random()-0.5)*0.5, dy:(Math.random()-0.5)*0.5})}
