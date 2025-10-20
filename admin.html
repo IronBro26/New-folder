@@ -3,75 +3,46 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>ADMIN CONTROL PANEL</title>
+<title>ADMIN CONTROL PANEL — ironbro26fanclub</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
 
 <style>
-  :root{
-    --bg:#000;
-    --neon:#ff0033;
-    --glow: rgba(255,0,51,0.12);
-    --neon-green: #00ff88;
-  }
-  html,body{height:100%; margin:0; background: #000; color:var(--neon); font-family:'Orbitron', sans-serif;}
-  body{display:flex; align-items:center; justify-content:center; padding:28px;}
-
-  .container{
-    width:1000px; max-width:96%; border-radius:14px; padding:18px; background: linear-gradient(180deg, rgba(255,0,51,0.02), rgba(0,0,0,0.6));
-    border:1px solid rgba(255,0,51,0.08); box-shadow:0 20px 80px rgba(255,0,51,0.03);
-  }
-
-  .header{
-    display:flex; align-items:center; justify-content:space-between; gap:12px;
-    margin-bottom:16px;
-  }
-  .h-title{
-    font-family:'Press Start 2P', 'Orbitron';
-    font-size:20px; color:var(--neon);
-    text-shadow: 0 0 14px rgba(255,0,51,0.9), 0 0 60px rgba(255,0,51,0.12);
-    animation: flicker 2.2s infinite;
-  }
-  @keyframes flicker{
-    0%{opacity:0.95} 50%{opacity:1} 55%{opacity:0.8} 100%{opacity:0.98}
-  }
-
-  .controls{display:flex; gap:10px; align-items:center;}
-  .btn{
-    padding:8px 12px; border-radius:8px; background:linear-gradient(180deg, rgba(255,0,51,0.06), transparent); border:1px solid rgba(255,0,51,0.12);
-    color:white; font-weight:700; cursor:pointer;
-  }
-
-  .panel{
-    border-radius:10px; padding:12px; border:1px solid rgba(255,0,51,0.06); background:rgba(0,0,0,0.45);
-  }
-
-  table{width:100%; border-collapse:collapse; font-size:13px;}
-  th,td{padding:10px 8px; text-align:left; border-bottom:1px dashed rgba(255,0,51,0.04);}
-  th{font-size:12px; color:rgba(255,255,255,0.8); text-transform:uppercase; letter-spacing:1px;}
-  td{color:rgba(255,255,255,0.88);}
-
-  .dot{width:14px;height:14px;border-radius:50%;display:inline-block;margin-right:8px;vertical-align:middle}
-  .online{background:var(--neon-green); box-shadow:0 0 18px rgba(0,255,136,0.12)}
-  .offline{background:var(--neon); box-shadow:0 0 18px rgba(255,0,51,0.12)}
-
-  .muted{color:rgba(255,255,255,0.55); font-size:12px}
-  .center{display:flex; justify-content:center; align-items:center}
-
-  @media (max-width:860px){ body{padding:12px} .header{flex-direction:column; gap:8px}}
+:root{ --bg:#000; --neon:#ff0033; --neon-green:#00ff88; --weak:rgba(255,0,51,0.06) }
+*{box-sizing:border-box}
+html,body{height:100%; margin:0; background:var(--bg); color:var(--neon); font-family:'Orbitron',sans-serif; display:flex; align-items:center; justify-content:center; padding:20px}
+.container{width:1000px; max-width:96%; border-radius:14px; padding:18px; background:linear-gradient(180deg, rgba(255,0,51,0.02), rgba(0,0,0,0.6)); border:1px solid var(--weak)}
+.header{display:flex; justify-content:space-between; align-items:center; gap:10px}
+.h-title{font-family:'Press Start 2P','Orbitron'; font-size:20px; color:var(--neon); text-shadow:0 0 14px rgba(255,0,51,0.9); animation:flicker 2.2s infinite}
+@keyframes flicker{0%{opacity:0.95}50%{opacity:1}55%{opacity:0.8}100%{opacity:0.98}}
+.controls{display:flex; gap:8px; align-items:center}
+.btn{padding:8px 12px; border-radius:8px; background:linear-gradient(180deg, rgba(255,0,51,0.06), transparent); border:1px solid var(--weak); color:white; cursor:pointer}
+.btn:hover{transform:translateY(-3px)}
+.panel{margin-top:12px; border-radius:10px; padding:12px; border:1px solid var(--weak); background:rgba(0,0,0,0.45)}
+table{width:100%; border-collapse:collapse; font-size:13px}
+th,td{padding:10px 8px; text-align:left; border-bottom:1px dashed rgba(255,0,51,0.04)}
+th{font-size:12px; color:rgba(255,255,255,0.85); text-transform:uppercase}
+.dot{width:14px;height:14px;border-radius:50%;display:inline-block;margin-right:8px}
+.online{background:var(--neon-green); box-shadow:0 0 18px rgba(0,255,136,0.12)}
+.offline{background:var(--neon); box-shadow:0 0 18px rgba(255,0,51,0.12)}
+.muted{color:rgba(255,255,255,0.55); font-size:12px}
+.actions button{margin-right:8px}
+.center{display:flex; justify-content:center; align-items:center}
+@media (max-width:860px){ .header{flex-direction:column; gap:8px} }
 </style>
 </head>
 <body>
+
 <div class="container">
   <div class="header">
     <div>
       <div class="h-title">ADMIN CONTROL PANEL</div>
-      <div class="muted">Realtime users (from <code>neon_users</code>) — refreshes automatically and via storage events</div>
+      <div class="muted" style="margin-top:6px">Viewing live users from <code>neon_users</code>. Only owner (<strong>Krfuchs@icloud.com</strong>) may access.</div>
     </div>
     <div class="controls">
-      <a class="btn" href="file:///C:/Users/Krfuc/OneDrive/Website/New%20folder/index.html" target="_blank">Home</a>
-      <button id="btn-refresh" class="btn">Data Sync</button>
-      <button id="btn-logout" class="btn">Logout (Admin)</button>
+      <a class="btn" href="https://ironbro26fanclub.co.za/index.html" target="_blank">Home</a>
+      <button id="btn-sync" class="btn">Data Sync</button>
+      <button id="btn-logout" class="btn">Logout</button>
     </div>
   </div>
 
@@ -84,6 +55,7 @@
           <th>Signup Time</th>
           <th>Online Status</th>
           <th>Last Online</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody></tbody>
@@ -95,8 +67,9 @@
 <script>
 const USERS_KEY = "neon_users";
 const CURRENT_KEY = "neon_current";
+const OWNER_EMAIL = "Krfuchs@icloud.com";
 
-/* Formatting */
+/* time */
 function nowFormatted(){
   const d = new Date();
   const Y = d.getFullYear();
@@ -106,111 +79,113 @@ function nowFormatted(){
   const m = String(d.getMinutes()).padStart(2,'0');
   return `${Y}-${M}-${D} ${h}:${m}`;
 }
-function loadUsers(){ try { return JSON.parse(localStorage.getItem(USERS_KEY) || "[]"); } catch(e){ return []; } }
+
+/* storage helpers */
+function loadUsers(){ try{ return JSON.parse(localStorage.getItem(USERS_KEY) || "[]"); } catch(e){ return []; } }
 function saveUsers(arr){ localStorage.setItem(USERS_KEY, JSON.stringify(arr)); }
 
-/* Access control: only Owner (Krfuchs@icloud.com) allowed */
-const current = sessionStorage.getItem(CURRENT_KEY);
-if(!current || current.toLowerCase() !== 'krfuchs@icloud.com'){
+/* Access control */
+const current = (localStorage.getItem(CURRENT_KEY) || '').toLowerCase();
+if(!current || current !== OWNER_EMAIL.toLowerCase()){
   alert('Access Denied: Admins Only.');
-  // small delay so alert reads, then redirect:
+  // redirect back
   window.location.href = 'signup.html';
 } else {
-  // owner is present: proceed
+  // proceed
   init();
 }
 
 function init(){
   renderTable();
-  // refresh every 3 seconds
+  // auto-refresh every 3s
   setInterval(renderTable, 3000);
 
-  // Listen for storage updates to reflect other tabs' changes
+  // storage event listener to reflect changes from other tabs
   window.addEventListener('storage', (e)=>{
     if(e.key === USERS_KEY || e.key === 'neon_last_activity'){
       renderTable();
-      // subtle flash
-      document.querySelector('.h-title').style.transform = 'translateY(-2px)';
+      document.querySelector('.h-title').style.transform = 'translateY(-3px)';
       setTimeout(()=> document.querySelector('.h-title').style.transform = '', 220);
     }
   });
 
-  document.getElementById('btn-refresh').addEventListener('click', ()=> renderTable());
+  document.getElementById('btn-sync').addEventListener('click', ()=> renderTable());
   document.getElementById('btn-logout').addEventListener('click', ()=>{
-    // Owner logout: mark offline and clear session
+    // set owner offline and clear session
     const users = loadUsers();
-    const idx = users.findIndex(u => u.email.toLowerCase() === 'krfuchs@icloud.com');
+    const idx = users.findIndex(u => u.email && u.email.toLowerCase() === OWNER_EMAIL.toLowerCase());
     if(idx !== -1){
       users[idx].online = false;
       users[idx].lastOnline = nowFormatted();
       saveUsers(users);
     }
-    sessionStorage.removeItem(CURRENT_KEY);
-    // notify other tabs
+    localStorage.removeItem(CURRENT_KEY);
     localStorage.setItem('neon_last_activity', Date.now().toString());
-    // redirect back to signup
     window.location.href = 'signup.html';
   });
 }
 
+/* render table */
 function renderTable(){
   const tbody = document.querySelector('#users-table tbody');
   const noUsers = document.getElementById('no-users');
   const users = loadUsers();
   tbody.innerHTML = '';
-  if(!users || users.length === 0){
-    noUsers.style.display = 'block';
-    return;
-  } else noUsers.style.display = 'none';
+  if(!users || users.length === 0){ noUsers.style.display = 'block'; return; } else noUsers.style.display = 'none';
 
   users.forEach(u=>{
     const tr = document.createElement('tr');
-    const emailTd = document.createElement('td');
-    emailTd.textContent = u.email;
-    const passTd = document.createElement('td');
-    passTd.textContent = u.passcode;
-    const signupTd = document.createElement('td');
-    signupTd.textContent = u.signupTime || '-';
-    const onlineTd = document.createElement('td');
-    const dot = document.createElement('span');
-    dot.className = 'dot ' + (u.online ? 'online' : 'offline');
-    const txt = document.createElement('span');
-    txt.textContent = u.online ? 'Online' : 'Offline';
-    onlineTd.appendChild(dot);
-    onlineTd.appendChild(txt);
-    const lastTd = document.createElement('td');
-    lastTd.textContent = u.lastOnline || '-';
+
+    const emailTd = document.createElement('td'); emailTd.textContent = u.email || '-';
+    const passTd = document.createElement('td'); passTd.textContent = u.passcode || '-';
+    const signupTd = document.createElement('td'); signupTd.textContent = u.signupTime || '-';
+
+    const statusTd = document.createElement('td');
+    const dot = document.createElement('span'); dot.className = 'dot ' + (u.online ? 'online' : 'offline');
+    statusTd.appendChild(dot);
+    const txt = document.createElement('span'); txt.textContent = u.online ? 'Online' : 'Offline';
+    statusTd.appendChild(txt);
+
+    const lastTd = document.createElement('td'); lastTd.textContent = u.lastOnline || '-';
+
+    const actionsTd = document.createElement('td'); actionsTd.className = 'actions';
+    // Toggle online
+    const toggleBtn = document.createElement('button'); toggleBtn.className='btn'; toggleBtn.style.padding='6px 8px'; toggleBtn.textContent = u.online ? 'Set Offline' : 'Set Online';
+    toggleBtn.addEventListener('click', ()=>{
+      if(!confirm(`Toggle online status for ${u.email}?`)) return;
+      const users = loadUsers();
+      const idx = users.findIndex(x => x.email === u.email);
+      if(idx !== -1){
+        users[idx].online = !users[idx].online;
+        users[idx].lastOnline = nowFormatted();
+        saveUsers(users);
+        localStorage.setItem('neon_last_activity', Date.now().toString());
+        renderTable();
+      }
+    });
+    // Remove user
+    const removeBtn = document.createElement('button'); removeBtn.className='btn'; removeBtn.style.padding='6px 8px'; removeBtn.style.marginLeft='6px'; removeBtn.textContent = 'Remove';
+    removeBtn.addEventListener('click', ()=>{
+      if(!confirm(`Remove user ${u.email}? This cannot be undone locally.`)) return;
+      const users = loadUsers().filter(x => x.email !== u.email);
+      saveUsers(users);
+      localStorage.setItem('neon_last_activity', Date.now().toString());
+      renderTable();
+    });
+
+    actionsTd.appendChild(toggleBtn);
+    actionsTd.appendChild(removeBtn);
 
     tr.appendChild(emailTd);
     tr.appendChild(passTd);
     tr.appendChild(signupTd);
-    tr.appendChild(onlineTd);
+    tr.appendChild(statusTd);
     tr.appendChild(lastTd);
+    tr.appendChild(actionsTd);
+
     tbody.appendChild(tr);
   });
 }
-
-/* optional: allow admin to force toggle a user's online state by clicking a row (convenience) */
-document.addEventListener('click', (e)=>{
-  const row = e.target.closest('tr');
-  if(!row) return;
-  const cells = row.querySelectorAll('td');
-  if(cells.length < 1) return;
-  const email = cells[0].innerText;
-  // prevent accidental toggle when clicking header
-  if(email.toLowerCase() === 'email') return;
-  // confirm action
-  if(!confirm(`Toggle online status for ${email}?`)) return;
-  const users = loadUsers();
-  const idx = users.findIndex(u => u.email === email);
-  if(idx !== -1){
-    users[idx].online = !users[idx].online;
-    users[idx].lastOnline = nowFormatted();
-    saveUsers(users);
-    localStorage.setItem('neon_last_activity', Date.now().toString());
-    renderTable();
-  }
-});
 </script>
 </body>
 </html>
