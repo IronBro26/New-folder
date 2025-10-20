@@ -7,8 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Audiowide&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#000;--neon:#ff0033;--neon-green:#00ff88;}
-*{box-sizing:border-box} 
-html,body{height:100%;margin:0;background:var(--bg);color:var(--neon);font-family:'Orbitron',sans-serif}
+*{box-sizing:border-box} html,body{height:100%;margin:0;background:var(--bg);color:var(--neon);font-family:'Orbitron',sans-serif}
 canvas#sparks{position:fixed; inset:0; z-index:0; pointer-events:none}
 .container{position:relative; z-index:1; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px}
 .card{
@@ -18,73 +17,108 @@ canvas#sparks{position:fixed; inset:0; z-index:0; pointer-events:none}
   backdrop-filter: blur(6px);
 }
 .brand{padding:8px 6px 0 6px;}
-.title{font-family:'Audiowide','Orbitron'; font-size:34px; letter-spacing:2px; margin:6px 0;
-text-shadow: 0 0 12px rgba(255,0,51,0.9), 0 0 40px rgba(255,0,51,0.14); animation: pulse 2s infinite ease-in-out;}
-@keyframes pulse{0%{text-shadow:0 0 6px rgba(255,0,51,0.5)}50%{text-shadow:0 0 22px rgba(255,0,51,0.95)}100%{text-shadow:0 0 6px rgba(255,0,51,0.5)}}
+.title{
+  font-family:'Audiowide','Orbitron'; font-size:34px; letter-spacing:2px; margin:6px 0;
+  text-shadow: 0 0 12px rgba(255,0,51,0.9), 0 0 40px rgba(255,0,51,0.14);
+  animation: pulse 2s infinite ease-in-out;
+}
+@keyframes pulse{
+  0%{text-shadow:0 0 6px rgba(255,0,51,0.5)}
+  50%{text-shadow:0 0 22px rgba(255,0,51,0.95)}
+  100%{text-shadow:0 0 6px rgba(255,0,51,0.5)}
+}
 .desc{color:rgba(255,255,255,0.8); font-size:13px; margin-bottom:12px}
 .tabs{display:flex; gap:12px; margin:14px 0}
-.tab{padding:10px 16px; border-radius:10px; cursor:pointer; user-select:none;
-border:1px solid rgba(255,0,51,0.06); background:linear-gradient(180deg, rgba(255,0,51,0.02), transparent);
-transition: all .28s ease;}
+.tab{
+  padding:10px 16px; border-radius:10px; cursor:pointer; user-select:none;
+  border:1px solid rgba(255,0,51,0.06); background:linear-gradient(180deg, rgba(255,0,51,0.02), transparent);
+  transition: all .28s ease;
+}
 .tab.active{ transform:translateY(-3px); box-shadow:0 10px 40px rgba(255,0,51,0.06); border-color:rgba(255,0,51,0.3)}
-.side{background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(255,0,51,0.01)); padding:18px; border-radius:12px; border:1px solid rgba(255,0,51,0.06)}
+.side{
+  background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(255,0,51,0.01)); padding:18px; border-radius:12px; border:1px solid rgba(255,0,51,0.06)
+}
 form{display:flex; flex-direction:column; gap:10px}
 label{font-size:13px; color:rgba(255,255,255,0.85)}
-.input{background:transparent; border:1px solid rgba(255,0,51,0.16); padding:12px 14px; border-radius:10px; color:#fff; outline:none; font-size:14px; transition: box-shadow .18s, transform .12s;}
+.input{
+  background:transparent; border:1px solid rgba(255,0,51,0.16); padding:12px 14px; border-radius:10px; color:#fff; outline:none; font-size:14px;
+  transition: box-shadow .18s, transform .12s;
+}
 .input:focus{ box-shadow:0 0 34px rgba(255,0,51,0.14); transform:translateY(-2px); border-color:rgba(255,0,51,0.32) }
-.btn{padding:12px 14px; border-radius:10px; border:1px solid rgba(255,0,51,0.12); cursor:pointer; font-weight:700; color:white; background:linear-gradient(180deg, rgba(255,0,51,0.06), rgba(255,0,51,0.01)); transition: all .24s ease;}
+.btn{
+  padding:12px 14px; border-radius:10px; border:1px solid rgba(255,0,51,0.12); cursor:pointer; font-weight:700; color:white; background:linear-gradient(180deg, rgba(255,0,51,0.06), rgba(255,0,51,0.01));
+  transition: all .24s ease;
+}
 .btn:hover{ transform:translateY(-4px); box-shadow:0 30px 80px rgba(255,0,51,0.08) }
 .small{font-size:13px; color:rgba(255,255,255,0.75)}
 .notice{padding:10px; border-radius:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,0,51,0.06); color:rgba(255,255,255,0.9); margin-top:8px}
-@media (max-width:920px){.card{grid-template-columns:1fr; padding:14px}.title{font-size:26px}}
+@media (max-width:920px){
+  .card{grid-template-columns:1fr; padding:14px}
+  .title{font-size:26px}
+}
 </style>
 </head>
 <body>
 <canvas id="sparks"></canvas>
-<div class="container">
-<div class="card">
-  <div class="brand">
-    <div class="title">NEON SIGNUP PORTAL</div>
-    <div class="desc">Join the ironbro26 fanclub. Accounts sync via JSONBin.</div>
-    <div class="tabs">
-      <div class="tab active" data-tab="signup">SIGN UP</div>
-      <div class="tab" data-tab="login">LOGIN</div>
-    </div>
-    <div id="msg" class="notice" style="display:none;"></div>
-  </div>
-  <div class="side">
-    <form id="signup-form" class="fade" autocomplete="off">
-      <label>Email</label>
-      <input id="s-email" class="input" type="email" required placeholder="you@domain.com">
-      <label>Passcode</label>
-      <input id="s-pass" class="input" type="password" required placeholder="Enter passcode">
-      <div style="display:flex; gap:10px; margin-top:8px; align-items:center">
-        <button class="btn" type="submit">Create Account</button>
-        <div class="small">After signup you'll be redirected to Login</div>
-      </div>
-    </form>
 
-    <form id="login-form" class="fade" style="display:none" autocomplete="off">
-      <label>Email</label>
-      <input id="l-email" class="input" type="email" required placeholder="you@domain.com">
-      <label>Passcode</label>
-      <input id="l-pass" class="input" type="password" required placeholder="Enter passcode">
-      <div style="display:flex; gap:10px; margin-top:8px; align-items:center">
-        <button class="btn" type="submit">Log In</button>
+<div class="container">
+  <div class="card">
+    <div class="brand">
+      <div class="title">NEON SIGNUP PORTAL</div>
+      <div class="desc">Join the ironbro26 fanclub. Accounts sync via JSONBin.</div>
+
+      <div class="tabs">
+        <div class="tab active" data-tab="signup">SIGN UP</div>
+        <div class="tab" data-tab="login">LOGIN</div>
       </div>
-    </form>
+
+      <div id="msg" class="notice" style="display:none;"></div>
+
+      <div class="footer">
+        <div class="small">Owner account: <strong>Krfuchs@icloud.com</strong></div>
+      </div>
+    </div>
+
+    <div class="side">
+      <!-- SIGNUP -->
+      <form id="signup-form" class="fade" autocomplete="off">
+        <label for="s-email">Email</label>
+        <input id="s-email" class="input" type="email" required placeholder="you@domain.com" autocomplete="email">
+        <label for="s-pass">Passcode</label>
+        <input id="s-pass" class="input" type="password" required placeholder="Enter passcode" autocomplete="new-password">
+        <div style="display:flex; gap:10px; margin-top:8px; align-items:center">
+          <button class="btn" type="submit">Create Account</button>
+          <div class="small">After signup you'll be redirected to Login</div>
+        </div>
+      </form>
+
+      <!-- LOGIN -->
+      <form id="login-form" class="fade" style="display:none" autocomplete="off">
+        <label for="l-email">Email</label>
+        <input id="l-email" class="input" type="email" required placeholder="you@domain.com" autocomplete="username">
+        <label for="l-pass">Passcode</label>
+        <input id="l-pass" class="input" type="password" required placeholder="Enter passcode" autocomplete="current-password">
+        <div style="display:flex; gap:10px; margin-top:8px; align-items:center">
+          <button class="btn" type="submit">Log In</button>
+          <a class="btn" id="go-site" href="https://ironbro26fanclub.co.za/index.html" target="_blank">Go to Website</a>
+        </div>
+      </form>
+    </div>
   </div>
-</div>
 </div>
 
 <script>
-const BIN_ID = "68f65f92d0ea881f40aebb87";
-const API_KEY = "$2a$10$wpHGujrPsIgbzGPptWRaIOkuT.9Bz2iSRN.gytSpwclZcQPr880tC";
+const BIN_ID = "68f65f92d0ea881f40aebb87"; // your bin
+const API_KEY = "$2a$10$wpHGujrPsIgbzGPptWRaIOkuT.9Bz2iSRN.gytSpwclZcQPr880tC"; // master key
+const OWNER_EMAIL = "Krfuchs@icloud.com";
+const OWNER_PASS = "Krf11@2011";
+
 const tabs = document.querySelectorAll('.tab');
 const signupForm = document.getElementById('signup-form');
 const loginForm = document.getElementById('login-form');
 const msg = document.getElementById('msg');
 
+// Tabs toggle
 tabs.forEach(t=>{
   t.addEventListener('click', ()=>{
     tabs.forEach(x=>x.classList.remove('active'));
@@ -94,17 +128,26 @@ tabs.forEach(t=>{
   });
 });
 
-async function fetchUsers() {
-  const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {headers:{'X-Master-Key':API_KEY}});
+// Fetch users from JSONBin
+async function fetchUsers(){
+  const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+    headers: { "X-Master-Key": API_KEY }
+  });
   const data = await res.json();
-  return data.record.users || [];
+  if(!data.record.users) data.record.users = [];
+  return data.record.users;
 }
 
-async function saveUsers(users) {
+// Save users back to JSONBin
+async function saveUsers(users){
   await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
-    method: 'PUT',
-    headers: {'Content-Type':'application/json','X-Master-Key':API_KEY},
-    body: JSON.stringify({users})
+    method:"PUT",
+    headers: {
+      "Content-Type":"application/json",
+      "X-Master-Key": API_KEY,
+      "X-Bin-Versioning": "false"
+    },
+    body: JSON.stringify({ users })
   });
 }
 
@@ -113,10 +156,16 @@ signupForm.addEventListener('submit', async e=>{
   e.preventDefault();
   const email = document.getElementById('s-email').value.trim();
   const pass = document.getElementById('s-pass').value.trim();
-  const users = await fetchUsers();
-  if(users.find(u=>u.email===email)){ msg.style.display="block"; msg.textContent="Email already exists"; return; }
-  users.push({email, passcode:pass, signupTime:new Date().toISOString(), lastOnline:new Date().toISOString(), online:true});
+  if(!email||!pass) return;
+
+  let users = await fetchUsers();
+  if(users.find(u=>u.email===email)){
+    msg.style.display="block"; msg.textContent="Email already registered"; return;
+  }
+
+  users.push({ email, passcode: pass, signupTime: new Date().toISOString(), lastOnline: new Date().toISOString(), online:true });
   await saveUsers(users);
+
   msg.style.display="block"; msg.textContent="Account created. Redirecting to Login...";
   setTimeout(()=>{ tabs[1].click(); msg.style.display="none"; signupForm.reset(); },1200);
 });
@@ -126,15 +175,31 @@ loginForm.addEventListener('submit', async e=>{
   e.preventDefault();
   const email = document.getElementById('l-email').value.trim();
   const pass = document.getElementById('l-pass').value.trim();
-  const users = await fetchUsers();
+  if(!email||!pass) return;
+
+  let users = await fetchUsers();
   const user = users.find(u=>u.email===email && u.passcode===pass);
   if(!user){ msg.style.display="block"; msg.textContent="Invalid credentials"; return; }
-  user.lastOnline = new Date().toISOString();
+
   user.online = true;
+  user.lastOnline = new Date().toISOString();
   await saveUsers(users);
-  msg.style.display="block"; msg.textContent="Logged in!";
+
+  if(email===OWNER_EMAIL && pass===OWNER_PASS) localStorage.setItem('currentUserRole','Owner');
+  else localStorage.setItem('currentUserRole','Member');
+
+  msg.style.display="block"; msg.textContent=email===OWNER_EMAIL?"Owner logged in":"Member logged in";
   loginForm.reset();
+  setTimeout(()=>{ msg.style.display="none"; },1200);
 });
+</script>
+<script>
+// Sparks background
+const canvas=document.getElementById('sparks'); const ctx=canvas.getContext('2d');
+canvas.width=innerWidth; canvas.height=innerHeight;
+const sparks=[]; for(let i=0;i<120;i++){ sparks.push({x:Math.random()*innerWidth, y:Math.random()*innerHeight, r:Math.random()*2+1, dx:(Math.random()-0.5)*0.5, dy:(Math.random()-0.5)*0.5})}
+function drawS(){ctx.fillStyle="#000"; ctx.fillRect(0,0,canvas.width,canvas.height); sparks.forEach(p=>{ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle='rgba(255,0,51,0.5)'; ctx.fill(); p.x+=p.dx; p.y+=p.dy; if(p.x<0||p.x>canvas.width)p.dx*=-1;if(p.y<0||p.y>canvas.height)p.dy*=-1}); requestAnimationFrame(drawS);}
+drawS(); window.addEventListener('resize',()=>{canvas.width=innerWidth; canvas.height=innerHeight;});
 </script>
 </body>
 </html>
