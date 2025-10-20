@@ -1,191 +1,98 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ADMIN CONTROL PANEL — ironbro26fanclub</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Audiowide&display=swap" rel="stylesheet">
 <style>
-:root{ --bg:#000; --neon:#ff0033; --neon-green:#00ff88; --weak:rgba(255,0,51,0.06) }
-*{box-sizing:border-box}
-html,body{height:100%; margin:0; background:var(--bg); color:var(--neon); font-family:'Orbitron',sans-serif; display:flex; align-items:center; justify-content:center; padding:20px}
-.container{width:1000px; max-width:96%; border-radius:14px; padding:18px; background:linear-gradient(180deg, rgba(255,0,51,0.02), rgba(0,0,0,0.6)); border:1px solid var(--weak)}
-.header{display:flex; justify-content:space-between; align-items:center; gap:10px}
-.h-title{font-family:'Press Start 2P','Orbitron'; font-size:20px; color:var(--neon); text-shadow:0 0 14px rgba(255,0,51,0.9); animation:flicker 2.2s infinite}
-@keyframes flicker{0%{opacity:0.95}50%{opacity:1}55%{opacity:0.8}100%{opacity:0.98}}
-.controls{display:flex; gap:8px; align-items:center}
-.btn{padding:8px 12px; border-radius:8px; background:linear-gradient(180deg, rgba(255,0,51,0.06), transparent); border:1px solid var(--weak); color:white; cursor:pointer}
-.btn:hover{transform:translateY(-3px)}
-.panel{margin-top:12px; border-radius:10px; padding:12px; border:1px solid var(--weak); background:rgba(0,0,0,0.45)}
-table{width:100%; border-collapse:collapse; font-size:13px}
-th,td{padding:10px 8px; text-align:left; border-bottom:1px dashed rgba(255,0,51,0.04)}
-th{font-size:12px; color:rgba(255,255,255,0.85); text-transform:uppercase}
-.dot{width:14px;height:14px;border-radius:50%;display:inline-block;margin-right:8px}
-.online{background:var(--neon-green); box-shadow:0 0 18px rgba(0,255,136,0.12)}
-.offline{background:var(--neon); box-shadow:0 0 18px rgba(255,0,51,0.12)}
-.muted{color:rgba(255,255,255,0.55); font-size:12px}
-.actions button{margin-right:8px}
-.center{display:flex; justify-content:center; align-items:center}
-@media (max-width:860px){ .header{flex-direction:column; gap:8px} }
+:root{--bg:#000;--neon:#ff0033;--neon-green:#00ff88;}
+body{margin:0;font-family:'Orbitron',sans-serif;background:var(--bg);color:var(--neon);}
+h1{font-family:'Audiowide',sans-serif;font-size:36px;text-align:center;text-shadow:0 0 12px rgba(255,0,51,0.9),0 0 40px rgba(255,0,51,0.14);animation:pulse 2s infinite;}
+@keyframes pulse{0%{text-shadow:0 0 6px rgba(255,0,51,0.5);}50%{text-shadow:0 0 22px rgba(255,0,51,0.95);}100%{text-shadow:0 0 6px rgba(255,0,51,0.5);}}
+.container{padding:20px; max-width:1080px; margin:auto;}
+.table{width:100%; border-collapse:collapse;margin-top:20px;}
+.table th, .table td{padding:12px;border:1px solid rgba(255,0,51,0.2); text-align:center;}
+.table th{background:rgba(255,0,51,0.05);}
+.online{color:var(--neon-green); font-weight:700;}
+.offline{color:var(--neon); font-weight:700;}
+.btn{padding:10px 14px;border-radius:10px;border:1px solid rgba(255,0,51,0.2);cursor:pointer;background:linear-gradient(180deg, rgba(255,0,51,0.06), rgba(255,0,51,0.01));color:#fff;font-weight:700;margin-bottom:10px;}
+.btn:hover{box-shadow:0 0 30px rgba(255,0,51,0.5);}
+.notice{margin-top:10px;padding:10px;border-radius:8px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,0,51,0.06);color:#fff;text-align:center;display:none;}
 </style>
 </head>
 <body>
-
+<h1>ADMIN CONTROL PANEL</h1>
 <div class="container">
-  <div class="header">
-    <div>
-      <div class="h-title">ADMIN CONTROL PANEL</div>
-      <div class="muted" style="margin-top:6px">Viewing live users from <code>neon_users</code>. Only owner (<strong>Krfuchs@icloud.com</strong>) may access.</div>
-    </div>
-    <div class="controls">
-      <a class="btn" href="https://ironbro26fanclub.co.za/index.html" target="_blank">Home</a>
-      <button id="btn-sync" class="btn">Data Sync</button>
-      <button id="btn-logout" class="btn">Logout</button>
-    </div>
-  </div>
-
-  <div class="panel">
-    <table id="users-table" aria-live="polite">
-      <thead>
-        <tr>
-          <th>Email</th>
-          <th>Passcode</th>
-          <th>Signup Time</th>
-          <th>Online Status</th>
-          <th>Last Online</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-    <div id="no-users" class="center" style="padding:14px; display:none; color:rgba(255,255,255,0.6)">No users found</div>
-  </div>
+<button class="btn" onclick="goHome()">Go to Website</button>
+<div class="notice" id="notice"></div>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th>Passcode</th>
+      <th>Signup Time</th>
+      <th>Online Status</th>
+      <th>Last Online</th>
+    </tr>
+  </thead>
+  <tbody id="usersTable"></tbody>
+</table>
 </div>
 
-<script>
-const USERS_KEY = "neon_users";
-const CURRENT_KEY = "neon_current";
-const OWNER_EMAIL = "Krfuchs@icloud.com";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
 
-/* time */
-function nowFormatted(){
-  const d = new Date();
-  const Y = d.getFullYear();
-  const M = String(d.getMonth()+1).padStart(2,'0');
-  const D = String(d.getDate()).padStart(2,'0');
-  const h = String(d.getHours()).padStart(2,'0');
-  const m = String(d.getMinutes()).padStart(2,'0');
-  return `${Y}-${M}-${D} ${h}:${m}`;
+const firebaseConfig = {
+  apiKey: "AIzaSyCZ-kcVeGKjiQh4wgOe5yp-S9zxS8n3oZY",
+  authDomain: "ironbro26-708c4.firebaseapp.com",
+  projectId: "ironbro26-708c4",
+  storageBucket: "ironbro26-708c4.firebasestorage.app",
+  messagingSenderId: "47778309159",
+  appId: "1:47778309159:web:0caea70db87468ca959a02",
+  measurementId: "G-RWTEX313PX"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const OWNER_EMAIL="Krfuchs@icloud.com";
+
+function showNotice(msg){
+  const n=document.getElementById('notice');
+  n.style.display="block";
+  n.textContent=msg;
+  setTimeout(()=>{n.style.display="none";},2000);
 }
 
-/* storage helpers */
-function loadUsers(){ try{ return JSON.parse(localStorage.getItem(USERS_KEY) || "[]"); } catch(e){ return []; } }
-function saveUsers(arr){ localStorage.setItem(USERS_KEY, JSON.stringify(arr)); }
+function goHome(){window.location.href="https://ironbro26fanclub.co.za/index.html";}
 
-/* Access control */
-const current = (localStorage.getItem(CURRENT_KEY) || '').toLowerCase();
-if(!current || current !== OWNER_EMAIL.toLowerCase()){
-  alert('Access Denied: Admins Only.');
-  // redirect back
-  window.location.href = 'signup.html';
-} else {
-  // proceed
-  init();
+// Check if owner is logged in
+const currentOwner = localStorage.getItem('currentOwner');
+if(!currentOwner || currentOwner !== OWNER_EMAIL){
+  alert("Access Denied: Admins Only.");
+  window.location.href="signup.html";
 }
 
-function init(){
-  renderTable();
-  // auto-refresh every 3s
-  setInterval(renderTable, 3000);
+// Realtime listener for users
+const usersRef = collection(db,'users');
+onSnapshot(usersRef, (snapshot)=>{
+  const tbody=document.getElementById('usersTable');
+  tbody.innerHTML="";
+  snapshot.forEach(docSnap=>{
+    const u=docSnap.data();
+    const tr=document.createElement('tr');
 
-  // storage event listener to reflect changes from other tabs
-  window.addEventListener('storage', (e)=>{
-    if(e.key === USERS_KEY || e.key === 'neon_last_activity'){
-      renderTable();
-      document.querySelector('.h-title').style.transform = 'translateY(-3px)';
-      setTimeout(()=> document.querySelector('.h-title').style.transform = '', 220);
-    }
-  });
-
-  document.getElementById('btn-sync').addEventListener('click', ()=> renderTable());
-  document.getElementById('btn-logout').addEventListener('click', ()=>{
-    // set owner offline and clear session
-    const users = loadUsers();
-    const idx = users.findIndex(u => u.email && u.email.toLowerCase() === OWNER_EMAIL.toLowerCase());
-    if(idx !== -1){
-      users[idx].online = false;
-      users[idx].lastOnline = nowFormatted();
-      saveUsers(users);
-    }
-    localStorage.removeItem(CURRENT_KEY);
-    localStorage.setItem('neon_last_activity', Date.now().toString());
-    window.location.href = 'signup.html';
-  });
-}
-
-/* render table */
-function renderTable(){
-  const tbody = document.querySelector('#users-table tbody');
-  const noUsers = document.getElementById('no-users');
-  const users = loadUsers();
-  tbody.innerHTML = '';
-  if(!users || users.length === 0){ noUsers.style.display = 'block'; return; } else noUsers.style.display = 'none';
-
-  users.forEach(u=>{
-    const tr = document.createElement('tr');
-
-    const emailTd = document.createElement('td'); emailTd.textContent = u.email || '-';
-    const passTd = document.createElement('td'); passTd.textContent = u.passcode || '-';
-    const signupTd = document.createElement('td'); signupTd.textContent = u.signupTime || '-';
-
-    const statusTd = document.createElement('td');
-    const dot = document.createElement('span'); dot.className = 'dot ' + (u.online ? 'online' : 'offline');
-    statusTd.appendChild(dot);
-    const txt = document.createElement('span'); txt.textContent = u.online ? 'Online' : 'Offline';
-    statusTd.appendChild(txt);
-
-    const lastTd = document.createElement('td'); lastTd.textContent = u.lastOnline || '-';
-
-    const actionsTd = document.createElement('td'); actionsTd.className = 'actions';
-    // Toggle online
-    const toggleBtn = document.createElement('button'); toggleBtn.className='btn'; toggleBtn.style.padding='6px 8px'; toggleBtn.textContent = u.online ? 'Set Offline' : 'Set Online';
-    toggleBtn.addEventListener('click', ()=>{
-      if(!confirm(`Toggle online status for ${u.email}?`)) return;
-      const users = loadUsers();
-      const idx = users.findIndex(x => x.email === u.email);
-      if(idx !== -1){
-        users[idx].online = !users[idx].online;
-        users[idx].lastOnline = nowFormatted();
-        saveUsers(users);
-        localStorage.setItem('neon_last_activity', Date.now().toString());
-        renderTable();
-      }
-    });
-    // Remove user
-    const removeBtn = document.createElement('button'); removeBtn.className='btn'; removeBtn.style.padding='6px 8px'; removeBtn.style.marginLeft='6px'; removeBtn.textContent = 'Remove';
-    removeBtn.addEventListener('click', ()=>{
-      if(!confirm(`Remove user ${u.email}? This cannot be undone locally.`)) return;
-      const users = loadUsers().filter(x => x.email !== u.email);
-      saveUsers(users);
-      localStorage.setItem('neon_last_activity', Date.now().toString());
-      renderTable();
-    });
-
-    actionsTd.appendChild(toggleBtn);
-    actionsTd.appendChild(removeBtn);
-
-    tr.appendChild(emailTd);
-    tr.appendChild(passTd);
-    tr.appendChild(signupTd);
-    tr.appendChild(statusTd);
-    tr.appendChild(lastTd);
-    tr.appendChild(actionsTd);
+    const emailTd=document.createElement('td'); emailTd.textContent=u.email; tr.appendChild(emailTd);
+    const passTd=document.createElement('td'); passTd.textContent='*****'; tr.appendChild(passTd);
+    const signupTd=document.createElement('td'); signupTd.textContent=new Date(u.signupTime).toLocaleString(); tr.appendChild(signupTd);
+    const onlineTd=document.createElement('td'); onlineTd.textContent=u.online?'Online':'Offline'; onlineTd.className=u.online?'online':'offline'; tr.appendChild(onlineTd);
+    const lastTd=document.createElement('td'); lastTd.textContent=new Date(u.lastOnline).toLocaleString(); tr.appendChild(lastTd);
 
     tbody.appendChild(tr);
   });
-}
+});
 </script>
 </body>
 </html>
