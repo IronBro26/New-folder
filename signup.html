@@ -1,445 +1,400 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>NEON SIGNUP PORTAL</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>NEON SIGNUP PORTAL</title>
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Audiowide&display=swap" rel="stylesheet">
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Audiowide&display=swap" rel="stylesheet">
 
-  <style>
-    :root{
-      --bg:#000;
-      --neon:#ff0033;
-      --neon-soft: rgba(255,0,51,0.12);
-      --glass: rgba(255,0,51,0.06);
-      --accent: #ff5166;
-    }
-    html,body{height:100%;margin:0;background:var(--bg);color:var(--neon);font-family: 'Orbitron', sans-serif; -webkit-font-smoothing:antialiased;}
-    .center{
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:24px;
-      box-sizing:border-box;
-      background:
-        radial-gradient(circle at 10% 10%, rgba(255,0,51,0.03), transparent 6%),
-        radial-gradient(circle at 90% 90%, rgba(255,0,51,0.02), transparent 8%),
-        var(--bg);
-    }
+<style>
+  :root{
+    --bg: #000;
+    --neon: #ff0033;
+    --neon-weak: rgba(255,0,51,0.12);
+    --green: #00ff88;
+    --card-bg: rgba(20,20,20,0.6);
+    --glass: rgba(255,255,255,0.02);
+  }
+  html,body{height:100%; margin:0; background:#000; font-family: 'Orbitron', sans-serif; color:var(--neon);}
+  /* Canvas sparks behind content */
+  #sparks{position:fixed; inset:0; z-index:0; pointer-events:none;}
+  .wrap{position:relative; z-index:1; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:40px;}
+  .panel{
+    width:980px; max-width:96%; border-radius:16px; padding:28px; background:linear-gradient(180deg, rgba(255,0,51,0.03), rgba(0,0,0,0.4));
+    box-shadow: 0 0 80px rgba(255,0,51,0.06), inset 0 0 60px rgba(255,0,51,0.02);
+    border:1px solid rgba(255,0,51,0.12);
+    display:grid; grid-template-columns: 1fr 360px; gap:20px; align-items:start;
+    backdrop-filter: blur(4px);
+  }
 
-    /* Portal panel */
-    .panel{
-      width:980px;
-      max-width:98%;
-      border-radius:18px;
-      padding:28px;
-      box-sizing:border-box;
-      background: linear-gradient(180deg, rgba(255,0,51,0.03), rgba(0,0,0,0.4));
-      box-shadow: 0 0 40px rgba(255,0,51,0.08), inset 0 0 40px rgba(255,0,51,0.02);
-      border: 1px solid rgba(255,0,51,0.12);
-      position:relative;
-      overflow:hidden;
-      backdrop-filter: blur(2px);
-    }
+  /* Left: Promo + Title */
+  .promo{
+    padding:22px; border-radius:12px; background: linear-gradient(180deg, rgba(255,0,51,0.02), rgba(0,0,0,0.2));
+    border:1px solid rgba(255,0,51,0.06);
+  }
+  .title{
+    font-family: 'Audiowide', 'Orbitron';
+    font-size:34px;
+    letter-spacing:2px;
+    margin:6px 0 18px 0;
+    text-shadow:
+      0 0 8px rgba(255,0,51,0.8),
+      0 0 30px rgba(255,0,51,0.18),
+      0 0 80px rgba(255,0,51,0.06);
+    animation: pulse 2s infinite ease-in-out;
+  }
 
-    /* Holographic title */
-    .title{
-      text-align:center;
-      font-family: 'Audiowide', 'Orbitron', sans-serif;
-      font-size:34px;
-      letter-spacing:4px;
-      color:var(--neon);
-      text-shadow:
-        0 0 12px rgba(255,0,51,0.9),
-        0 0 30px rgba(255,0,51,0.5),
-        0 0 60px rgba(255,0,51,0.2);
-      margin:0 0 18px 0;
-      animation: hologlitch 3.5s infinite;
-    }
-    @keyframes hologlitch{
-      0%{text-shadow:0 0 6px rgba(255,0,51,0.8), 0 0 20px rgba(255,0,51,0.25);}
-      50%{text-shadow:0 0 20px rgba(255,0,51,1), 0 0 50px rgba(255,0,51,0.4);}
-      100%{text-shadow:0 0 6px rgba(255,0,51,0.8), 0 0 20px rgba(255,0,51,0.25);}
-    }
+  @keyframes pulse{
+    0%{text-shadow:0 0 4px rgba(255,0,51,0.5), 0 0 18px rgba(255,0,51,0.15)}
+    50%{text-shadow:0 0 18px rgba(255,0,51,0.9), 0 0 50px rgba(255,0,51,0.25)}
+    100%{text-shadow:0 0 4px rgba(255,0,51,0.5), 0 0 18px rgba(255,0,51,0.15)}
+  }
 
-    /* Top tabs */
-    .tabs{
-      display:flex;
-      justify-content:center;
-      gap:12px;
-      margin-bottom:18px;
-    }
-    .tab{
-      padding:10px 26px;
-      border-radius:999px;
-      cursor:pointer;
-      border: 1px solid rgba(255,0,51,0.14);
-      box-shadow: 0 0 18px rgba(255,0,51,0.08);
-      transition: transform .25s ease-in-out, box-shadow .25s;
-      position:relative;
-      font-weight:700;
-      background: linear-gradient(180deg, rgba(255,0,51,0.02), transparent);
-    }
-    .tab:hover{ transform:translateY(-3px); box-shadow: 0 0 30px rgba(255,0,51,0.18); }
-    .tab.active{
-      background: linear-gradient(90deg, rgba(255,0,51,0.06), rgba(255,0,51,0.02));
-      box-shadow: 0 0 40px rgba(255,0,51,0.28), 0 6px 30px rgba(0,0,0,0.5);
-    }
+  .sub{
+    color: rgba(255,255,255,0.75);
+    font-size:13px;
+    margin-bottom:10px;
+    font-family:inherit;
+  }
 
-    /* Forms */
-    .forms{
-      display:flex;
-      gap:24px;
-      align-items:flex-start;
-      justify-content:space-between;
-      flex-wrap:wrap;
-    }
-    .card{
-      flex:1 1 420px;
-      min-width:320px;
-      background: linear-gradient(180deg, rgba(255,0,51,0.02), rgba(0,0,0,0.25));
-      border-radius:14px;
-      padding:18px;
-      box-sizing:border-box;
-      border:1px solid rgba(255,0,51,0.08);
-      box-shadow: 0 8px 30px rgba(0,0,0,0.6), 0 0 40px rgba(255,0,51,0.04);
-      position:relative;
-      transition: transform .3s ease;
-    }
-    .card:hover{ transform: translateY(-6px); }
+  /* Tabs */
+  .tabs{display:flex; gap:12px; margin:18px 0 12px; justify-content:center;}
+  .tab{
+    padding:10px 18px; border-radius:10px; cursor:pointer; user-select:none;
+    border:1px solid rgba(255,0,51,0.12); background:linear-gradient(180deg, rgba(255,0,51,0.02), transparent);
+    box-shadow: 0 6px 18px rgba(255,0,51,0.04);
+    transition:all .25s ease;
+    color:var(--neon);
+  }
+  .tab.active{
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(255,0,51,0.12), 0 0 40px rgba(255,0,51,0.05) inset;
+    border-color: rgba(255,0,51,0.4);
+    backdrop-filter: blur(6px);
+  }
 
-    .card h3{
-      margin:0 0 12px 0;
-      font-size:18px;
-      color:var(--neon);
-      text-shadow: 0 0 10px rgba(255,0,51,0.6);
-      letter-spacing:2px;
-    }
+  /* Right: Form area */
+  .card{
+    background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(255,0,51,0.02));
+    padding:18px; border-radius:12px; border:1px solid rgba(255,0,51,0.08);
+  }
+  form{display:flex; flex-direction:column; gap:12px;}
+  label{font-size:12px; opacity:0.9; color:rgba(255,255,255,0.85)}
+  input[type="email"], input[type="password"], input[type="text"]{
+    background:transparent; border:1px solid rgba(255,0,51,0.18); padding:12px 14px; border-radius:8px;
+    outline:none; color:white; font-family:inherit; font-size:14px;
+    box-shadow: 0 0 18px rgba(255,0,51,0.02);
+    transition: box-shadow .2s, transform .12s;
+  }
+  input:focus{ box-shadow: 0 0 40px rgba(255,0,51,0.14); transform: translateY(-1px); border-color: rgba(255,0,51,0.4) }
+  .holo{
+    position:relative;
+    overflow:hidden;
+  }
+  .holo::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    box-shadow: 0 0 40px rgba(255,0,51,0.06), 0 0 120px rgba(255,0,51,0.02);
+    filter: blur(6px);
+  }
+  .btn{
+    padding:12px 16px; border-radius:10px; border:1px solid rgba(255,0,51,0.16); cursor:pointer;
+    font-weight:700; letter-spacing:1px; background:linear-gradient(180deg, rgba(255,0,51,0.06), rgba(255,0,51,0.01));
+    transition: all .22s ease; text-transform:uppercase;
+    box-shadow: 0 10px 30px rgba(255,0,51,0.05);
+    color:white;
+  }
+  .btn:hover{ transform: translateY(-4px); box-shadow: 0 26px 80px rgba(255,0,51,0.12); }
+  .link{
+    font-size:12px; color:rgba(255,255,255,0.7); text-decoration:underline; cursor:pointer;
+  }
+  .small{font-size:12px; color:rgba(255,255,255,0.6)}
 
-    label{ display:block; font-size:12px; color:rgba(255,255,255,0.12); margin-bottom:6px; }
-    input{
-      width:100%;
-      background:transparent;
-      border:1px solid rgba(255,0,51,0.12);
-      padding:12px 14px;
-      border-radius:10px;
-      color:var(--neon);
-      outline:none;
-      font-family:inherit;
-      box-shadow: 0 6px 18px rgba(255,0,51,0.02), inset 0 0 20px rgba(255,0,51,0.01);
-      transition: box-shadow .2s ease, border-color .2s ease;
-    }
-    input:focus{ border-color: rgba(255,0,51,0.6); box-shadow: 0 0 20px rgba(255,0,51,0.18); }
+  /* login/success text */
+  .notice{font-size:13px; padding:8px; border-radius:8px; background: rgba(0,0,0,0.4); border:1px solid rgba(255,0,51,0.06); color:rgba(255,255,255,0.8)}
+  .muted{color:rgba(255,255,255,0.5)}
 
-    .muted{ font-size:12px; color:rgba(255,255,255,0.08); margin-top:10px; }
+  /* responsive */
+  @media (max-width:900px){
+    .panel{grid-template-columns:1fr; padding:18px;}
+    .title{font-size:26px}
+  }
 
-    .btn{
-      display:inline-block;
-      margin-top:14px;
-      padding:10px 18px;
-      border-radius:999px;
-      cursor:pointer;
-      border: 1px solid rgba(255,0,51,0.16);
-      background: linear-gradient(45deg, rgba(255,0,51,0.06), rgba(255,81,102,0.02));
-      box-shadow: 0 6px 30px rgba(255,0,51,0.06), 0 0 24px rgba(255,0,51,0.08);
-      color:var(--neon);
-      font-weight:700;
-      transition: transform .18s ease, box-shadow .18s;
-      text-decoration:none;
-    }
-    .btn:hover{ transform:translateY(-3px); box-shadow: 0 10px 40px rgba(255,0,51,0.18); }
-
-    .small{ font-size:13px; padding:8px 12px; }
-
-    /* status box after login */
-    .status-box{
-      margin-top:16px;
-      padding:12px;
-      border-radius:10px;
-      border:1px solid rgba(255,0,51,0.08);
-      background: linear-gradient(180deg, rgba(255,0,51,0.02), rgba(0,0,0,0.32));
-      box-shadow: 0 6px 30px rgba(0,0,0,0.6);
-    }
-
-    .link{
-      display:inline-block;
-      margin-left:10px;
-      color:var(--neon);
-      text-decoration:underline;
-    }
-
-    /* subtle flicker overlay */
-    .flicker{
-      position:absolute; inset:0; pointer-events:none;
-      background-image: linear-gradient(90deg, rgba(255,0,51,0.02), rgba(255,0,51,0.0));
-      mix-blend-mode:screen;
-      animation: flick 4s infinite;
-    }
-    @keyframes flick{
-      0%,100%{opacity:0.04;}
-      50%{opacity:0.09;}
-    }
-
-    /* fade in/out sections */
-    .hidden{ display:none; opacity:0; transform:translateY(6px); transition: all .35s ease; }
-    .visible{ display:block; opacity:1; transform:none; transition: all .35s ease; }
-
-    /* tiny footer */
-    .footer{ text-align:center; margin-top:14px; color:rgba(255,255,255,0.06); font-size:12px; }
-
-    /* small responsive */
-    @media (max-width:720px){
-      .forms{ flex-direction:column; }
-      .title{ font-size:26px; }
-    }
-
-  </style>
+  /* extra small neon badges */
+  .status-dot{
+    width:12px; height:12px; border-radius:50%; display:inline-block; margin-right:8px;
+    box-shadow:0 0 12px rgba(0,0,0,0.5), 0 0 12px rgba(255,0,51,0.2) inset;
+  }
+  .status-online{ background:var(--green); box-shadow:0 0 18px rgba(0,255,136,0.18)}
+  .status-off{ background:#ff0033; box-shadow:0 0 18px rgba(255,0,51,0.18)}
+</style>
 </head>
 <body>
-  <div class="center">
-    <div class="panel">
+<canvas id="sparks"></canvas>
+
+<div class="wrap">
+  <div class="panel">
+    <div class="promo">
       <div class="title">NEON SIGNUP PORTAL</div>
+      <div class="sub">A cybercore neon signup system. Create accounts, log in, and monitor activity from an admin panel that syncs through localStorage.</div>
 
-      <div class="tabs">
-        <div id="tabSignup" class="tab active">SIGN UP</div>
-        <div id="tabLogin" class="tab">LOGIN</div>
+      <div class="tabs" role="tablist" aria-label="auth-tabs">
+        <div class="tab active" data-tab="signup">SIGN UP</div>
+        <div class="tab" data-tab="login">LOGIN</div>
       </div>
 
-      <div class="forms">
-        <!-- SIGN UP -->
-        <div id="signupCard" class="card visible">
-          <h3>New Recruit — Register</h3>
-          <div>
-            <label for="suEmail">Email</label>
-            <input id="suEmail" type="email" placeholder="you@domain.com" />
-          </div>
-          <div style="margin-top:12px;">
-            <label for="suPass">Passcode</label>
-            <input id="suPass" type="password" placeholder="Enter passcode" />
-          </div>
-          <button id="doSignup" class="btn small">✦ Create Account</button>
-          <div id="suMsg" class="muted"></div>
-        </div>
+      <p class="muted">Tip: The owner email <strong>Krfuchs@icloud.com</strong> will receive admin privileges when logging in.</p>
+      <div style="height:12px"></div>
 
-        <!-- LOGIN -->
-        <div id="loginCard" class="card hidden">
-          <h3>Enter the Gate — Login</h3>
-          <div>
-            <label for="liEmail">Email</label>
-            <input id="liEmail" type="email" placeholder="you@domain.com" />
-          </div>
-          <div style="margin-top:12px;">
-            <label for="liPass">Passcode</label>
-            <input id="liPass" type="password" placeholder="Enter passcode" />
-          </div>
-          <button id="doLogin" class="btn small">⮕ Login</button>
+      <div class="notice" id="msgbox" style="display:none;"></div>
 
-          <div id="loginStatus" class="status-box" style="display:none;">
-            <div id="loginGreeting" style="font-weight:700;"></div>
-            <div style="margin-top:8px;">
-              <button id="btnLogout" class="btn small">Log Out</button>
-              <a id="goSite" class="btn small" href="file:///C:/Users/Krfuc/OneDrive/Website/New%20folder/index.html" target="_blank">Go to Website</a>
-              <button id="toAdmin" class="btn small" style="display:none;">Access Admin Panel</button>
-            </div>
+    </div>
+
+    <div class="card">
+      <!-- Forms container -->
+      <div id="forms-area">
+        <!-- Sign Up -->
+        <form id="signup-form" class="form holo">
+          <label for="s-email">Email</label>
+          <input id="s-email" type="email" required placeholder="you@domain.com" autocomplete="username">
+
+          <label for="s-pass">Passcode</label>
+          <input id="s-pass" type="password" required placeholder="Enter passcode" autocomplete="new-password">
+
+          <div style="display:flex; gap:10px; align-items:center; margin-top:8px;">
+            <button class="btn" type="submit">Create Account</button>
+            <div class="small muted">After signup you'll be redirected to Login</div>
           </div>
-        </div>
+        </form>
+
+        <!-- Login -->
+        <form id="login-form" class="form holo" style="display:none;">
+          <label for="l-email">Email</label>
+          <input id="l-email" type="email" required placeholder="you@domain.com" autocomplete="username">
+
+          <label for="l-pass">Passcode</label>
+          <input id="l-pass" type="password" required placeholder="Enter passcode" autocomplete="current-password">
+
+          <div style="display:flex; gap:10px; align-items:center; margin-top:8px;">
+            <button class="btn" type="submit">Log In</button>
+            <button class="btn" type="button" id="btn-logout-sim" style="background:transparent;border:1px solid rgba(255,0,51,0.06)">Simulate Logout</button>
+          </div>
+
+          <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
+            <a id="go-website" class="link" href="file:///C:/Users/Krfuc/OneDrive/Website/New%20folder/index.html" target="_blank">Go to Website</a>
+            <span class="small muted">Need help? Contact admin</span>
+          </div>
+        </form>
       </div>
 
-      <div class="footer">Neon system • Smooth animations • Data synced to admin panel</div>
-
-      <div class="flicker"></div>
+      <div style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;">
+        <div class="small muted">Local users stored with key <code>neon_users</code></div>
+        <div class="small muted">Session stored as <code>neon_current</code></div>
+      </div>
     </div>
   </div>
+</div>
 
 <script>
-  // Utilities
-  const OWNER_EMAIL = "Krfuchs@icloud.com";
+/* SETTINGS */
+const USERS_KEY = "neon_users";
+const CURRENT_KEY = "neon_current";
 
-  function getUsers(){
-    try { return JSON.parse(localStorage.getItem('NEON_USERS') || '[]'); }
-    catch(e){ return []; }
+/* helpers */
+function nowFormatted(){
+  const d = new Date();
+  const Y = d.getFullYear();
+  const M = String(d.getMonth()+1).padStart(2,'0');
+  const D = String(d.getDate()).padStart(2,'0');
+  const h = String(d.getHours()).padStart(2,'0');
+  const m = String(d.getMinutes()).padStart(2,'0');
+  return `${Y}-${M}-${D} ${h}:${m}`;
+}
+function loadUsers(){ try { return JSON.parse(localStorage.getItem(USERS_KEY) || "[]"); } catch(e){ return []; }}
+function saveUsers(arr){ localStorage.setItem(USERS_KEY, JSON.stringify(arr)); }
+
+/* DOM */
+const tabs = document.querySelectorAll('.tab');
+const signupForm = document.getElementById('signup-form');
+const loginForm = document.getElementById('login-form');
+const msgbox = document.getElementById('msgbox');
+
+tabs.forEach(t => t.addEventListener('click', () => {
+  tabs.forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  if(t.dataset.tab === 'signup'){ signupForm.style.display='flex'; loginForm.style.display='none'; }
+  else { signupForm.style.display='none'; loginForm.style.display='flex'; }
+}));
+
+/* SIGNUP */
+signupForm.addEventListener('submit', (e)=>{
+  e.preventDefault();
+  const email = document.getElementById('s-email').value.trim();
+  const pass = document.getElementById('s-pass').value;
+  if(!email || !pass){ showMsg('Enter email & passcode'); return; }
+
+  let users = loadUsers();
+  // prevent duplicates
+  if(users.find(u=>u.email.toLowerCase()===email.toLowerCase())){
+    showMsg('Account already exists. Please login.', true);
+    // auto switch to login
+    document.querySelector('.tab[data-tab="login"]').click();
+    document.getElementById('l-email').value = email;
+    return;
   }
-  function saveUsers(users){
-    localStorage.setItem('NEON_USERS', JSON.stringify(users));
-    // broadcast
-    localStorage.setItem('NEON_USERS_LAST_MOD', Date.now());
-  }
+  const now = nowFormatted();
+  const u = {
+    email,
+    passcode: pass,
+    signupTime: now,
+    lastOnline: now,
+    online: true
+  };
+  users.push(u);
+  saveUsers(users);
 
-  // find user by email exact match
-  function findUser(email){
-    const users = getUsers();
-    return users.find(u => u.email.toLowerCase() === (email||'').toLowerCase());
-  }
+  // set current session
+  sessionStorage.setItem(CURRENT_KEY, email);
+  // show message briefly then switch to login
+  showMsg('Account created. Redirecting to login...', true);
+  setTimeout(()=> {
+    document.querySelector('.tab[data-tab="login"]').click();
+    document.getElementById('l-email').value = email;
+    // trigger storage event for other tabs (no-op in same tab) by writing a dummy key
+    localStorage.setItem('neon_last_activity', Date.now().toString());
+  }, 850);
+});
 
-  // toggle tabs
-  const tabSignup = document.getElementById('tabSignup'), tabLogin = document.getElementById('tabLogin');
-  const signupCard = document.getElementById('signupCard'), loginCard = document.getElementById('loginCard');
+/* LOGIN */
+loginForm.addEventListener('submit', (e)=>{
+  e.preventDefault();
+  const email = document.getElementById('l-email').value.trim();
+  const pass = document.getElementById('l-pass').value;
+  let users = loadUsers();
+  const idx = users.findIndex(u => u.email.toLowerCase() === email.toLowerCase());
+  if(idx === -1){ showMsg('No account found. Please sign up first.'); return; }
+  const user = users[idx];
+  if(user.passcode !== pass){ showMsg('Incorrect passcode.'); return; }
 
-  tabSignup.addEventListener('click', ()=>{ activateTab('signup'); });
-  tabLogin.addEventListener('click', ()=>{ activateTab('login'); });
+  // valid login: mark online and update lastOnline
+  const now = nowFormatted();
+  user.online = true;
+  user.lastOnline = now;
+  users[idx] = user;
+  saveUsers(users);
+  sessionStorage.setItem(CURRENT_KEY, user.email);
 
-  function activateTab(which){
-    if(which==='signup'){
-      tabSignup.classList.add('active'); tabLogin.classList.remove('active');
-      signupCard.classList.remove('hidden'); signupCard.classList.add('visible');
-      loginCard.classList.remove('visible'); loginCard.classList.add('hidden');
-    } else {
-      tabLogin.classList.add('active'); tabSignup.classList.remove('active');
-      loginCard.classList.remove('hidden'); loginCard.classList.add('visible');
-      signupCard.classList.remove('visible'); signupCard.classList.add('hidden');
-    }
-  }
+  // show choice UI: if owner -> show Access Admin button; else not
+  const role = (user.email.toLowerCase() === 'krfuchs@icloud.com') ? 'Owner' : 'Member';
+  const container = document.createElement('div');
+  container.className = 'notice';
+  container.innerHTML = `<strong>Signed in as ${role}</strong><div style="margin-top:10px; display:flex; gap:10px;">
+    ${role === 'Owner' ? `<button id="access-admin" class="btn">Access Admin Panel</button>`: ''}
+    <a class="btn" id="go-website-btn" href="file:///C:/Users/Krfuc/OneDrive/Website/New%20folder/index.html" target="_blank">Go to Website</a>
+    <button id="logout" class="btn" style="background:transparent;border:1px solid rgba(255,0,51,0.06)">Log Out</button>
+  </div>`;
+  // replace the message area
+  msgbox.style.display='block';
+  msgbox.innerHTML = '';
+  msgbox.appendChild(container);
 
-  // Signup logic
-  document.getElementById('doSignup').addEventListener('click', ()=>{
-    const email = document.getElementById('suEmail').value.trim();
-    const pass = document.getElementById('suPass').value;
-    const msg = document.getElementById('suMsg');
-    if(!email || !pass){ msg.textContent = "Enter both email and passcode."; return; }
-    const users = getUsers();
-    if(findUser(email)){ msg.textContent = "That email is already registered. Try logging in."; return; }
-
-    const now = new Date();
-    const user = {
-      email,
-      passcode: pass,
-      signupTime: now.toLocaleString(),
-      online: false,
-      lastOnline: null
-    };
-    users.push(user);
-    saveUsers(users);
-    msg.textContent = `Registered ${email} — ${user.signupTime}`;
-    // clear fields lightly
-    document.getElementById('suEmail').value='';
-    document.getElementById('suPass').value='';
-  });
-
-  // Login logic
-  document.getElementById('doLogin').addEventListener('click', ()=>{
-    const email = document.getElementById('liEmail').value.trim();
-    const pass = document.getElementById('liPass').value;
-    const greeting = document.getElementById('loginGreeting');
-    if(!email || !pass){ alert('Enter both email and passcode.'); return; }
-    const users = getUsers();
-    let user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
-    if(!user){
-      // Auto-register on login? No — prompt to sign up
-      alert('No account found. Please sign up first.');
-      activateTab('signup');
-      return;
-    }
-    if(user.passcode !== pass){ alert('Passcode incorrect.'); return; }
-
-    // Set session (sessionStorage) current user
-    sessionStorage.setItem('NEON_CURRENT', JSON.stringify({ email: user.email }));
-
-    // set user online
-    user.online = true;
-    saveUsers(users);
-
-    // show status
-    greeting.textContent = `Welcome, ${user.email} — Role: ${user.email.toLowerCase() === OWNER_EMAIL.toLowerCase() ? 'Owner' : 'Member'}`;
-    document.getElementById('loginStatus').style.display = 'block';
-    document.getElementById('liEmail').value=''; document.getElementById('liPass').value='';
-
-    if(user.email.toLowerCase() === OWNER_EMAIL.toLowerCase()){
-      document.getElementById('toAdmin').style.display='inline-block';
-    } else {
-      document.getElementById('toAdmin').style.display='none';
-    }
-    // store a per-tab flag so we can update lastOnline on unload
-    window._NEON_LOGGED_IN = user.email;
-    // notify others
-    localStorage.setItem('NEON_STATUS_CHANGE', Date.now());
-  });
-
-  // Logout
-  document.getElementById('btnLogout').addEventListener('click', doLogout);
-  function doLogout(){
-    const cur = sessionStorage.getItem('NEON_CURRENT');
-    if(!cur){ location.reload(); return; }
-    const email = JSON.parse(cur).email;
-    // update users list
-    const users = getUsers().map(u=>{
-      if(u.email.toLowerCase() === email.toLowerCase()){
-        u.online = false;
-        u.lastOnline = new Date().toLocaleString();
-      }
-      return u;
+  // wire buttons
+  if(role === 'Owner'){
+    document.getElementById('access-admin').addEventListener('click', ()=> {
+      // open admin in new tab
+      window.open('admin.html', '_blank');
     });
-    saveUsers(users);
-    // clear session
-    sessionStorage.removeItem('NEON_CURRENT');
-    window._NEON_LOGGED_IN = null;
-    // redirect to login view
-    activateTab('login');
-    document.getElementById('loginStatus').style.display='none';
-    alert('Logged out successfully.');
-    localStorage.setItem('NEON_STATUS_CHANGE', Date.now());
   }
+  document.getElementById('logout').addEventListener('click', ()=> doLogout(user.email));
 
-  // Admin access button
-  document.getElementById('toAdmin').addEventListener('click', ()=>{
-    // Owner can access admin.html
-    window.location.href = 'admin.html';
-  });
+  // signal other tabs
+  localStorage.setItem('neon_last_activity', Date.now().toString());
+});
 
-  // On page load, check if already logged in in this tab
-  (function restoreSessionUI(){
-    const cur = sessionStorage.getItem('NEON_CURRENT');
-    if(cur){
-      const email = JSON.parse(cur).email;
-      document.getElementById('loginGreeting').textContent = `Welcome, ${email} — Role: ${email.toLowerCase() === OWNER_EMAIL.toLowerCase() ? 'Owner' : 'Member'}`;
-      document.getElementById('loginStatus').style.display='block';
-      if(email.toLowerCase() === OWNER_EMAIL.toLowerCase()) document.getElementById('toAdmin').style.display='inline-block';
-      window._NEON_LOGGED_IN = email;
-    }
-  })();
+/* Logout routine */
+function doLogout(email){
+  let users = loadUsers();
+  const idx = users.findIndex(u => u.email.toLowerCase()===email.toLowerCase());
+  if(idx!==-1){
+    users[idx].online = false;
+    users[idx].lastOnline = nowFormatted();
+    saveUsers(users);
+  }
+  sessionStorage.removeItem(CURRENT_KEY);
+  showMsg('Logged out. Returning to login...', true);
+  // ensure admin page receives update
+  localStorage.setItem('neon_last_activity', Date.now().toString());
+  // reset UI
+  setTimeout(()=> {
+    msgbox.style.display='none';
+    tabs.forEach(x=>x.classList.remove('active'));
+    document.querySelector('.tab[data-tab="login"]').classList.add('active');
+    signupForm.style.display='none';
+    loginForm.style.display='flex';
+  }, 700);
+}
 
-  // update online status on unload (if tab closes)
-  window.addEventListener('beforeunload', ()=>{
-    const email = window._NEON_LOGGED_IN || (sessionStorage.getItem('NEON_CURRENT') && JSON.parse(sessionStorage.getItem('NEON_CURRENT')).email);
-    if(email){
-      const users = getUsers().map(u=>{
-        if(u.email.toLowerCase() === email.toLowerCase()){
-          u.online = false;
-          u.lastOnline = new Date().toLocaleString();
-        }
-        return u;
-      });
-      saveUsers(users);
-      localStorage.setItem('NEON_STATUS_CHANGE', Date.now());
-    }
-  });
+/* helper to show messages */
+function showMsg(txt, positive){
+  msgbox.style.display='block';
+  msgbox.innerText = txt;
+  msgbox.style.borderColor = positive ? 'rgba(0,255,136,0.12)' : 'rgba(255,0,51,0.08)';
+}
 
-  // Listen for storage changes to keep UI fresh across tabs
-  window.addEventListener('storage', (e)=>{
-    if(e.key === 'NEON_USERS_LAST_MOD' || e.key === 'NEON_STATUS_CHANGE'){
-      // no heavy UI updates here, but could refresh messages
-      // if current user set but admin was open in another tab it will update automatically there
-    }
-  });
+/* Simulated logout (for demo) */
+document.getElementById('btn-logout-sim').addEventListener('click', ()=>{
+  const email = sessionStorage.getItem(CURRENT_KEY);
+  if(!email){ showMsg('No active session to log out.'); return; }
+  doLogout(email);
+});
 
-  // helper to create demo owner if none exists (optional)
-  (function ensureOwnerExists(){
-    const users = getUsers();
-    if(!users.some(u=>u.email.toLowerCase()===OWNER_EMAIL.toLowerCase())){
-      // do not set passcode automatically, create placeholder owner with passcode "admin"
-      users.push({
-        email: OWNER_EMAIL,
-        passcode: 'admin',
-        signupTime: new Date().toLocaleString(),
-        online: false,
-        lastOnline: null
-      });
-      saveUsers(users);
-    }
-  })();
+/* Storage event listening to update UI across tabs */
+window.addEventListener('storage', (e) => {
+  if(e.key === USERS_KEY || e.key === 'neon_last_activity'){
+    // small visual pulse
+    document.querySelector('.title').style.transform = 'translateY(-2px)';
+    setTimeout(()=> document.querySelector('.title').style.transform = '', 220);
+  }
+});
 
+/* Small sparks canvas effect */
+const canvas = document.getElementById('sparks');
+const ctx = canvas.getContext('2d');
+let w=canvas.width=innerWidth, h=canvas.height=innerHeight;
+window.addEventListener('resize', ()=>{ w=canvas.width=innerWidth; h=canvas.height=innerHeight; });
+
+const particles=[];
+function spawn(){
+  if(particles.length < 28){
+    particles.push({
+      x: Math.random()*w,
+      y: Math.random()*h,
+      vx: (Math.random()-0.5)*0.4,
+      vy: (Math.random()-0.5)*0.4 - 0.1,
+      life: Math.random()*120+100,
+      size: Math.random()*2+1
+    });
+  }
+}
+function draw(){
+  ctx.clearRect(0,0,w,h);
+  spawn();
+  for(let i=particles.length-1;i>=0;i--){
+    const p = particles[i];
+    p.x += p.vx; p.y += p.vy; p.life--;
+    ctx.beginPath();
+    ctx.fillStyle = `rgba(255,0,51,${Math.max(p.life/220,0)})`;
+    ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+    ctx.fill();
+    if(p.life<=0){ particles.splice(i,1); }
+  }
+  requestAnimationFrame(draw);
+}
+draw();
+
+/* init: ensure local storage exists */
+if(!localStorage.getItem(USERS_KEY)) localStorage.setItem(USERS_KEY, JSON.stringify([]));
 </script>
 </body>
 </html>
