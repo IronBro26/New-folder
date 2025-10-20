@@ -1,246 +1,216 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ADMIN CONTROL PANEL</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#000;
-      --neon:#ff0033;
-      --neon-soft: rgba(255,0,51,0.10);
-      --green:#2fff7a;
-      --red:#ff0033;
-    }
-    html,body{height:100%;margin:0;background:var(--bg);color:var(--neon);font-family:'Orbitron',sans-serif;}
-    .wrap{padding:28px;min-height:100vh;box-sizing:border-box;}
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ADMIN CONTROL PANEL</title>
 
-    .header{
-      display:flex;align-items:center;justify-content:space-between;gap:12px;
-      border-radius:12px;padding:18px;background:linear-gradient(180deg, rgba(255,0,51,0.02), rgba(0,0,0,0.28));
-      box-shadow: 0 10px 40px rgba(255,0,51,0.04);
-      border:1px solid rgba(255,0,51,0.12);
-    }
-    .hdr-title{
-      font-size:28px;letter-spacing:4px;color:var(--neon);
-      text-shadow: 0 0 16px rgba(255,0,51,0.9), 0 0 40px rgba(255,0,51,0.2);
-      animation: neonPulse 2.5s infinite;
-    }
-    @keyframes neonPulse{
-      0%{ transform: translateY(0); filter: drop-shadow(0 0 12px rgba(255,0,51,0.6)); }
-      50%{ transform: translateY(-3px); filter: drop-shadow(0 0 36px rgba(255,0,51,0.9)); }
-      100%{ transform: translateY(0); filter: drop-shadow(0 0 12px rgba(255,0,51,0.6)); }
-    }
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
 
-    .controls{display:flex;gap:12px;align-items:center;}
-    .btn{padding:10px 16px;border-radius:999px;border:1px solid rgba(255,0,51,0.12);background:transparent;color:var(--neon);cursor:pointer;font-weight:700;text-decoration:none;}
-    .btn:hover{transform:translateY(-3px);box-shadow:0 10px 40px rgba(255,0,51,0.12);}
+<style>
+  :root{
+    --bg:#000;
+    --neon:#ff0033;
+    --glow: rgba(255,0,51,0.12);
+    --neon-green: #00ff88;
+  }
+  html,body{height:100%; margin:0; background: #000; color:var(--neon); font-family:'Orbitron', sans-serif;}
+  body{display:flex; align-items:center; justify-content:center; padding:28px;}
 
-    .main{
-      margin-top:20px;
-      display:block;
-    }
+  .container{
+    width:1000px; max-width:96%; border-radius:14px; padding:18px; background: linear-gradient(180deg, rgba(255,0,51,0.02), rgba(0,0,0,0.6));
+    border:1px solid rgba(255,0,51,0.08); box-shadow:0 20px 80px rgba(255,0,51,0.03);
+  }
 
-    .panel{
-      margin-top:12px;padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,0,51,0.02), rgba(0,0,0,0.32));
-      border:1px solid rgba(255,0,51,0.06);box-shadow: 0 8px 28px rgba(0,0,0,0.6);
-    }
+  .header{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    margin-bottom:16px;
+  }
+  .h-title{
+    font-family:'Press Start 2P', 'Orbitron';
+    font-size:20px; color:var(--neon);
+    text-shadow: 0 0 14px rgba(255,0,51,0.9), 0 0 60px rgba(255,0,51,0.12);
+    animation: flicker 2.2s infinite;
+  }
+  @keyframes flicker{
+    0%{opacity:0.95} 50%{opacity:1} 55%{opacity:0.8} 100%{opacity:0.98}
+  }
 
-    table{
-      width:100%;border-collapse:collapse;color:var(--neon);font-size:14px;
-    }
-    thead th{
-      text-align:left;padding:12px;border-bottom:1px dashed rgba(255,0,51,0.06);font-weight:700;
-      color:var(--neon);letter-spacing:2px;
-    }
-    tbody td{padding:12px;border-bottom:1px solid rgba(255,0,51,0.03);}
-    .status-dot{
-      width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:8px;box-shadow:0 0 10px rgba(0,0,0,0.6);
-    }
-    .online{ background: var(--green); box-shadow:0 0 16px rgba(47,255,122,0.18);}
-    .offline{ background: var(--red); box-shadow:0 0 16px rgba(255,0,51,0.18);}
+  .controls{display:flex; gap:10px; align-items:center;}
+  .btn{
+    padding:8px 12px; border-radius:8px; background:linear-gradient(180deg, rgba(255,0,51,0.06), transparent); border:1px solid rgba(255,0,51,0.12);
+    color:white; font-weight:700; cursor:pointer;
+  }
 
-    .small-muted{ font-size:12px;color:rgba(255,255,255,0.08); }
+  .panel{
+    border-radius:10px; padding:12px; border:1px solid rgba(255,0,51,0.06); background:rgba(0,0,0,0.45);
+  }
 
-    /* glowing header for table */
-    .panel h4{
-      margin:0 0 12px 0;color:var(--neon);text-shadow:0 0 12px rgba(255,0,51,0.6);
-      animation: smallPulse 3s infinite;
-    }
-    @keyframes smallPulse{
-      0%{ transform:scale(1); }
-      50%{ transform:scale(1.01); }
-      100%{ transform:scale(1); }
-    }
+  table{width:100%; border-collapse:collapse; font-size:13px;}
+  th,td{padding:10px 8px; text-align:left; border-bottom:1px dashed rgba(255,0,51,0.04);}
+  th{font-size:12px; color:rgba(255,255,255,0.8); text-transform:uppercase; letter-spacing:1px;}
+  td{color:rgba(255,255,255,0.88);}
 
-    .note{ margin-top:10px;color:rgba(255,255,255,0.06);font-size:12px;}
-    .danger{ color:rgba(255,0,51,0.9); }
+  .dot{width:14px;height:14px;border-radius:50%;display:inline-block;margin-right:8px;vertical-align:middle}
+  .online{background:var(--neon-green); box-shadow:0 0 18px rgba(0,255,136,0.12)}
+  .offline{background:var(--neon); box-shadow:0 0 18px rgba(255,0,51,0.12)}
 
-    /* responsive */
-    @media (max-width:720px){
-      .header{ flex-direction:column; align-items:flex-start; gap:8px; }
-      table,thead,tbody,th,td{ display:block; }
-      thead{ display:none; }
-      tbody td{ border-bottom: none; padding:8px 0; }
-    }
-  </style>
+  .muted{color:rgba(255,255,255,0.55); font-size:12px}
+  .center{display:flex; justify-content:center; align-items:center}
+
+  @media (max-width:860px){ body{padding:12px} .header{flex-direction:column; gap:8px}}
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="header">
-      <div class="hdr-title">ADMIN CONTROL PANEL</div>
-      <div class="controls">
-        <a class="btn" href="file:///C:/Users/Krfuc/OneDrive/Website/New%20folder/index.html" target="_blank">Home</a>
-        <button id="refreshBtn" class="btn">Refresh</button>
-        <button id="forceLogoutAll" class="btn">Force Logout All</button>
-        <button id="logoutSelf" class="btn">Log Out (You)</button>
-      </div>
+<div class="container">
+  <div class="header">
+    <div>
+      <div class="h-title">ADMIN CONTROL PANEL</div>
+      <div class="muted">Realtime users (from <code>neon_users</code>) — refreshes automatically and via storage events</div>
     </div>
-
-    <div class="main">
-      <div class="panel">
-        <h4>Registered Users</h4>
-        <div style="overflow:auto;">
-          <table id="usersTable" role="grid" aria-label="Registered users">
-            <thead>
-              <tr>
-                <th>Email</th>
-                <th>Passcode</th>
-                <th>Signup Time</th>
-                <th>Online Status</th>
-                <th>Last Online</th>
-              </tr>
-            </thead>
-            <tbody id="tbodyUsers">
-              <!-- populated by JS -->
-            </tbody>
-          </table>
-        </div>
-        <div class="note">Status updates automatically. Last online updates on logout. Owner-only page enforced.</div>
-      </div>
+    <div class="controls">
+      <a class="btn" href="file:///C:/Users/Krfuc/OneDrive/Website/New%20folder/index.html" target="_blank">Home</a>
+      <button id="btn-refresh" class="btn">Data Sync</button>
+      <button id="btn-logout" class="btn">Logout (Admin)</button>
     </div>
   </div>
 
+  <div class="panel">
+    <table id="users-table" aria-live="polite">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Passcode</th>
+          <th>Signup Time</th>
+          <th>Online Status</th>
+          <th>Last Online</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div id="no-users" class="center" style="padding:14px; display:none; color:rgba(255,255,255,0.6)">No users found</div>
+  </div>
+</div>
+
 <script>
-  const OWNER_EMAIL = "Krfuchs@icloud.com";
-  // Access control: check session storage
-  const cur = sessionStorage.getItem('NEON_CURRENT');
-  if(!cur){
-    alert('Access Denied: Admins Only.');
-    window.location.href = 'signup.html';
-    throw new Error('Redirecting non-logged user.');
-  }
-  const current = JSON.parse(cur);
-  if(current.email.toLowerCase() !== OWNER_EMAIL.toLowerCase()){
-    alert('Access Denied: Admins Only.');
-    window.location.href = 'signup.html';
-    throw new Error('Redirecting non-owner.');
-  }
+const USERS_KEY = "neon_users";
+const CURRENT_KEY = "neon_current";
 
-  // helpers
-  function getUsers(){
-    try { return JSON.parse(localStorage.getItem('NEON_USERS') || '[]'); }
-    catch(e){ return []; }
-  }
-  function saveUsers(users){
-    localStorage.setItem('NEON_USERS', JSON.stringify(users));
-    localStorage.setItem('NEON_USERS_LAST_MOD', Date.now());
-  }
+/* Formatting */
+function nowFormatted(){
+  const d = new Date();
+  const Y = d.getFullYear();
+  const M = String(d.getMonth()+1).padStart(2,'0');
+  const D = String(d.getDate()).padStart(2,'0');
+  const h = String(d.getHours()).padStart(2,'0');
+  const m = String(d.getMinutes()).padStart(2,'0');
+  return `${Y}-${M}-${D} ${h}:${m}`;
+}
+function loadUsers(){ try { return JSON.parse(localStorage.getItem(USERS_KEY) || "[]"); } catch(e){ return []; } }
+function saveUsers(arr){ localStorage.setItem(USERS_KEY, JSON.stringify(arr)); }
 
-  function renderTable(){
-    const users = getUsers();
-    const tbody = document.getElementById('tbodyUsers');
-    tbody.innerHTML = '';
-    if(users.length===0){
-      tbody.innerHTML = '<tr><td colspan="5" style="padding:14px;color:rgba(255,255,255,0.06);">No users registered yet.</td></tr>';
-      return;
-    }
-    users.forEach(u=>{
-      const tr = document.createElement('tr');
-      // email
-      const tdEmail = document.createElement('td');
-      tdEmail.textContent = u.email;
-      // passcode
-      const tdPass = document.createElement('td'); tdPass.textContent = u.passcode;
-      // signup time
-      const tdSignup = document.createElement('td'); tdSignup.textContent = u.signupTime || '-';
-      // online
-      const tdOnline = document.createElement('td');
-      const dot = document.createElement('span');
-      dot.className = 'status-dot ' + (u.online ? 'online' : 'offline');
-      const label = document.createElement('span');
-      label.textContent = u.online ? 'Online' : 'Offline';
-      tdOnline.appendChild(dot); tdOnline.appendChild(label);
-      // last online
-      const tdLast = document.createElement('td'); tdLast.textContent = u.lastOnline || '-';
+/* Access control: only Owner (Krfuchs@icloud.com) allowed */
+const current = sessionStorage.getItem(CURRENT_KEY);
+if(!current || current.toLowerCase() !== 'krfuchs@icloud.com'){
+  alert('Access Denied: Admins Only.');
+  // small delay so alert reads, then redirect:
+  window.location.href = 'signup.html';
+} else {
+  // owner is present: proceed
+  init();
+}
 
-      tr.appendChild(tdEmail); tr.appendChild(tdPass); tr.appendChild(tdSignup); tr.appendChild(tdOnline); tr.appendChild(tdLast);
-      tbody.appendChild(tr);
-    });
-  }
-
-  // initial render
+function init(){
   renderTable();
+  // refresh every 3 seconds
+  setInterval(renderTable, 3000);
 
-  // Refresh button
-  document.getElementById('refreshBtn').addEventListener('click', renderTable);
-
-  // Force logout all users
-  document.getElementById('forceLogoutAll').addEventListener('click', ()=>{
-    if(!confirm('Force logout all users? This sets them offline and updates Last Online.')) return;
-    const users = getUsers().map(u=>{
-      u.online = false;
-      u.lastOnline = new Date().toLocaleString();
-      return u;
-    });
-    saveUsers(users);
-    renderTable();
-    // notify other tabs
-    localStorage.setItem('NEON_STATUS_CHANGE', Date.now());
-  });
-
-  // logout self (owner)
-  document.getElementById('logoutSelf').addEventListener('click', ()=>{
-    // mark owner offline and set lastOnline
-    const users = getUsers().map(u=>{
-      if(u.email.toLowerCase() === OWNER_EMAIL.toLowerCase()){
-        u.online = false;
-        u.lastOnline = new Date().toLocaleString();
-      }
-      return u;
-    });
-    saveUsers(users);
-    sessionStorage.removeItem('NEON_CURRENT');
-    localStorage.setItem('NEON_STATUS_CHANGE', Date.now());
-    alert('You have been logged out.');
-    window.location.href = 'signup.html';
-  });
-
-  // Keep table in sync using storage event & polling
+  // Listen for storage updates to reflect other tabs' changes
   window.addEventListener('storage', (e)=>{
-    if(e.key === 'NEON_USERS_LAST_MOD' || e.key === 'NEON_STATUS_CHANGE'){
+    if(e.key === USERS_KEY || e.key === 'neon_last_activity'){
       renderTable();
+      // subtle flash
+      document.querySelector('.h-title').style.transform = 'translateY(-2px)';
+      setTimeout(()=> document.querySelector('.h-title').style.transform = '', 220);
     }
   });
 
-  // Poll every 2.5s to refresh status (helps when some browsers don't fire storage events)
-  const poll = setInterval(renderTable, 2500);
-
-  // Clean up on unload: mark owner offline (but for admin we want them to stay online while they're here)
-  window.addEventListener('beforeunload', ()=>{
-    // mark owner offline with lastOnline
-    const users = getUsers().map(u=>{
-      if(u.email.toLowerCase() === OWNER_EMAIL.toLowerCase()){
-        u.online = false;
-        u.lastOnline = new Date().toLocaleString();
-      }
-      return u;
-    });
-    saveUsers(users);
-    localStorage.setItem('NEON_STATUS_CHANGE', Date.now());
+  document.getElementById('btn-refresh').addEventListener('click', ()=> renderTable());
+  document.getElementById('btn-logout').addEventListener('click', ()=>{
+    // Owner logout: mark offline and clear session
+    const users = loadUsers();
+    const idx = users.findIndex(u => u.email.toLowerCase() === 'krfuchs@icloud.com');
+    if(idx !== -1){
+      users[idx].online = false;
+      users[idx].lastOnline = nowFormatted();
+      saveUsers(users);
+    }
+    sessionStorage.removeItem(CURRENT_KEY);
+    // notify other tabs
+    localStorage.setItem('neon_last_activity', Date.now().toString());
+    // redirect back to signup
+    window.location.href = 'signup.html';
   });
+}
 
+function renderTable(){
+  const tbody = document.querySelector('#users-table tbody');
+  const noUsers = document.getElementById('no-users');
+  const users = loadUsers();
+  tbody.innerHTML = '';
+  if(!users || users.length === 0){
+    noUsers.style.display = 'block';
+    return;
+  } else noUsers.style.display = 'none';
+
+  users.forEach(u=>{
+    const tr = document.createElement('tr');
+    const emailTd = document.createElement('td');
+    emailTd.textContent = u.email;
+    const passTd = document.createElement('td');
+    passTd.textContent = u.passcode;
+    const signupTd = document.createElement('td');
+    signupTd.textContent = u.signupTime || '-';
+    const onlineTd = document.createElement('td');
+    const dot = document.createElement('span');
+    dot.className = 'dot ' + (u.online ? 'online' : 'offline');
+    const txt = document.createElement('span');
+    txt.textContent = u.online ? 'Online' : 'Offline';
+    onlineTd.appendChild(dot);
+    onlineTd.appendChild(txt);
+    const lastTd = document.createElement('td');
+    lastTd.textContent = u.lastOnline || '-';
+
+    tr.appendChild(emailTd);
+    tr.appendChild(passTd);
+    tr.appendChild(signupTd);
+    tr.appendChild(onlineTd);
+    tr.appendChild(lastTd);
+    tbody.appendChild(tr);
+  });
+}
+
+/* optional: allow admin to force toggle a user's online state by clicking a row (convenience) */
+document.addEventListener('click', (e)=>{
+  const row = e.target.closest('tr');
+  if(!row) return;
+  const cells = row.querySelectorAll('td');
+  if(cells.length < 1) return;
+  const email = cells[0].innerText;
+  // prevent accidental toggle when clicking header
+  if(email.toLowerCase() === 'email') return;
+  // confirm action
+  if(!confirm(`Toggle online status for ${email}?`)) return;
+  const users = loadUsers();
+  const idx = users.findIndex(u => u.email === email);
+  if(idx !== -1){
+    users[idx].online = !users[idx].online;
+    users[idx].lastOnline = nowFormatted();
+    saveUsers(users);
+    localStorage.setItem('neon_last_activity', Date.now().toString());
+    renderTable();
+  }
+});
 </script>
 </body>
 </html>
