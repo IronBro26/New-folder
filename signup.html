@@ -3,205 +3,50 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>NEON SIGNUP PORTAL — ironbro26fanclub</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Audiowide&display=swap" rel="stylesheet">
+<title>ADMIN PANEL — ironbro26fanclub</title>
 <style>
-:root{
-  --bg:#000;
-  --neon:#ff0033;
-  --neon-weak:rgba(255,0,51,0.08);
-  --neon-green:#00ff88;
-}
-*{box-sizing:border-box}
-html,body{height:100%; margin:0; background:var(--bg); color:var(--neon); font-family:'Orbitron',sans-serif}
-canvas#sparks{position:fixed; inset:0; z-index:0; pointer-events:none}
-.container{position:relative; z-index:1; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px}
-.card{
-  width:980px; max-width:96%; display:grid; grid-template-columns:1fr 380px; gap:20px;
-  background:linear-gradient(180deg, rgba(255,0,51,0.02), rgba(0,0,0,0.5));
-  border:1px solid var(--neon-weak); border-radius:14px; padding:22px; box-shadow:0 30px 120px rgba(255,0,51,0.03);
-  backdrop-filter: blur(6px);
-}
-.brand{padding:8px 6px 0 6px;}
-.title{
-  font-family:'Audiowide','Orbitron'; font-size:34px; letter-spacing:2px; margin:6px 0;
-  text-shadow: 0 0 12px rgba(255,0,51,0.9), 0 0 40px rgba(255,0,51,0.14);
-  animation: pulse 2s infinite ease-in-out;
-}
-@keyframes pulse{
-  0%{text-shadow:0 0 6px rgba(255,0,51,0.5)}
-  50%{text-shadow:0 0 22px rgba(255,0,51,0.95)}
-  100%{text-shadow:0 0 6px rgba(255,0,51,0.5)}
-}
-.desc{color:rgba(255,255,255,0.8); font-size:13px; margin-bottom:12px}
-.tabs{display:flex; gap:12px; margin:14px 0}
-.tab{
-  padding:10px 16px; border-radius:10px; cursor:pointer; user-select:none;
-  border:1px solid rgba(255,0,51,0.06); background:linear-gradient(180deg, rgba(255,0,51,0.02), transparent);
-  transition: all .28s ease;
-}
-.tab.active{ transform:translateY(-3px); box-shadow:0 10px 40px rgba(255,0,51,0.06); border-color:rgba(255,0,51,0.3)}
-.side{
-  background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(255,0,51,0.01)); padding:18px; border-radius:12px; border:1px solid rgba(255,0,51,0.06)
-}
-form{display:flex; flex-direction:column; gap:10px}
-label{font-size:13px; color:rgba(255,255,255,0.85)}
-.input{
-  background:transparent; border:1px solid rgba(255,0,51,0.16); padding:12px 14px; border-radius:10px; color:#fff; outline:none; font-size:14px;
-  transition: box-shadow .18s, transform .12s;
-}
-.input:focus{ box-shadow:0 0 34px rgba(255,0,51,0.14); transform:translateY(-2px); border-color:rgba(255,0,51,0.32) }
-.btn{
-  padding:12px 14px; border-radius:10px; border:1px solid rgba(255,0,51,0.12); cursor:pointer; font-weight:700; color:white; background:linear-gradient(180deg, rgba(255,0,51,0.06), rgba(255,0,51,0.01));
-  transition: all .24s ease;
-}
-.btn:hover{ transform:translateY(-4px); box-shadow:0 30px 80px rgba(255,0,51,0.08) }
-.small{font-size:13px; color:rgba(255,255,255,0.75)}
-.notice{padding:10px; border-radius:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,0,51,0.06); color:rgba(255,255,255,0.9); margin-top:8px}
-@media (max-width:920px){
-  .card{grid-template-columns:1fr; padding:14px}
-  .title{font-size:26px}
-}
+body{background:#000;color:#ff0033;font-family:'Orbitron',sans-serif;}
+h1{text-align:center;color:#ff0033;margin-top:20px;}
+table{width:100%;max-width:900px;margin:20px auto;border-collapse:collapse;}
+th,td{border:1px solid rgba(255,0,51,0.2);padding:10px;text-align:center;}
+th{background:rgba(255,0,51,0.05);}
+.online{color:#00ff88;font-weight:700;}
+.offline{color:#ff0033;font-weight:700;}
 </style>
 </head>
 <body>
-<canvas id="sparks"></canvas>
-<div class="container">
-  <div class="card">
-    <div class="brand">
-      <div class="title">NEON SIGNUP PORTAL</div>
-      <div class="desc">Join the ironbro26 fanclub. Accounts sync via JSONBin.</div>
-
-      <div class="tabs">
-        <div class="tab active" data-tab="signup">SIGN UP</div>
-        <div class="tab" data-tab="login">LOGIN</div>
-      </div>
-
-      <div id="msg" class="notice" style="display:none;"></div>
-      <div class="footer">
-        <div class="small">Owner account: <strong>Krfuchs@icloud.com</strong></div>
-      </div>
-    </div>
-
-    <div class="side">
-      <!-- SIGNUP -->
-      <form id="signup-form" class="fade" autocomplete="off">
-        <label for="s-email">Email</label>
-        <input id="s-email" class="input" type="email" required placeholder="you@domain.com" autocomplete="email">
-        <label for="s-pass">Passcode</label>
-        <input id="s-pass" class="input" type="password" required placeholder="Enter passcode" autocomplete="new-password">
-        <div style="display:flex; gap:10px; margin-top:8px; align-items:center">
-          <button class="btn" type="submit">Create Account</button>
-          <div class="small">After signup you'll be redirected to Login</div>
-        </div>
-      </form>
-
-      <!-- LOGIN -->
-      <form id="login-form" class="fade" style="display:none" autocomplete="off">
-        <label for="l-email">Email</label>
-        <input id="l-email" class="input" type="email" required placeholder="you@domain.com" autocomplete="username">
-        <label for="l-pass">Passcode</label>
-        <input id="l-pass" class="input" type="password" required placeholder="Enter passcode" autocomplete="current-password">
-        <div style="display:flex; gap:10px; margin-top:8px; align-items:center">
-          <button class="btn" type="submit">Log In</button>
-          <a class="btn" id="go-site" href="https://ironbro26fanclub.co.za/index.html" target="_blank">Go to Website</a>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+<h1>Admin Control Panel</h1>
+<table>
+  <thead>
+    <tr><th>Email</th><th>Passcode</th><th>Signup Time</th><th>Status</th><th>Last Online</th></tr>
+  </thead>
+  <tbody id="usersTable"></tbody>
+</table>
 
 <script>
-const JSONBIN_KEY = "$2a$10$vgqNwrdJzRZIE1VzmCfNK.45JxnPigpvytYN/O19s6hq8kNSVzIBK"; // your key
-const JSONBIN_USERS_BIN = "68f659daae596e708f1f742f"; // signup bin id
-const OWNER_EMAIL = "Krfuchs@icloud.com";
-const OWNER_PASS = "Krf11@2011";
+const BIN_ID = "68f65f92d0ea881f40aebb87";
+const API_KEY = "$2a$10$wpHGujrPsIgbzGPptWRaIOkuT.9Bz2iSRN.gytSpwclZcQPr880tC";
 
-const signupForm = document.getElementById('signup-form');
-const loginForm = document.getElementById('login-form');
-const msg = document.getElementById('msg');
-const tabs = document.querySelectorAll('.tab');
-
-tabs.forEach(t=>{
-  t.addEventListener('click', ()=>{
-    tabs.forEach(x=>x.classList.remove('active'));
-    t.classList.add('active');
-    if(t.dataset.tab==="signup"){ signupForm.style.display="flex"; loginForm.style.display="none"; }
-    else{ signupForm.style.display="none"; loginForm.style.display="flex"; }
-  });
-});
-
-async function fetchUsers(){
-  const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_USERS_BIN}/latest`, {
-    headers: {"X-Master-Key": JSONBIN_KEY}
-  });
+async function fetchUsers() {
+  const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {headers:{'X-Master-Key':API_KEY}});
   const data = await res.json();
   return data.record.users || [];
 }
 
-async function updateUsers(users){
-  await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_USERS_BIN}`, {
-    method: "PUT",
-    headers:{
-      "X-Master-Key": JSONBIN_KEY,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({users})
+async function loadUsers() {
+  const users = await fetchUsers();
+  const tbody = document.getElementById('usersTable');
+  tbody.innerHTML = '';
+  users.forEach(u=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${u.email}</td><td>*****</td><td>${new Date(u.signupTime).toLocaleString()}</td>
+                    <td class="${u.online?'online':'offline'}">${u.online?'Online':'Offline'}</td>
+                    <td>${new Date(u.lastOnline).toLocaleString()}</td>`;
+    tbody.appendChild(tr);
   });
 }
 
-/* SIGNUP */
-signupForm.addEventListener('submit', async e=>{
-  e.preventDefault();
-  const email = document.getElementById('s-email').value.trim();
-  const pass = document.getElementById('s-pass').value.trim();
-  if(!email || !pass) return;
-
-  const users = await fetchUsers();
-  if(users.find(u=>u.email===email)){
-    msg.style.display="block"; msg.textContent="Email already registered"; return;
-  }
-
-  users.push({email, passcode:pass, signupTime:new Date().toISOString(), lastOnline:new Date().toISOString(), online:true});
-  await updateUsers(users);
-
-  msg.style.display="block"; msg.textContent="Account created. Redirecting to Login...";
-  setTimeout(()=>{ tabs[1].click(); msg.style.display="none"; signupForm.reset(); },1200);
-});
-
-/* LOGIN */
-loginForm.addEventListener('submit', async e=>{
-  e.preventDefault();
-  const email = document.getElementById('l-email').value.trim();
-  const pass = document.getElementById('l-pass').value.trim();
-  if(!email || !pass) return;
-
-  const users = await fetchUsers();
-  const user = users.find(u=>u.email===email && u.passcode===pass);
-  if(!user){ msg.style.display="block"; msg.textContent="Invalid credentials"; return; }
-
-  user.lastOnline = new Date().toISOString();
-  user.online = true;
-  await updateUsers(users);
-
-  if(email===OWNER_EMAIL && pass===OWNER_PASS){
-    localStorage.setItem('currentOwner', OWNER_EMAIL);
-    msg.style.display="block"; msg.textContent="Owner logged in. Access Admin Panel available.";
-  } else {
-    localStorage.setItem('currentOwner',''); // member
-    msg.style.display="block"; msg.textContent="Member logged in. Admin Panel hidden.";
-  }
-
-  loginForm.reset();
-  setTimeout(()=>{ msg.style.display="none"; },1200);
-});
-
-/* Sparks animation */
-const canvas=document.getElementById('sparks'); const ctx=canvas.getContext('2d');
-canvas.width=innerWidth; canvas.height=innerHeight;
-const sparks=[]; for(let i=0;i<120;i++){ sparks.push({x:Math.random()*innerWidth, y:Math.random()*innerHeight, r:Math.random()*2+1, dx:(Math.random()-0.5)*0.5, dy:(Math.random()-0.5)*0.5})}
-function drawS(){ctx.fillStyle="#000"; ctx.fillRect(0,0,canvas.width,canvas.height); sparks.forEach(p=>{ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle='rgba(255,0,51,0.5)'; ctx.fill(); p.x+=p.dx; p.y+=p.dy; if(p.x<0||p.x>canvas.width)p.dx*=-1;if(p.y<0||p.y>canvas.height)p.dy*=-1}); requestAnimationFrame(drawS);}
-drawS(); window.addEventListener('resize',()=>{canvas.width=innerWidth; canvas.height=innerHeight;});
+loadUsers();
 </script>
 </body>
 </html>
