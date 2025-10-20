@@ -32,51 +32,54 @@ canvas#sparks{position:fixed; inset:0; z-index:0; pointer-events:none}
   </table>
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
-import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+<script>
+const JSONBIN_ID = "YOUR_BIN_ID_HERE"; // replace with your bin ID
+const JSONBIN_KEY = "YOUR_API_KEY_HERE"; // replace with your API key
+const OWNER_EMAIL = "Krfuchs@icloud.com";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCZ-kcVeGKjiQh4wgOe5yp-S9zxS8n3oZY",
-  authDomain: "ironbro26-708c4.firebaseapp.com",
-  projectId: "ironbro26-708c4",
-  storageBucket: "ironbro26-708c4.firebasestorage.app",
-  messagingSenderId: "47778309159",
-  appId: "1:47778309159:web:0caea70db87468ca959a02",
-  measurementId: "G-RWTEX313PX"
-};
+function goHome(){ window.location.href="https://ironbro26fanclub.co.za/index.html"; }
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const OWNER_EMAIL="Krfuchs@icloud.com";
-
-function goHome(){window.location.href="https://ironbro26fanclub.co.za/index.html";}
-
-// Check if owner is logged in
-const currentOwner = localStorage.getItem('currentOwner');
-if(!currentOwner || currentOwner !== OWNER_EMAIL){
+// Verify admin access
+const role = localStorage.getItem('currentUserRole');
+if(role !== "Owner"){
   alert("Access Denied: Admins Only.");
   window.location.href="signup.html";
 }
 
-// Real-time listener for users
-const usersRef = collection(db,'users');
-onSnapshot(usersRef, (snapshot)=>{
-  const tbody=document.querySelector('#usersTable tbody');
-  tbody.innerHTML="";
-  snapshot.forEach(docSnap=>{
-    const u=docSnap.data();
-    const tr=document.createElement('tr');
-    const emailTd=document.createElement('td'); emailTd.textContent=u.email; tr.appendChild(emailTd);
-    const passTd=document.createElement('td'); passTd.textContent='*****'; tr.appendChild(passTd);
-    const signupTd=document.createElement('td'); signupTd.textContent=new Date(u.signupTime).toLocaleString(); tr.appendChild(signupTd);
-    const onlineTd=document.createElement('td'); onlineTd.textContent=u.online?'Online':'Offline'; onlineTd.className=u.online?'online':'offline'; tr.appendChild(onlineTd);
-    const lastTd=document.createElement('td'); lastTd.textContent=new Date(u.lastOnline).toLocaleString(); tr.appendChild(lastTd);
+// Load users from JSONBin
+async function loadUsers(){
+  const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
+    headers:{'X-Master-Key':JSONBIN_KEY}
+  });
+  const data = await res.json();
+  return data.record.users || [];
+}
+
+// Render users table
+async function renderTable(){
+  const users = await loadUsers();
+  const tbody = document.querySelector('#usersTable tbody');
+  tbody.innerHTML = '';
+  users.forEach(u=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${u.email}</td>
+      <td>*****</td>
+      <td>${u.signupTime}</td>
+      <td class="${u.online?'online':'offline'}">${u.online?'Online':'Offline'}</td>
+      <td>${u.lastOnline}</td>
+    `;
     tbody.appendChild(tr);
   });
-});
+}
 
-// Optional: Sparks animation
+// Initial render
+renderTable();
+
+// Optional: Refresh table every 5 seconds
+setInterval(renderTable,5000);
+
+// Sparks animation
 const canvas = document.getElementById('sparks');
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
