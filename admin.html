@@ -3,83 +3,50 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>ADMIN CONTROL PANEL — ironbro26fanclub</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Audiowide&display=swap" rel="stylesheet">
+<title>ADMIN PANEL — ironbro26fanclub</title>
 <style>
-:root{--bg:#000;--neon:#ff0033;--neon-green:#00ff88;}
-*{box-sizing:border-box} html,body{height:100%;margin:0;background:var(--bg);color:var(--neon);font-family:'Orbitron',sans-serif}
-canvas#sparks{position:fixed; inset:0; z-index:0; pointer-events:none}
-.container{position:relative; z-index:1; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:32px}
-.header{font-family:'Audiowide','Orbitron'; font-size:36px; margin:20px 0; text-shadow:0 0 12px rgba(255,0,51,0.9),0 0 40px rgba(255,0,51,0.14); animation:pulse 2s infinite ease-in-out;}
-@keyframes pulse{0%{text-shadow:0 0 6px rgba(255,0,51,0.5)}50%{text-shadow:0 0 22px rgba(255,0,51,0.95)}100%{text-shadow:0 0 6px rgba(255,0,51,0.5)}}
-.table{width:100%; max-width:1080px; border-collapse:collapse; margin-top:20px;}
-.table th,.table td{padding:12px 14px;border:1px solid rgba(255,0,51,0.16); text-align:center;}
-.table th{background:rgba(255,0,51,0.05);}
-.online{color:var(--neon-green); font-weight:700;}
-.offline{color:var(--neon); font-weight:700;}
-.btn{padding:10px 14px; border-radius:10px; border:1px solid rgba(255,0,51,0.12); cursor:pointer; font-weight:700; color:white; background:linear-gradient(180deg, rgba(255,0,51,0.06), rgba(255,0,51,0.01)); transition: all .24s ease;}
-.btn:hover{box-shadow:0 30px 80px rgba(255,0,51,0.08); transform:translateY(-3px);}
+body{background:#000;color:#ff0033;font-family:'Orbitron',sans-serif;}
+h1{text-align:center;color:#ff0033;margin-top:20px;}
+table{width:100%;max-width:900px;margin:20px auto;border-collapse:collapse;}
+th,td{border:1px solid rgba(255,0,51,0.2);padding:10px;text-align:center;}
+th{background:rgba(255,0,51,0.05);}
+.online{color:#00ff88;font-weight:700;}
+.offline{color:#ff0033;font-weight:700;}
 </style>
 </head>
 <body>
-<canvas id="sparks"></canvas>
-<div class="container">
-  <div class="header">ADMIN CONTROL PANEL</div>
-  <button class="btn" onclick="goHome()">Home</button>
-  <table class="table" id="usersTable">
-    <thead><tr><th>Email</th><th>Passcode</th><th>Signup Time</th><th>Online Status</th><th>Last Online</th></tr></thead>
-    <tbody></tbody>
-  </table>
-</div>
+<h1>Admin Control Panel</h1>
+<table>
+  <thead>
+    <tr><th>Email</th><th>Passcode</th><th>Signup Time</th><th>Status</th><th>Last Online</th></tr>
+  </thead>
+  <tbody id="usersTable"></tbody>
+</table>
 
 <script>
-const JSONBIN_KEY = "$2a$10$vgqNwrdJzRZIE1VzmCfNK.45JxnPigpvytYN/O19s6hq8kNSVzIBK";
-const JSONBIN_USERS_BIN = "68f659daae596e708f1f742f";
-const OWNER_EMAIL="Krfuchs@icloud.com";
+const BIN_ID = "68f65f92d0ea881f40aebb87";
+const API_KEY = "$2a$10$wpHGujrPsIgbzGPptWRaIOkuT.9Bz2iSRN.gytSpwclZcQPr880tC";
 
-function goHome(){window.location.href="signup.html";}
-
-const currentOwner = localStorage.getItem('currentOwner');
-if(!currentOwner || currentOwner!==OWNER_EMAIL){
-  alert("Access Denied: Admins Only.");
-  window.location.href="signup.html";
-}
-
-async function fetchUsers(){
-  const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_USERS_BIN}/latest`,{
-    headers:{"X-Master-Key":JSONBIN_KEY}
-  });
+async function fetchUsers() {
+  const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {headers:{'X-Master-Key':API_KEY}});
   const data = await res.json();
   return data.record.users || [];
 }
 
-async function displayUsers(){
+async function loadUsers() {
   const users = await fetchUsers();
-  const tbody=document.querySelector('#usersTable tbody');
-  tbody.innerHTML="";
+  const tbody = document.getElementById('usersTable');
+  tbody.innerHTML = '';
   users.forEach(u=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`
-      <td>${u.email}</td>
-      <td>*****</td>
-      <td>${new Date(u.signupTime).toLocaleString()}</td>
-      <td class="${u.online?'online':'offline'}">${u.online?'Online':'Offline'}</td>
-      <td>${new Date(u.lastOnline).toLocaleString()}</td>
-    `;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${u.email}</td><td>*****</td><td>${new Date(u.signupTime).toLocaleString()}</td>
+                    <td class="${u.online?'online':'offline'}">${u.online?'Online':'Offline'}</td>
+                    <td>${new Date(u.lastOnline).toLocaleString()}</td>`;
     tbody.appendChild(tr);
   });
 }
-displayUsers();
 
-/* Sparks animation */
-const canvas = document.getElementById('sparks');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-const sparks = [];
-for(let i=0;i<100;i++){sparks.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-0.5)*0.5,vy:(Math.random()-0.5)*0.5,r:Math.random()*2+1})}
-function animate(){ctx.clearRect(0,0,canvas.width,canvas.height); sparks.forEach(s=>{s.x+=s.vx;s.y+=s.vy;if(s.x<0||s.x>canvas.width)s.vx*=-1;if(s.y<0||s.y>canvas.height)s.vy*=-1;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='rgba(255,0,51,0.7)';ctx.fill();});requestAnimationFrame(animate);}
-animate();
+loadUsers();
 </script>
 </body>
 </html>
