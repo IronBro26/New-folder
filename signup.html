@@ -25,24 +25,18 @@ canvas#sparks{position:fixed; inset:0; z-index:0; pointer-events:none}
   border:1px solid var(--neon-weak); border-radius:14px; padding:22px; box-shadow:0 30px 120px rgba(255,0,51,0.03);
   backdrop-filter: blur(6px);
 }
-
-/* Left area */
-.brand{
-  padding:8px 6px 0 6px;
-}
+.brand{padding:8px 6px 0 6px;}
 .title{
-  font-family:'Audiowide', 'Orbitron'; font-size:34px; letter-spacing:2px; margin:6px 0;
+  font-family:'Audiowide','Orbitron'; font-size:34px; letter-spacing:2px; margin:6px 0;
   text-shadow: 0 0 12px rgba(255,0,51,0.9), 0 0 40px rgba(255,0,51,0.14);
   animation: pulse 2s infinite ease-in-out;
 }
 @keyframes pulse{
-  0%{text-shadow: 0 0 6px rgba(255,0,51,0.5)}
-  50%{text-shadow: 0 0 22px rgba(255,0,51,0.95)}
-  100%{text-shadow: 0 0 6px rgba(255,0,51,0.5)}
+  0%{text-shadow:0 0 6px rgba(255,0,51,0.5)}
+  50%{text-shadow:0 0 22px rgba(255,0,51,0.95)}
+  100%{text-shadow:0 0 6px rgba(255,0,51,0.5)}
 }
 .desc{color:rgba(255,255,255,0.8); font-size:13px; margin-bottom:12px}
-
-/* Tabs */
 .tabs{display:flex; gap:12px; margin:14px 0}
 .tab{
   padding:10px 16px; border-radius:10px; cursor:pointer; user-select:none;
@@ -50,8 +44,6 @@ canvas#sparks{position:fixed; inset:0; z-index:0; pointer-events:none}
   transition: all .28s ease;
 }
 .tab.active{ transform:translateY(-3px); box-shadow:0 10px 40px rgba(255,0,51,0.06); border-color:rgba(255,0,51,0.3)}
-
-/* Right form card */
 .side{
   background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(255,0,51,0.01)); padding:18px; border-radius:12px; border:1px solid rgba(255,0,51,0.06)
 }
@@ -61,28 +53,14 @@ label{font-size:13px; color:rgba(255,255,255,0.85)}
   background:transparent; border:1px solid rgba(255,0,51,0.16); padding:12px 14px; border-radius:10px; color:#fff; outline:none; font-size:14px;
   transition: box-shadow .18s, transform .12s;
 }
-.input:focus{ box-shadow: 0 0 34px rgba(255,0,51,0.14); transform:translateY(-2px); border-color:rgba(255,0,51,0.32) }
-
+.input:focus{ box-shadow:0 0 34px rgba(255,0,51,0.14); transform:translateY(-2px); border-color:rgba(255,0,51,0.32) }
 .btn{
   padding:12px 14px; border-radius:10px; border:1px solid rgba(255,0,51,0.12); cursor:pointer; font-weight:700; color:white; background:linear-gradient(180deg, rgba(255,0,51,0.06), rgba(255,0,51,0.01));
   transition: all .24s ease;
 }
 .btn:hover{ transform:translateY(-4px); box-shadow:0 30px 80px rgba(255,0,51,0.08) }
-
 .small{font-size:13px; color:rgba(255,255,255,0.75)}
 .notice{padding:10px; border-radius:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,0,51,0.06); color:rgba(255,255,255,0.9); margin-top:8px}
-
-.footer{margin-top:12px; display:flex; gap:10px; align-items:center; flex-wrap:wrap; color:rgba(255,255,255,0.7); font-size:13px}
-
-/* status dots */
-.dot{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:8px;vertical-align:middle}
-.online{background:var(--neon-green); box-shadow:0 0 12px rgba(0,255,136,0.1)}
-.offline{background:var(--neon); box-shadow:0 0 12px rgba(255,0,51,0.12)}
-
-/* transitions */
-.fade{transition: opacity .3s ease, transform .3s ease}
-
-/* responsive */
 @media (max-width:920px){
   .card{grid-template-columns:1fr; padding:14px}
   .title{font-size:26px}
@@ -93,12 +71,12 @@ label{font-size:13px; color:rgba(255,255,255,0.85)}
 <canvas id="sparks"></canvas>
 
 <div class="container">
-  <div class="card" role="main">
+  <div class="card">
     <div class="brand">
       <div class="title">NEON SIGNUP PORTAL</div>
-      <div class="desc">Join the ironbro26 fanclub. Create an account and sign in. Admin panel syncs via localStorage using <code>neon_users</code>.</div>
+      <div class="desc">Join the ironbro26 fanclub. Create an account and sign in. Admin panel syncs via localStorage key <code>neon_users</code>.</div>
 
-      <div class="tabs" role="tablist" aria-label="auth-tabs">
+      <div class="tabs">
         <div class="tab active" data-tab="signup">SIGN UP</div>
         <div class="tab" data-tab="login">LOGIN</div>
       </div>
@@ -107,7 +85,6 @@ label{font-size:13px; color:rgba(255,255,255,0.85)}
 
       <div class="footer">
         <div class="small">Owner account: <strong>Krfuchs@icloud.com</strong></div>
-        <div class="small">Session stored in <code>neon_current</code></div>
       </div>
     </div>
 
@@ -117,7 +94,7 @@ label{font-size:13px; color:rgba(255,255,255,0.85)}
         <label for="s-email">Email</label>
         <input id="s-email" class="input" type="email" required placeholder="you@domain.com" autocomplete="email">
         <label for="s-pass">Passcode</label>
-        <input id="s-pass" class="input" type="password" required placeholder="Enter passcode (will be stored)" autocomplete="new-password">
+        <input id="s-pass" class="input" type="password" required placeholder="Enter passcode" autocomplete="new-password">
         <div style="display:flex; gap:10px; margin-top:8px; align-items:center">
           <button class="btn" type="submit">Create Account</button>
           <div class="small">After signup you'll be redirected to Login</div>
@@ -134,42 +111,32 @@ label{font-size:13px; color:rgba(255,255,255,0.85)}
           <button class="btn" type="submit">Log In</button>
           <a class="btn" id="go-site" href="https://ironbro26fanclub.co.za/index.html" target="_blank">Go to Website</a>
         </div>
-        <div style="margin-top:8px;" class="small">Log out clears session and updates <code>lastOnline</code>.</div>
       </form>
     </div>
   </div>
 </div>
 
 <script>
-/* Keys */
-const USERS_KEY = "neon_users";
-const CURRENT_KEY = "neon_current";
-const OWNER_EMAIL = "Krfuchs@icloud.com";
+const USERS_KEY="neon_users";
+const CURRENT_KEY="neon_current";
+const OWNER_EMAIL="Krfuchs@icloud.com";
+const OWNER_PASS="Krf11@2011";
 
-/* Time formatter */
 function nowFormatted(){
-  const d = new Date();
-  const Y = d.getFullYear();
-  const M = String(d.getMonth()+1).padStart(2,'0');
-  const D = String(d.getDate()).padStart(2,'0');
-  const h = String(d.getHours()).padStart(2,'0');
-  const m = String(d.getMinutes()).padStart(2,'0');
+  const d=new Date();
+  const Y=d.getFullYear(), M=String(d.getMonth()+1).padStart(2,'0'), D=String(d.getDate()).padStart(2,'0'), h=String(d.getHours()).padStart(2,'0'), m=String(d.getMinutes()).padStart(2,'0');
   return `${Y}-${M}-${D} ${h}:${m}`;
 }
+function loadUsers(){ try{ return JSON.parse(localStorage.getItem(USERS_KEY)||"[]"); }catch(e){return[]} }
+function saveUsers(arr){ localStorage.setItem(USERS_KEY,JSON.stringify(arr)); }
+function setCurrent(email){ localStorage.setItem(CURRENT_KEY,email); }
+function clearCurrent(){ localStorage.removeItem(CURRENT_KEY); }
 
-/* localStorage helpers */
-function loadUsers(){ try{ return JSON.parse(localStorage.getItem(USERS_KEY) || "[]"); } catch(e){ return []; } }
-function saveUsers(arr){ localStorage.setItem(USERS_KEY, JSON.stringify(arr)); }
-function setCurrent(email){ localStorage.setItem(CURRENT_KEY, email); localStorage.setItem('neon_last_activity', Date.now().toString()); }
-function clearCurrent(){ localStorage.removeItem(CURRENT_KEY); localStorage.setItem('neon_last_activity', Date.now().toString()); }
+const tabs=document.querySelectorAll('.tab');
+const signupForm=document.getElementById('signup-form');
+const loginForm=document.getElementById('login-form');
+const msg=document.getElementById('msg');
 
-/* DOM elements */
-const tabs = document.querySelectorAll('.tab');
-const signupForm = document.getElementById('signup-form');
-const loginForm = document.getElementById('login-form');
-const msg = document.getElementById('msg');
-
-/* Tab switching */
 tabs.forEach(t=>{
   t.addEventListener('click', ()=>{
     tabs.forEach(x=>x.classList.remove('active'));
@@ -179,31 +146,31 @@ tabs.forEach(t=>{
   });
 });
 
-/* SIGNUP SUBMIT */
+/* SIGNUP */
 signupForm.addEventListener('submit', e=>{
   e.preventDefault();
-  const email = document.getElementById('s-email').value.trim();
-  const pass = document.getElementById('s-pass').value.trim();
+  const email=document.getElementById('s-email').value.trim();
+  const pass=document.getElementById('s-pass').value.trim();
   if(!email||!pass) return;
-  let users = loadUsers();
+  let users=loadUsers();
   if(users.find(u=>u.email===email)){ msg.style.display="block"; msg.textContent="Email already registered"; return; }
-  const obj = {email, passcode:pass, signupTime:nowFormatted(), lastOnline:nowFormatted(), online:true};
+  const obj={email, passcode:pass, signupTime:nowFormatted(), lastOnline:nowFormatted(), online:true};
   users.push(obj); saveUsers(users);
   msg.style.display="block"; msg.textContent="Account created. Redirecting to Login...";
   setTimeout(()=>{ tabs[1].click(); msg.style.display="none"; signupForm.reset(); },1200);
 });
 
-/* LOGIN SUBMIT */
+/* LOGIN */
 loginForm.addEventListener('submit', e=>{
   e.preventDefault();
-  const email = document.getElementById('l-email').value.trim();
-  const pass = document.getElementById('l-pass').value.trim();
-  let users = loadUsers();
-  const user = users.find(u=>u.email===email && u.passcode===pass);
+  const email=document.getElementById('l-email').value.trim();
+  const pass=document.getElementById('l-pass').value.trim();
+  let users=loadUsers();
+  const user=users.find(u=>u.email===email && u.passcode===pass);
   if(!user){ msg.style.display="block"; msg.textContent="Invalid credentials"; return; }
-  user.online = true; user.lastOnline = nowFormatted();
+  user.online=true; user.lastOnline=nowFormatted();
   saveUsers(users); setCurrent(email);
-  if(email===OWNER_EMAIL){ msg.style.display="block"; msg.textContent="Owner logged in. Access Admin Panel available."; }
+  if(email===OWNER_EMAIL && pass===OWNER_PASS){ msg.style.display="block"; msg.textContent="Owner logged in. Access Admin Panel available."; }
   else{ msg.style.display="block"; msg.textContent="Member logged in. Admin Panel hidden."; }
   loginForm.reset();
   setTimeout(()=>{ msg.style.display="none"; },1200);
@@ -211,15 +178,12 @@ loginForm.addEventListener('submit', e=>{
 </script>
 
 <script>
-// Optional: particles background effect
-const canvas = document.getElementById('sparks');
-const ctx = canvas.getContext('2d');
+// Sparks background effect
+const canvas=document.getElementById('sparks'); const ctx=canvas.getContext('2d');
 canvas.width=innerWidth; canvas.height=innerHeight;
-const sparks=[];
-for(let i=0;i<120;i++){ sparks.push({x:Math.random()*innerWidth, y:Math.random()*innerHeight, r:Math.random()*2+1, dx:(Math.random()-0.5)*0.5, dy:(Math.random()-0.5)*0.5}) }
-function drawS(){ ctx.fillStyle="#000"; ctx.fillRect(0,0,canvas.width,canvas.height); sparks.forEach(p=>{ ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle='rgba(255,0,51,0.5)'; ctx.fill(); p.x+=p.dx; p.y+=p.dy; if(p.x<0||p.x>canvas.width)p.dx*=-1; if(p.y<0||p.y>canvas.height)p.dy*=-1; }); requestAnimationFrame(drawS);}
-drawS();
-window.addEventListener('resize',()=>{canvas.width=innerWidth; canvas.height=innerHeight;})
+const sparks=[]; for(let i=0;i<120;i++){ sparks.push({x:Math.random()*innerWidth, y:Math.random()*innerHeight, r:Math.random()*2+1, dx:(Math.random()-0.5)*0.5, dy:(Math.random()-0.5)*0.5})}
+function drawS(){ctx.fillStyle="#000"; ctx.fillRect(0,0,canvas.width,canvas.height); sparks.forEach(p=>{ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle='rgba(255,0,51,0.5)'; ctx.fill(); p.x+=p.dx; p.y+=p.dy; if(p.x<0||p.x>canvas.width)p.dx*=-1;if(p.y<0||p.y>canvas.height)p.dy*=-1}); requestAnimationFrame(drawS);}
+drawS(); window.addEventListener('resize',()=>{canvas.width=innerWidth; canvas.height=innerHeight;});
 </script>
 </body>
 </html>
