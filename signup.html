@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>NEON SIGNUP PORTAL — ironbro26fanclub</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Audiowide&display=swap" rel="stylesheet">
+
 <style>
 :root{
   --bg:#000;
@@ -116,7 +117,7 @@ label{font-size:13px; color:rgba(255,255,255,0.85)}
 <!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, query, where, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCZ-kcVeGKjiQh4wgOe5yp-S9zxS8n3oZY",
@@ -127,21 +128,92 @@ const firebaseConfig = {
   appId: "1:47778309159:web:0caea70db87468ca959a02",
   measurementId: "G-RWTEX313PX"
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const OWNER_EMAIL="Krfuchs@icloud.com";
-const OWNER_PASS="Krf11@2011";
+const OWNER_EMAIL = "Krfuchs@icloud.com";
+const OWNER_PASS = "Krf11@2011";
 
-// Tabs
-const tabs=document.querySelectorAll('.tab');
-const signupForm=document.getElementById('signup-form');
-const loginForm=document.getElementById('login-form');
-const msg=document.getElementById('msg');
+const signupForm = document.getElementById('signup-form');
+const loginForm = document.getElementById('login-form');
+const msg = document.getElementById('msg');
+const tabs = document.querySelectorAll('.tab');
 
+// Tabs toggle
 tabs.forEach(t=>{
   t.addEventListener('click', ()=>{
     tabs.forEach(x=>x.classList.remove('active'));
     t.classList.add('active');
-    if(t.dataset.tab==="signup"){ signupForm.style.display="flex"; login
+    if(t.dataset.tab==="signup"){ signupForm.style.display="flex"; loginForm.style.display="none"; }
+    else{ signupForm.style.display="none"; loginForm.style.display="flex"; }
+  });
+});
+
+// Signup
+signupForm.addEventListener('submit', async e=>{
+  e.preventDefault();
+  const email = document.getElementById('s-email').value.trim();
+  const pass = document.getElementById('s-pass').value.trim();
+  if(!email || !pass) return;
+
+  // Check if email exists
+  const usersCol = collection(db,'users');
+  const q = query(usersCol, where("email","==",email));
+  const snapshot = await getDocs(q);
+  if(!snapshot.empty){
+    msg.style.display="block"; msg.textContent="Email already registered"; return;
+  }
+
+  await addDoc(usersCol,{
+    email: email,
+    passcode: pass,
+    signupTime: new Date().toISOString(),
+    lastOnline: new Date().toISOString(),
+    online: true
+  });
+
+  msg.style.display="block"; msg.textContent="Account created. Redirecting to Login...";
+  setTimeout(()=>{ tabs[1].click(); msg.style.display="none"; signupForm.reset(); },1200);
+});
+
+// Login
+loginForm.addEventListener('submit', async e=>{
+  e.preventDefault();
+  const email = document.getElementById('l-email').value.trim();
+  const pass = document.getElementById('l-pass').value.trim();
+  if(!email || !pass) return;
+
+  const usersCol = collection(db,'users');
+  const q = query(usersCol, where("email","==",email), where("passcode","==",pass));
+  const snapshot = await getDocs(q);
+  if(snapshot.empty){ msg.style.display="block"; msg.textContent="Invalid credentials"; return; }
+
+  let userDoc;
+  snapshot.forEach(docSnap => { userDoc = docSnap; });
+
+  await updateDoc(userDoc.ref,{ lastOnline:new Date().toISOString(), online:true });
+
+  if(email===OWNER_EMAIL && pass===OWNER_PASS){
+    msg.style.display="block"; msg.textContent="Owner logged in. Access Admin Panel available.";
+    localStorage.setItem('currentUserRole','Owner');
+  } else {
+    msg.style.display="block"; msg.textContent="Member logged in. Admin Panel hidden.";
+    localStorage.setItem('currentUserRole','Member');
+  }
+
+  loginForm.reset();
+  setTimeout(()=>{ msg.style.display="none"; },1200);
+});
+</script>
+
+<script>
+// Sparks background
+const canvas=document.getElementById('sparks'); const ctx=canvas.getContext('2d');
+canvas.width=innerWidth; canvas.height=innerHeight;
+const sparks=[]; for(let i=0;i<120;i++){ sparks.push({x:Math.random()*innerWidth, y:Math.random()*innerHeight, r:Math.random()*2+1, dx:(Math.random()-0.5)*0.5, dy:(Math.random()-0.5)*0.5})}
+function drawS(){ctx.fillStyle="#000"; ctx.fillRect(0,0,canvas.width,canvas.height); sparks.forEach(p=>{ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle='rgba(255,0,51,0.5)'; ctx.fill(); p.x+=p.dx; p.y+=p.dy; if(p.x<0||p.x>canvas.width)p.dx*=-1;if(p.y<0||p.y>canvas.height)p.dy*=-1}); requestAnimationFrame(drawS);}
+drawS(); window.addEventListener('resize',()=>{canvas.width=innerWidth; canvas.height=innerHeight;});
+</script>
+
+</body>
+</html>
