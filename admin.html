@@ -7,7 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Audiowide&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#000;--neon:#ff0033;--neon-green:#00ff88;}
-*{box-sizing:border-box} html,body{height:100%;margin:0;background:var(--bg);color:var(--neon);font-family:'Orbitron',sans-serif}
+*{box-sizing:border-box} 
+html,body{height:100%;margin:0;background:var(--bg);color:var(--neon);font-family:'Orbitron',sans-serif}
 canvas#sparks{position:fixed; inset:0; z-index:0; pointer-events:none}
 .container{position:relative; z-index:1; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:32px}
 .header{font-family:'Audiowide','Orbitron'; font-size:36px; margin:20px 0; text-shadow:0 0 12px rgba(255,0,51,0.9),0 0 40px rgba(255,0,51,0.14); animation:pulse 2s infinite ease-in-out;}
@@ -33,53 +34,50 @@ canvas#sparks{position:fixed; inset:0; z-index:0; pointer-events:none}
 </div>
 
 <script>
-const JSONBIN_ID = "YOUR_BIN_ID_HERE"; // replace with your bin ID
-const JSONBIN_KEY = "YOUR_API_KEY_HERE"; // replace with your API key
+const JSONBIN_ID = "68f6570dae596e708f1f6daa";
+const JSONBIN_KEY = "$2a$10$szwEmZ8N1E54bEC.rq/y5.u8Pg4rs2sMbdZMYjV3D2IfXLkI5i34u";
 const OWNER_EMAIL = "Krfuchs@icloud.com";
 
 function goHome(){ window.location.href="https://ironbro26fanclub.co.za/index.html"; }
 
-// Verify admin access
-const role = localStorage.getItem('currentUserRole');
-if(role !== "Owner"){
+function getCurrentUserRole(){
+  return localStorage.getItem('currentUserRole') || "Member";
+}
+
+// Check if owner is logged in
+if(getCurrentUserRole() !== "Owner"){
   alert("Access Denied: Admins Only.");
   window.location.href="signup.html";
 }
 
-// Load users from JSONBin
-async function loadUsers(){
+async function fetchUsers(){
   const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
-    headers:{'X-Master-Key':JSONBIN_KEY}
+    headers: { "X-Master-Key": JSONBIN_KEY }
   });
   const data = await res.json();
   return data.record.users || [];
 }
 
-// Render users table
-async function renderTable(){
-  const users = await loadUsers();
+async function updateTable(){
+  const users = await fetchUsers();
   const tbody = document.querySelector('#usersTable tbody');
-  tbody.innerHTML = '';
+  tbody.innerHTML = "";
   users.forEach(u=>{
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${u.email}</td>
-      <td>*****</td>
-      <td>${u.signupTime}</td>
-      <td class="${u.online?'online':'offline'}">${u.online?'Online':'Offline'}</td>
-      <td>${u.lastOnline}</td>
-    `;
+    const tr=document.createElement('tr');
+    const emailTd=document.createElement('td'); emailTd.textContent=u.email; tr.appendChild(emailTd);
+    const passTd=document.createElement('td'); passTd.textContent='*****'; tr.appendChild(passTd);
+    const signupTd=document.createElement('td'); signupTd.textContent=new Date(u.signupTime).toLocaleString(); tr.appendChild(signupTd);
+    const onlineTd=document.createElement('td'); onlineTd.textContent=u.online?'Online':'Offline'; onlineTd.className=u.online?'online':'offline'; tr.appendChild(onlineTd);
+    const lastTd=document.createElement('td'); lastTd.textContent=new Date(u.lastOnline).toLocaleString(); tr.appendChild(lastTd);
     tbody.appendChild(tr);
   });
 }
 
-// Initial render
-renderTable();
+// Update every 5 seconds to mimic real-time
+updateTable();
+setInterval(updateTable, 5000);
 
-// Optional: Refresh table every 5 seconds
-setInterval(renderTable,5000);
-
-// Sparks animation
+// Sparks background
 const canvas = document.getElementById('sparks');
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
@@ -97,6 +95,7 @@ function animate(){
   requestAnimationFrame(animate);
 }
 animate();
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth; canvas.height=window.innerHeight;});
 </script>
 </body>
 </html>
