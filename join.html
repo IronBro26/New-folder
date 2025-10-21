@@ -1,22 +1,51 @@
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bro Squad Subscription</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bro Squad Signup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    /* Base theme variables */
+    :root {
+      --bg: #0a0a0a;
+      --bg2: #1a1a1a;
+      --panel: #111;
+      --text: #fff;
+      --accent: #ff1a1a;
+      --accent-light: #ff6666;
+      --accent-dark: #660000;
+      --transition-speed: 0.3s;
+    }
 
-    <style>
-      :root {
-        --bg: #0a0a0a;
-        --panel: #111;
-        --text: #fff;
-        --accent: #ff1a1a;
-        --accent-light: #ff6666;
-        --transition: 0.3s;
-      }
+    /* Theme class-based styles */
+    .theme-yellow {
+      --accent: #ffcc00 !important;
+      --accent-light: #ffdd66 !important;
+      --accent-dark: #cc9900 !important;
+    }
+
+    .theme-purple {
+      --accent: #9c27b0 !important;
+      --accent-light: #ba68c8 !important;
+      --accent-dark: #6a1b9a !important;
+    }
+
+    .theme-skyblue {
+      --accent: #00bcd4 !important;
+      --accent-light: #4dd0e1 !important;
+      --accent-dark: #008ba3 !important;
+    }
+
+    /* Apply smooth transitions */
+    * {
+      transition: background-color var(--transition-speed) ease,
+                  color var(--transition-speed) ease,
+                  border-color var(--transition-speed) ease,
+                  box-shadow var(--transition-speed) ease;
+    }
 
       body {
         font-family: 'Poppins', Arial, sans-serif;
@@ -38,12 +67,17 @@
         width: 420px;
       }
 
-      h1 {
-        color: var(--accent);
-        text-shadow: 0 0 10px var(--accent);
-        font-size: 24px;
-        margin-bottom: 16px;
-      }
+    h1 {
+      color: var(--accent);
+      text-shadow: 0 0 10px var(--accent);
+      font-size: 22px;
+      margin-bottom: 16px;
+    }
+
+    p {
+      opacity: .85;
+      margin-bottom: 16px;
+    }
 
       input {
         padding: 12px;
@@ -55,121 +89,150 @@
         color: var(--text);
       }
 
-      button {
-        background: var(--accent);
-        color: #fff;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 12px;
-        cursor: pointer;
-        font-weight: bold;
-        transition: var(--transition);
-        box-shadow: 0 0 10px var(--accent);
-      }
+    button {
+      padding: 12px 20px;
+      margin-top: 8px;
+      border-radius: 12px;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: .3s;
+      box-shadow: 0 0 10px var(--accent);
+    }
 
       button:hover {
         background: var(--accent-light);
         box-shadow: 0 0 15px var(--accent);
       }
 
-      #status {
-        margin-top: 10px;
-        font-weight: bold;
-        min-height: 1.2em;
-        color: var(--accent-light);
-      }
+    #status {
+      margin-top: 10px;
+      color: var(--accent-light);
+      font-weight: bold;
+      min-height: 1.2em;
+    }
 
-      #paypal-button-container {
-        margin-top: 20px;
-        display: none; /* hidden until user clicks proceed */
-      }
-
-      .home {
-        margin-top: 10px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1>🔥 Bro Squad Membership 🔥</h1>
-      <p>Subscribe for $4.99/month — get early access, games, and BroSquad chat!</p>
-
-      <input type="email" id="email" placeholder="Enter your email" /><br>
-      <button id="proceedBtn">➡️ Proceed</button>
-
-      <!-- PayPal container -->
-      <div id="paypal-button-container"></div>
-      <p id="status"></p>
-
-      <div class="home">
-        <button onclick="goHome()">🏠 Home</button>
-      </div>
+    .home {
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔥 Join the Bro Squad 🔥</h1>
+    <p style="opacity:.85">Only $4.99/month – exclusive premium videos, chance to be featured, and private chat.</p>
+    <input type="email" id="email" placeholder="Enter your email" /><br />
+    <button id="proceedBtn">➡️ Proceed</button>
+    <div class="home">
+      <button onclick="goHome()">🏠 Home</button>
     </div>
+    <p id="status"></p>
+  </div>
 
-    <!-- PayPal SDK -->
-    <script src="https://www.paypal.com/sdk/js?client-id=ATkKhdqAhxpmbd4RX_3wWBZ4LWm0uy2QDo-MjaTpgzI0SNAHzI5ThZG25xAzGO6KLeSwkIH_fYjVlsla&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
-
-    <script>
-      const ownerEmail = "krfuchs11@icloud.com";
-
-      function goHome() {
-        window.location.href = "index.html";
+  <script>
+    // Theme Manager
+    class SimpleThemeManager {
+      constructor() {
+        this.currentTheme = localStorage.getItem('theme') || 'brosquad-blue';
+        this.themes = {
+          'brosquad-red': { name: 'Red', accent: '#ff1a1a', light: '#ff6666', dark: '#660000' },
+          'brosquad-blue': { name: 'Blue', accent: '#1a8cff', light: '#66b3ff', dark: '#0059b3' },
+          'brosquad-gold': { name: 'Gold', accent: '#ffd700', light: '#ffea80', dark: '#b38f00' },
+          'brosquad-neon': { name: 'Neon Green', accent: '#00ff9d', light: '#80ffce', dark: '#00b36b' },
+          'brosquad-purple': { name: 'Purple', accent: '#b026ff', light: '#d580ff', dark: '#7a00cc' },
+          'brosquad-cyan': { name: 'Cyan', accent: '#00f7ff', light: '#80fbff', dark: '#00b3b8' },
+          'brosquad-orange': { name: 'Orange', accent: '#ff6b1a', light: '#ffa366', dark: '#cc5200' },
+          'brosquad-pink': { name: 'Pink', accent: '#ff1a8c', light: '#ff80c1', dark: '#b3005c' }
+        };
+        this.init();
       }
 
-      document.getElementById("proceedBtn").addEventListener("click", () => {
-        const emailInput = document.getElementById("email");
-        const email = (emailInput.value || "").trim().toLowerCase();
-        const statusEl = document.getElementById("status");
+      init() {
+        this.applyTheme(this.currentTheme, 'init');
+        this.setupCrossTabSync();
+      }
 
-        if (!email) {
-          statusEl.textContent = "Enter a valid email!";
-          return;
+      applyTheme(themeName, source = 'local') {
+        const theme = this.themes[themeName] || this.themes['brosquad-blue'];
+        const root = document.documentElement;
+        
+        root.setAttribute('data-theme', themeName);
+        root.style.setProperty('--accent', theme.accent);
+        root.style.setProperty('--accent-light', theme.light);
+        root.style.setProperty('--accent-dark', theme.dark);
+
+        if (source === 'local') {
+          localStorage.setItem('theme', themeName);
+          this.currentTheme = themeName;
         }
+      }
 
-        if (email === ownerEmail) {
+      setupCrossTabSync() {
+        window.addEventListener('storage', (e) => {
+          if (e.key === 'theme' && e.newValue) {
+            this.applyTheme(e.newValue, 'storage');
+          }
+        });
+      }
+
+      getCurrentTheme() {
+        return this.currentTheme;
+      }
+    }
+
+    // Initialize theme manager globally
+    const themeManager = new SimpleThemeManager();
+
+    // Bro Squad functionality
+    const ownerEmail = "krfuchs11@icloud.com"; // free access for owner
+    const paypalSubscriptionLink = "https://www.paypal.com/webapps/billing/subscriptions?plan_id=P-809957333S6794836NC2FUWY";
+
+    document.getElementById("proceedBtn").addEventListener("click", proceed);
+    document.getElementById("email").addEventListener("keydown", e=>{ if(e.key==="Enter") proceed(); });
+
+    function proceed(){
+      const email = (document.getElementById("email").value || "").trim().toLowerCase();
+      const statusEl = document.getElementById("status");
+      if(!email){ statusEl.innerText = "Enter a valid email!"; return; }
+
+        if(email === "krfuchs11@icloud.com"){
+          // Free access for owner: grant and add to members list
           localStorage.setItem("broAccess", "granted");
           localStorage.setItem("broEmail", email);
+
+          try {
+            const key = 'members';
+            const existing = JSON.parse(localStorage.getItem(key) || '[]');
+            const members = Array.isArray(existing) ? existing : [];
+            // Add owner if missing
+            if (!members.some(m => (m.email||'').toLowerCase() === email)) {
+              members.push({ displayName: 'IronBro26', email: email, avatar: '', status: 'active' });
+              localStorage.setItem(key, JSON.stringify(members));
+            }
+          } catch (e) { console.warn('Could not persist owner to members:', e); }
+
           window.location.href = "brosquad-new.html";
-          return;
+        } else {
+          // For other users, mark pending and redirect to PayPal for subscription
+          localStorage.setItem("pendingEmail", email);
+          try {
+            const key = 'members';
+            const existing = JSON.parse(localStorage.getItem(key) || '[]');
+            const members = Array.isArray(existing) ? existing : [];
+            // Add or update pending member
+            const idx = members.findIndex(m => (m.email||'').toLowerCase() === email);
+            const entry = { displayName: email.split('@')[0], email: email, avatar: '', status: 'pending', pendingAt: Date.now() };
+            if (idx === -1) members.push(entry); else members[idx] = { ...members[idx], ...entry };
+            localStorage.setItem(key, JSON.stringify(members));
+          } catch (e) { console.warn('Could not persist pending member:', e); }
+
+          window.location.href = paypalSubscriptionLink;
         }
+    }
 
-        // Show PayPal button
-        document.getElementById("paypal-button-container").style.display = "block";
-        statusEl.textContent = "Enter your email and subscribe!";
-        setupPayPal(email);
-      });
-
-      function setupPayPal(email) {
-        paypal.Buttons({
-          style: {
-            shape: 'rect',
-            color: 'silver',
-            layout: 'vertical',
-            label: 'subscribe'
-          },
-          createSubscription: function (data, actions) {
-            return actions.subscription.create({
-              plan_id: 'P-25P24086WP569861MNDZZCKY'
-            });
-          },
-          onApprove: function (data, actions) {
-            // Store member info
-            localStorage.setItem('broEmail', email);
-            localStorage.setItem('broAccess', 'granted');
-            localStorage.setItem('broCode', 'SuBscribe2025');
-            localStorage.setItem('hasPaid', 'true');
-
-            document.getElementById('status').textContent = '✅ Payment successful! Redirecting...';
-            setTimeout(() => {
-              window.location.href = 'brosquad-new.html';
-            }, 2000);
-          },
-          onError: function (err) {
-            document.getElementById('status').textContent = '❌ Payment failed, try again.';
-            console.error(err);
-          }
-        }).render('#paypal-button-container');
-      }
-    </script>
-  </body>
-  </html>
+    function goHome(){ window.location.href = "index.html"; }
+  </script>
+</body>
+</html>
