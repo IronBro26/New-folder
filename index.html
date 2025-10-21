@@ -11,6 +11,16 @@
   <!-- JavaScript files will be loaded at the end of the body -->
   <style>
     /* Navigation Styles */
+    /* Lock navigation colors so theme changes won't affect nav visuals */
+    .sidebar, .topbar, .nav-link, .logo-img, .logo-text, .settings-link, .premium-link {
+      --nav-accent: #ff1a1a; /* fallback fixed color */
+    }
+    .sidebar { background: linear-gradient(180deg, #ff1a1a, #660000) !important; }
+    .topbar { background: #111 !important; border-bottom-color: rgba(255,255,255,0.12) !important; }
+    .nav-link { background: rgba(255,255,255,0.05) !important; color: #fff !important; }
+    .nav-link.active { background: #ff1a1a !important; color: #000 !important; box-shadow: 0 0 10px #ff1a1a !important; }
+    .logo-img { border-color: #ff1a1a !important; box-shadow: 0 0 15px #ff1a1a !important; }
+    .settings-link, .premium-link { border-color: #ff1a1a !important; color: #ff1a1a !important; box-shadow: 0 0 10px #ff1a1a !important; }
     .nav-links {
       display: flex;
       flex-direction: column;
@@ -114,9 +124,9 @@
       --bg2: #1a1a1a;
       --panel: #111;
       --text: #fff;
-      --accent: #9c27b0; /* default purple for index */
-      --accent-light: #b26dff;
-      --accent-dark: #6a1b9a;
+      --accent: #ff1a1a;
+      --accent-light: #ff6666;
+      --accent-dark: #660000;
       --transition-speed: 0.3s;
     }
 
@@ -181,29 +191,16 @@
       height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: stretch; /* allow children to fill width */
+      align-items: center;
       box-shadow: 0 0 25px rgba(0,0,0,0.5);
       gap: 8px;
       z-index: 30;
     }
-  .sidebar img{width:100px;height:100px;border-radius:50%;margin:0 auto 10px;box-shadow:0 0 15px var(--accent),0 0 30px var(--accent-light)}
-  .sidebar h1{font-size:22px;margin:4px 0 12px;text-align:center;color:#000;text-shadow:0 0 10px var(--accent),0 0 25px var(--accent-light)}
-  .sidebar a{width:100%;color:#fff;text-decoration:none;padding:10px;display:block;text-align:center;margin:3px 0;border-radius:8px;transition:.3s;box-shadow:0 0 5px var(--accent);cursor:pointer}
+    .sidebar img{width:100px;height:100px;border-radius:50%;margin-bottom:10px;box-shadow:0 0 15px var(--accent),0 0 30px var(--accent-light)}
+    .sidebar h1{font-size:22px;margin:4px 0 12px;text-align:center;color:#000;text-shadow:0 0 10px var(--accent),0 0 25px var(--accent-light)}
+    .sidebar a{width:100%;color:#fff;text-decoration:none;padding:10px;display:block;text-align:center;margin:3px 0;border-radius:8px;transition:.3s;box-shadow:0 0 5px var(--accent);cursor:pointer}
     .sidebar a:hover { background: var(--accent); color: #000; box-shadow: 0 0 15px var(--accent), 0 0 30px var(--accent-light) }
     .content { margin-left: 280px; padding: 20px; flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
-
-    /* Make nav-links scrollable while keeping admin pinned */
-    .nav-links {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      overflow-y: auto;
-      max-height: calc(100vh - 220px); /* leave space for logo/header and admin */
-      padding-right: 6px; /* avoid overlapping scrollbar with content */
-    }
-
-    /* Ensure admin section stays at the bottom of the sidebar */
-    .admin-section { margin-top: auto; }
     
     @media (max-width: 860px) {
       .topbar { display: flex; }
@@ -431,7 +428,7 @@
 </head>
 <body>
 
-  <div class="sidebar" data-allow-accent>
+  <div class="sidebar">
     <a href="./index.html" class="logo-link">
       <img src="./IronBro.jpg" alt="IronBro" class="logo-img" />
       <h1 class="logo-text">IronBro26</h1>
@@ -439,38 +436,32 @@
   
     <!-- Navigation Links as Buttons -->
     <nav class="nav-links">
-  <button onclick="window.location.href='./index.html'" class="nav-link" data-skip-accent>
+      <button onclick="window.location.href='./index.html'" class="nav-link">
         <span class="nav-icon">🏠</span>
         <span class="nav-text">Home</span>
       </button>
-  <button onclick="window.location.href='./videos.html'" class="nav-link" data-skip-accent>
+      <button onclick="window.location.href='./videos.html'" class="nav-link">
         <span class="nav-icon">🎬</span>
         <span class="nav-text">Videos</span>
       </button>
-  <button onclick="window.location.href='./fan-mail.html'" class="nav-link" data-skip-accent>
+      <button onclick="window.location.href='./fan-mail.html'" class="nav-link">
         <span class="nav-icon">✉️</span>
         <span class="nav-text">Fan Mail</span>
       </button>
-  <button onclick="window.location.href='./join.html'" class="nav-link" data-skip-accent>
+      <button onclick="window.location.href='./brosquad-new.html'" class="nav-link">
         <span class="nav-icon">🔥</span>
         <span class="nav-text">Bro Squad</span>
       </button>
-  <button onclick="window.location.href='./donate.html'" class="nav-link" data-skip-accent>
+      <button onclick="window.location.href='./donate.html'" class="nav-link">
         <span class="nav-icon">💎</span>
         <span class="nav-text">Donate</span>
       </button>
-  <button onclick="window.location.href='./signup.html'" class="nav-link" data-skip-accent style="background: var(--accent); color: #000; font-weight: bold;">
+      <button onclick="window.location.href='./signup.html'" class="nav-link" style="background: var(--accent); color: #000; font-weight: bold;">
         <span class="nav-icon">🚀</span>
         <span class="nav-text">Sign Up</span>
-      </button>
-  <button onclick="window.location.href='./reviews.html'" class="nav-link" data-skip-accent>
-        <span class="nav-icon">⭐</span>
-        <span class="nav-text">Reviews</span>
-      </button>
-  <button onclick="window.location.href='./camoman.html'" class="nav-link" data-skip-accent>
-        <span class="nav-icon">🪖</span>
-        <span class="nav-text">Camoman</span>
-      </button>
+        <a href="C:/Users/Krfuc/OneDrive/Website/New folder/reviews.html">
+  <button>Go to Reviews</button>
+</a>
     </nav>
   
     <!-- Admin Section -->
@@ -539,6 +530,10 @@
         <span class="theme-preview" style="background: var(--theme-color);"></span>
         <span>Blue</span>
       </button>
+      <button class="theme-option" data-theme="brosquad-gold" style="--theme-color: #ffd700;">
+        <span class="theme-preview" style="background: var(--theme-color);"></span>
+        <span>Gold</span>
+      </button>
       <button class="theme-option" data-theme="brosquad-neon" style="--theme-color: #00ff9d;">
         <span class="theme-preview" style="background: var(--theme-color);"></span>
         <span>Neon</span>
@@ -559,7 +554,6 @@
         <span class="theme-preview" style="background: var(--theme-color);"></span>
         <span>Pink</span>
       </button>
-
     </div>
   </div>
   
