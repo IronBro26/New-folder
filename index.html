@@ -11,16 +11,19 @@
   <!-- JavaScript files will be loaded at the end of the body -->
   <style>
     /* Navigation Styles */
-    /* Lock navigation colors so theme changes won't affect nav visuals */
-    .sidebar, .topbar, .nav-link, .logo-img, .logo-text, .settings-link, .premium-link {
+    .nav-link, .logo-img, .logo-text, .settings-link, .premium-link {
       --nav-accent: #ff1a1a; /* fallback fixed color */
     }
-    .sidebar { background: linear-gradient(180deg, #ff1a1a, #660000) !important; }
     .topbar { background: #111 !important; border-bottom-color: rgba(255,255,255,0.12) !important; }
     .nav-link { background: rgba(255,255,255,0.05) !important; color: #fff !important; }
-    .nav-link.active { background: #ff1a1a !important; color: #000 !important; box-shadow: 0 0 10px #ff1a1a !important; }
-    .logo-img { border-color: #ff1a1a !important; box-shadow: 0 0 15px #ff1a1a !important; }
-    .settings-link, .premium-link { border-color: #ff1a1a !important; color: #ff1a1a !important; box-shadow: 0 0 10px #ff1a1a !important; }
+    .nav-link.active { background: var(--accent) !important; color: #000 !important; box-shadow: 0 0 10px var(--accent) !important; }
+    .logo-img { border-color: var(--accent) !important; box-shadow: 0 0 15px var(--accent) !important; }
+    .settings-link, .premium-link { border-color: var(--accent) !important; color: var(--accent) !important; box-shadow: 0 0 10px var(--accent) !important; }
+    
+    /* Sidebar theming */
+    .sidebar {
+      background: linear-gradient(180deg, var(--accent), var(--accent-dark)) !important;
+    }
     .nav-links {
       display: flex;
       flex-direction: column;
@@ -195,6 +198,7 @@
       box-shadow: 0 0 25px rgba(0,0,0,0.5);
       gap: 8px;
       z-index: 30;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
     }
     .sidebar img{width:100px;height:100px;border-radius:50%;margin-bottom:10px;box-shadow:0 0 15px var(--accent),0 0 30px var(--accent-light)}
     .sidebar h1{font-size:22px;margin:4px 0 12px;text-align:center;color:#000;text-shadow:0 0 10px var(--accent),0 0 25px var(--accent-light)}
