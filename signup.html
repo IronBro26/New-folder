@@ -1,164 +1,93 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NEON SIGNUP PORTAL — ironbro26fanclub</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Audiowide&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#000;--neon:#ff0033;--neon-green:#00ff88;}
-*{box-sizing:border-box}
-html,body{height:100%; margin:0; background:var(--bg); color:var(--neon); font-family:'Orbitron',sans-serif}
-canvas#sparks{position:fixed; inset:0; z-index:0; pointer-events:none}
-.container{position:relative; z-index:1; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px}
-.card{width:980px; max-width:96%; display:grid; grid-template-columns:1fr 380px; gap:20px; background:linear-gradient(180deg, rgba(255,0,51,0.02), rgba(0,0,0,0.5)); border:1px solid rgba(255,0,51,0.08); border-radius:14px; padding:22px; box-shadow:0 30px 120px rgba(255,0,51,0.03); backdrop-filter: blur(6px);}
-.brand{padding:8px 6px 0 6px;}
-.title{font-family:'Audiowide','Orbitron'; font-size:34px; letter-spacing:2px; margin:6px 0; text-shadow: 0 0 12px rgba(255,0,51,0.9), 0 0 40px rgba(255,0,51,0.14); animation: pulse 2s infinite ease-in-out;}
-@keyframes pulse{0%{text-shadow:0 0 6px rgba(255,0,51,0.5)}50%{text-shadow:0 0 22px rgba(255,0,51,0.95)}100%{text-shadow:0 0 6px rgba(255,0,51,0.5)}}
-.desc{color:rgba(255,255,255,0.8); font-size:13px; margin-bottom:12px}
-.tabs{display:flex; gap:12px; margin:14px 0}
-.tab{padding:10px 16px; border-radius:10px; cursor:pointer; user-select:none; border:1px solid rgba(255,0,51,0.06); background:linear-gradient(180deg, rgba(255,0,51,0.02), transparent); transition: all .28s ease;}
-.tab.active{ transform:translateY(-3px); box-shadow:0 10px 40px rgba(255,0,51,0.06); border-color:rgba(255,0,51,0.3)}
-.side{background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(255,0,51,0.01)); padding:18px; border-radius:12px; border:1px solid rgba(255,0,51,0.06)}
-form{display:flex; flex-direction:column; gap:10px}
-label{font-size:13px; color:rgba(255,255,255,0.85)}
-.input{background:transparent; border:1px solid rgba(255,0,51,0.16); padding:12px 14px; border-radius:10px; color:#fff; outline:none; font-size:14px; transition: box-shadow .18s, transform .12s;}
-.input:focus{ box-shadow:0 0 34px rgba(255,0,51,0.14); transform:translateY(-2px); border-color:rgba(255,0,51,0.32) }
-.btn{padding:12px 14px; border-radius:10px; border:1px solid rgba(255,0,51,0.12); cursor:pointer; font-weight:700; color:white; background:linear-gradient(180deg, rgba(255,0,51,0.06), rgba(255,0,51,0.01)); transition: all .24s ease;}
-.btn:hover{ transform:translateY(-4px); box-shadow:0 30px 80px rgba(255,0,51,0.08) }
-.small{font-size:13px; color:rgba(255,255,255,0.75)}
-.notice{padding:10px; border-radius:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,0,51,0.06); color:rgba(255,255,255,0.9); margin-top:8px}
-@media (max-width:920px){.card{grid-template-columns:1fr; padding:14px}.title{font-size:26px}}
+:root { --bg:#000; --neon:#ff0033; }
+*{box-sizing:border-box;}
+body {
+  background: var(--bg);
+  color: var(--neon);
+  font-family: 'Orbitron', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+.container {
+  text-align: center;
+  padding: 40px;
+  border: 1px solid var(--neon);
+  border-radius: 12px;
+  box-shadow: 0 0 25px var(--neon);
+  animation: glowPulse 2s infinite alternate;
+}
+@keyframes glowPulse {
+  from { box-shadow: 0 0 15px var(--neon); }
+  to { box-shadow: 0 0 40px var(--neon); }
+}
+h1 {
+  font-family: 'Audiowide', cursive;
+  color: var(--neon);
+  margin-bottom: 20px;
+  text-shadow: 0 0 15px var(--neon);
+}
+input {
+  background: black;
+  color: white;
+  border: 1px solid var(--neon);
+  padding: 10px;
+  border-radius: 8px;
+  width: 250px;
+  margin: 10px 0;
+  outline: none;
+  box-shadow: 0 0 10px var(--neon);
+}
+button {
+  background: var(--neon);
+  color: black;
+  font-weight: 700;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+button:hover {
+  background: black;
+  color: var(--neon);
+  box-shadow: 0 0 20px var(--neon);
+}
 </style>
 </head>
 <body>
-<canvas id="sparks"></canvas>
 <div class="container">
-  <div class="card">
-    <div class="brand">
-      <div class="title">NEON SIGNUP PORTAL</div>
-      <div class="desc">Join the ironbro26 fanclub. Accounts sync via JSONBin.</div>
-      <div class="tabs">
-        <div class="tab active" data-tab="signup">SIGN UP</div>
-        <div class="tab" data-tab="login">LOGIN</div>
-      </div>
-      <div id="msg" class="notice" style="display:none;"></div>
-      <div class="footer"><div class="small">Owner account: <strong>Krfuchs@icloud.com</strong></div></div>
-    </div>
-
-    <div class="side">
-      <form id="signup-form" autocomplete="off">
-        <label for="s-email">Email</label>
-        <input id="s-email" class="input" type="email" required placeholder="you@domain.com">
-        <label for="s-pass">Passcode</label>
-        <input id="s-pass" class="input" type="password" required placeholder="Enter passcode">
-        <button class="btn" type="submit">Create Account</button>
-      </form>
-
-      <form id="login-form" autocomplete="off" style="display:none">
-        <label for="l-email">Email</label>
-        <input id="l-email" class="input" type="email" required placeholder="you@domain.com">
-        <label for="l-pass">Passcode</label>
-        <input id="l-pass" class="input" type="password" required placeholder="Enter passcode">
-        <button class="btn" type="submit">Log In</button>
-      </form>
-    </div>
-  </div>
+  <h1>NEON SIGNUP PORTAL</h1>
+  <form id="signupForm">
+    <input type="email" id="email" placeholder="Email" required><br>
+    <input type="password" id="password" placeholder="Passcode" required><br>
+    <button type="submit">SIGN UP</button>
+  </form>
 </div>
 
 <script>
-const BIN_ID = "68f65f92d0ea881f40aebb87"; // your bin
-const MASTER_KEY = "$2a$10$wpHGujrPsIgbzGPptWRaIOkuT.9Bz2iSRN.gytSpwclZcQPr880tC";
-const OWNER_EMAIL = "Krfuchs@icloud.com";
-const OWNER_PASS = "Krf11@2011";
+document.getElementById("signupForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-// Tabs
-document.querySelectorAll('.tab').forEach(t=>{
-  t.addEventListener('click', ()=>{
-    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-    t.classList.add('active');
-    document.getElementById('signup-form').style.display = t.dataset.tab==="signup"?"flex":"none";
-    document.getElementById('login-form').style.display = t.dataset.tab==="login"?"flex":"none";
+  const res = await fetch("/api/signup", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
   });
-});
 
-// JSONBin helper
-async function fetchUsers(){
-  const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-    headers:{ "X-Master-Key": MASTER_KEY }
-  });
   const data = await res.json();
-  return data.record.users || [];
-}
-
-async function saveUsers(users){
-  await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`,{
-    method:"PUT",
-    headers:{
-      "Content-Type":"application/json",
-      "X-Master-Key": MASTER_KEY,
-      "X-Bin-Versioning": "false"
-    },
-    body: JSON.stringify({users})
-  });
-}
-
-// Signup
-document.getElementById('signup-form').addEventListener('submit', async e=>{
-  e.preventDefault();
-  const email = document.getElementById('s-email').value.trim();
-  const pass = document.getElementById('s-pass').value.trim();
-  let users = await fetchUsers();
-
-  if(users.find(u=>u.email.toLowerCase()===email.toLowerCase())){
-    document.getElementById('msg').style.display="block";
-    document.getElementById('msg').textContent="Email already registered";
-    return;
-  }
-
-  users.push({email, passcode: pass, signupTime: new Date().toISOString(), lastOnline: new Date().toISOString(), online:true});
-  await saveUsers(users);
-
-  document.getElementById('msg').style.display="block";
-  document.getElementById('msg').textContent="Account created. Redirecting to login...";
-  setTimeout(()=>{ document.querySelector('[data-tab="login"]').click(); document.getElementById('msg').style.display="none"; },1200);
-});
-
-// Login
-document.getElementById('login-form').addEventListener('submit', async e=>{
-  e.preventDefault();
-  const email = document.getElementById('l-email').value.trim();
-  const pass = document.getElementById('l-pass').value.trim();
-  let users = await fetchUsers();
-
-  const user = users.find(u=>u.email.toLowerCase()===email.toLowerCase());
-  if(!user){
-    document.getElementById('msg').style.display="block";
-    document.getElementById('msg').textContent="Invalid credentials: Email not found";
-    return;
-  }
-
-  if(user.passcode !== pass){
-    document.getElementById('msg').style.display="block";
-    document.getElementById('msg').textContent="Invalid credentials: Wrong password";
-    return;
-  }
-
-  user.online = true;
-  user.lastOnline = new Date().toISOString();
-  await saveUsers(users);
-
-  if(email.toLowerCase()===OWNER_EMAIL.toLowerCase() && pass===OWNER_PASS){
-    localStorage.setItem('currentUserRole','Owner');
-    document.getElementById('msg').textContent="Owner logged in. Admin panel available.";
-  } else {
-    localStorage.setItem('currentUserRole','Member');
-    document.getElementById('msg').textContent="Member logged in. Admin panel hidden.";
-  }
-
-  document.getElementById('login-form').reset();
-  document.getElementById('msg').style.display="block";
-  setTimeout(()=>{ document.getElementById('msg').style.display="none"; },1500);
+  alert(data.message);
 });
 </script>
 </body>
