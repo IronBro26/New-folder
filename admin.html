@@ -1,52 +1,70 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>ADMIN PANEL — ironbro26fanclub</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADMIN CONTROL PANEL</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 <style>
-body{background:#000;color:#ff0033;font-family:'Orbitron',sans-serif;}
-h1{text-align:center;color:#ff0033;margin-top:20px;}
-table{width:100%;max-width:900px;margin:20px auto;border-collapse:collapse;}
-th,td{border:1px solid rgba(255,0,51,0.2);padding:10px;text-align:center;}
-th{background:rgba(255,0,51,0.05);}
-.online{color:#00ff88;font-weight:700;}
-.offline{color:#ff0033;font-weight:700;}
+body { background:#000; color:#ff0033; font-family:'Orbitron',sans-serif; margin:0; padding:0; }
+header { text-align:center; padding:20px; font-size:2em; text-shadow:0 0 5px #ff0033,0 0 20px #ff0033; animation:pulse 2s infinite; }
+@keyframes pulse {0%,100%{text-shadow:0 0 5px #ff0033,0 0 20px #ff0033;}50%{text-shadow:0 0 15px #ff0033,0 0 30px #ff0033;}}
+table { width:90%; margin:20px auto; border-collapse:collapse; }
+th,td { padding:10px; border:1px solid #ff0033; text-align:center; color:#ff0033; }
+.online { color:#00ff00; font-weight:bold; }
+.offline { color:#ff0033; font-weight:bold; }
+button { margin:10px; padding:10px 20px; background:transparent; border:1px solid #ff0033; color:#ff0033; cursor:pointer; transition:.3s ease-in-out; }
+button:hover { box-shadow:0 0 20px #ff0033,0 0 40px #ff0033 inset; }
 </style>
 </head>
 <body>
-<h1>Admin Control Panel</h1>
-<table>
+<header>ADMIN CONTROL PANEL</header>
+<div style="text-align:center;">
+  <button id="home">Go to Website</button>
+</div>
+<table id="user-table">
   <thead>
-    <tr><th>Email</th><th>Passcode</th><th>Signup Time</th><th>Status</th><th>Last Online</th></tr>
+    <tr>
+      <th>Email</th>
+      <th>Signup Time</th>
+      <th>Online Status</th>
+      <th>Last Online</th>
+    </tr>
   </thead>
-  <tbody id="usersTable"></tbody>
+  <tbody></tbody>
 </table>
 
-<script>
-const BIN_ID = "68f65f92d0ea881f40aebb87";
-const API_KEY = "$2a$10$wpHGujrPsIgbzGPptWRaIOkuT.9Bz2iSRN.gytSpwclZcQPr880tC";
+<script type="module">
+import { auth, db } from "./firebase.js";
+import { collection, onSnapshot } from "firebase/firestore";
 
-async function fetchUsers() {
-  const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {headers:{'X-Master-Key':API_KEY}});
-  const data = await res.json();
-  return data.record.users || [];
+const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+if(!currentUser || currentUser.email !== "Krfuchs@icloud.com") {
+  alert("Access Denied: Admins Only.");
+  window.location.href = "signup.html";
 }
 
-async function loadUsers() {
-  const users = await fetchUsers();
-  const tbody = document.getElementById('usersTable');
-  tbody.innerHTML = '';
-  users.forEach(u=>{
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${u.email}</td><td>*****</td><td>${new Date(u.signupTime).toLocaleString()}</td>
-                    <td class="${u.online?'online':'offline'}">${u.online?'Online':'Offline'}</td>
-                    <td>${new Date(u.lastOnline).toLocaleString()}</td>`;
+document.getElementById("home").addEventListener("click", ()=>{
+  window.location.href = "file:///C:/Users/Krfuc/OneDrive/Website/New%20folder/index.html";
+});
+
+const tbody = document.querySelector("#user-table tbody");
+const usersCol = collection(db, "users");
+
+onSnapshot(usersCol, snapshot => {
+  tbody.innerHTML = "";
+  snapshot.docs.forEach(docSnap=>{
+    const u = docSnap.data();
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${u.email}</td>
+      <td>${u.signupTime?.toDate ? u.signupTime.toDate().toLocaleString() : 'N/A'}</td>
+      <td class="${u.online?'online':'offline'}">${u.online?'Online':'Offline'}</td>
+      <td>${u.lastOnline?.toDate ? u.lastOnline.toDate().toLocaleString() : 'N/A'}</td>
+    `;
     tbody.appendChild(tr);
   });
-}
-
-loadUsers();
+});
 </script>
 </body>
 </html>
