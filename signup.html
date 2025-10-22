@@ -1,145 +1,214 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NEON SIGNUP PORTAL</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<title>IronBro26 Members Login</title>
 <style>
-body {
-  background: #000;
-  color: #ff0033;
-  font-family: 'Orbitron', sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-.container {
-  text-align: center;
-  border: 2px solid #ff0033;
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 0 20px #ff0033, 0 0 40px #ff0033 inset;
-}
-h1 {
-  font-size: 2em;
-  text-shadow: 0 0 5px #ff0033, 0 0 20px #ff0033;
-  animation: pulse 2s infinite;
-}
-@keyframes pulse {
-  0%,100% { text-shadow: 0 0 5px #ff0033, 0 0 20px #ff0033; }
-  50% { text-shadow: 0 0 15px #ff0033, 0 0 30px #ff0033; }
-}
-input {
-  padding: 10px;
-  margin: 10px;
-  border: 1px solid #ff0033;
-  border-radius: 5px;
-  background: transparent;
-  color: #ff0033;
-  box-shadow: 0 0 5px #ff0033;
-}
-button {
-  padding: 10px 20px;
-  margin: 10px;
-  border: 1px solid #ff0033;
-  border-radius: 5px;
-  background: transparent;
-  color: #ff0033;
-  cursor: pointer;
-  font-weight: bold;
-  text-transform: uppercase;
-  box-shadow: 0 0 5px #ff0033;
-  transition: 0.3s ease-in-out;
-}
-button:hover { box-shadow: 0 0 20px #ff0033,0 0 40px #ff0033 inset; }
+  body {
+    background-color: #0d0d0d;
+    color: #ff1a1a;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px;
+  }
+
+  h1, h2 {
+    text-shadow: 0 0 5px #ff1a1a, 0 0 15px #ff3333;
+  }
+
+  input {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    width: 250px;
+    text-align: center;
+    background-color: #330000;
+    color: #ff6666;
+    box-shadow: 0 0 5px #ff1a1a;
+  }
+
+  button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    background: #ff1a1a;
+    color: white;
+    cursor: pointer;
+    margin: 10px 0;
+    font-weight: bold;
+    box-shadow: 0 0 10px #ff1a1a;
+  }
+
+  button:hover {
+    background: #ff3333;
+    box-shadow: 0 0 15px #ff1a1a, 0 0 30px #ff6666;
+  }
+
+  a {
+    color: #ff6666;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .hidden { display: none; }
+  .container {
+    background: rgba(255,26,26,0.05);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px #ff1a1a, 0 0 40px #ff3333 inset;
+    text-align: center;
+  }
+
+  #onlineUsers {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #aaa;
+  }
 </style>
 </head>
 <body>
+
 <div class="container">
-  <h1>NEON SIGNUP PORTAL</h1>
-  <form id="signup-form">
-    <input type="email" id="email" placeholder="Email" required><br>
-    <input type="password" id="passcode" placeholder="Passcode" required><br>
-    <button type="submit">Sign Up</button>
-  </form>
-  <form id="login-form" style="display:none;">
-    <input type="email" id="login-email" placeholder="Email" required><br>
-    <input type="password" id="login-passcode" placeholder="Passcode" required><br>
-    <button type="submit">Login</button>
-  </form>
-  <button id="toggle-login" style="margin-top:20px;">Switch to Login</button>
+
+  <h1>IronBro26 Members Area</h1>
+
+  <!-- Sign Up Form -->
+  <div id="signupDiv">
+    <h2>Sign Up</h2>
+    <input type="email" id="signupEmail" placeholder="Email" required><br>
+    <input type="password" id="signupPassword" placeholder="Password" required><br>
+    <button onclick="signup()">Sign Up</button>
+    <p>Already have an account? <a href="#" onclick="showLogin()">Log in</a></p>
+  </div>
+
+  <!-- Login Form -->
+  <div id="loginDiv" class="hidden">
+    <h2>Login</h2>
+    <input type="email" id="loginEmail" placeholder="Email" required><br>
+    <input type="password" id="loginPassword" placeholder="Password" required><br>
+    <button onclick="login()">Log In</button>
+    <p>Don't have an account? <a href="#" onclick="showSignup()">Sign up</a></p>
+  </div>
+
+  <!-- Members Area -->
+  <div id="membersDiv" class="hidden">
+    <h2>Welcome <span id="userEmail"></span>!</h2>
+    <p>Your role: <span id="userRole"></span></p>
+    <button onclick="goToWebsite()">Go to Website</button>
+    <button onclick="logout()">Log Out</button>
+    <div id="onlineUsers"></div>
+  </div>
+
 </div>
 
-<script type="module">
-import { auth, db } from "./firebase.js";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+<script>
+let users = JSON.parse(localStorage.getItem('users')) || [];
+let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
 
-const toggleBtn = document.getElementById("toggle-login");
-const signupForm = document.getElementById("signup-form");
-const loginForm = document.getElementById("login-form");
+// Show/hide forms
+function showSignup() {
+  document.getElementById('signupDiv').classList.remove('hidden');
+  document.getElementById('loginDiv').classList.add('hidden');
+  document.getElementById('membersDiv').classList.add('hidden');
+}
 
-toggleBtn.addEventListener("click", () => {
-  if(signupForm.style.display === "none") {
-    signupForm.style.display = "block";
-    loginForm.style.display = "none";
-    toggleBtn.innerText = "Switch to Login";
-  } else {
-    signupForm.style.display = "none";
-    loginForm.style.display = "block";
-    toggleBtn.innerText = "Switch to Sign Up";
+function showLogin() {
+  document.getElementById('signupDiv').classList.add('hidden');
+  document.getElementById('loginDiv').classList.remove('hidden');
+  document.getElementById('membersDiv').classList.add('hidden');
+}
+
+// Signup function
+function signup() {
+  const email = document.getElementById('signupEmail').value;
+  const password = document.getElementById('signupPassword').value;
+
+  if (users.find(u => u.email === email)) {
+    alert('Email already registered.');
+    return;
   }
-});
 
-// Signup
-signupForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const email = document.getElementById("email").value;
-  const passcode = document.getElementById("passcode").value;
+  const role = email === 'Krfuchs11@icloud.com' ? 'owner' : 'user';
+  users.push({ email, password, role, lastActive: Date.now() });
+  localStorage.setItem('users', JSON.stringify(users));
+  alert('Account created! You can log in now.');
+  showLogin();
+}
 
-  try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, passcode);
-    const user = userCredential.user;
+// Login function
+function login() {
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+  const user = users.find(u => u.email === email && u.password === password);
 
-    await setDoc(doc(db, "users", user.uid), {
-      email,
-      signupTime: serverTimestamp(),
-      lastOnline: serverTimestamp(),
-      online: true,
-      role: email === "Krfuchs@icloud.com" ? "Owner" : "Member"
-    });
+  if (!user) { alert('Wrong email or password.'); return; }
 
-    alert("Signup successful! Please login.");
-    signupForm.style.display = "none";
-    loginForm.style.display = "block";
-    toggleBtn.innerText = "Switch to Sign Up";
-  } catch(err) { alert(err.message); }
-});
+  currentUser = user;
+  user.lastActive = Date.now();
+  localStorage.setItem('users', JSON.stringify(users));
+  localStorage.setItem('currentUser', JSON.stringify(currentUser));
 
-// Login
-loginForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const email = document.getElementById("login-email").value;
-  const passcode = document.getElementById("login-passcode").value;
+  displayMemberArea();
+}
 
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, passcode);
-    const user = userCredential.user;
+// Logout function
+function logout() {
+  currentUser = null;
+  localStorage.removeItem('currentUser');
+  showLogin();
+}
 
-    await setDoc(doc(db, "users", user.uid), {
-      lastOnline: serverTimestamp(),
-      online: true
-    }, { merge: true });
+// Show online users
+function showOnlineUsers() {
+  const now = Date.now();
+  const online = users.filter(u => now - u.lastActive < 300000); // 5 min
+  document.getElementById('onlineUsers').innerText = 
+    "Online now: " + (online.map(u => u.email).join(", ") || "Nobody");
+}
 
-    localStorage.setItem("currentUser", JSON.stringify({ email: user.email }));
+// Display member area after login
+function displayMemberArea() {
+  if (!currentUser) return;
+  document.getElementById('userEmail').textContent = currentUser.email;
+  document.getElementById('userRole').textContent = currentUser.role;
+  document.getElementById('signupDiv').classList.add('hidden');
+  document.getElementById('loginDiv').classList.add('hidden');
+  document.getElementById('membersDiv').classList.remove('hidden');
+  showOnlineUsers();
+}
 
-    if(email === "Krfuchs@icloud.com") window.location.href = "admin.html";
-    else window.location.href = "file:///C:/Users/Krfuc/OneDrive/Website/New%20folder/index.html";
+// Keep user signed in on page reload
+window.onload = function() {
+  if (currentUser) {
+    displayMemberArea();
+  } else {
+    showSignup();
+  }
+}
 
-  } catch(err) { alert(err.message); }
-});
+// Update current user activity every 30 sec
+setInterval(() => {
+  if (currentUser) {
+    currentUser.lastActive = Date.now();
+    localStorage.setItem('users', JSON.stringify(users));
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    showOnlineUsers();
+  }
+}, 30000);
+
+// Button to go to main website
+function goToWebsite() {
+ window.location.href = "index.html";
+}
 </script>
+
 </body>
 </html>
