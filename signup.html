@@ -3,91 +3,142 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NEON SIGNUP PORTAL — ironbro26fanclub</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Audiowide&display=swap" rel="stylesheet">
+<title>NEON SIGNUP PORTAL</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root { --bg:#000; --neon:#ff0033; }
-*{box-sizing:border-box;}
 body {
-  background: var(--bg);
-  color: var(--neon);
+  background: #000;
+  color: #ff0033;
   font-family: 'Orbitron', sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  margin: 0;
 }
 .container {
   text-align: center;
+  border: 2px solid #ff0033;
   padding: 40px;
-  border: 1px solid var(--neon);
   border-radius: 12px;
-  box-shadow: 0 0 25px var(--neon);
-  animation: glowPulse 2s infinite alternate;
-}
-@keyframes glowPulse {
-  from { box-shadow: 0 0 15px var(--neon); }
-  to { box-shadow: 0 0 40px var(--neon); }
+  box-shadow: 0 0 20px #ff0033, 0 0 40px #ff0033 inset;
 }
 h1 {
-  font-family: 'Audiowide', cursive;
-  color: var(--neon);
-  margin-bottom: 20px;
-  text-shadow: 0 0 15px var(--neon);
+  font-size: 2em;
+  text-shadow: 0 0 5px #ff0033, 0 0 20px #ff0033;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { text-shadow: 0 0 5px #ff0033, 0 0 20px #ff0033; }
+  50% { text-shadow: 0 0 15px #ff0033, 0 0 30px #ff0033; }
 }
 input {
-  background: black;
-  color: white;
-  border: 1px solid var(--neon);
   padding: 10px;
-  border-radius: 8px;
-  width: 250px;
-  margin: 10px 0;
-  outline: none;
-  box-shadow: 0 0 10px var(--neon);
+  margin: 10px;
+  border: 1px solid #ff0033;
+  border-radius: 5px;
+  background: transparent;
+  color: #ff0033;
+  box-shadow: 0 0 5px #ff0033;
 }
 button {
-  background: var(--neon);
-  color: black;
-  font-weight: 700;
-  border: none;
   padding: 10px 20px;
-  border-radius: 8px;
+  margin: 10px;
+  border: 1px solid #ff0033;
+  border-radius: 5px;
+  background: transparent;
+  color: #ff0033;
   cursor: pointer;
-  transition: 0.3s;
+  font-weight: bold;
+  text-transform: uppercase;
+  box-shadow: 0 0 5px #ff0033;
+  transition: 0.3s ease-in-out;
 }
-button:hover {
-  background: black;
-  color: var(--neon);
-  box-shadow: 0 0 20px var(--neon);
-}
+button:hover { box-shadow: 0 0 20px #ff0033,0 0 40px #ff0033 inset; }
 </style>
 </head>
 <body>
 <div class="container">
   <h1>NEON SIGNUP PORTAL</h1>
-  <form id="signupForm">
+  <form id="signup-form">
     <input type="email" id="email" placeholder="Email" required><br>
-    <input type="password" id="password" placeholder="Passcode" required><br>
-    <button type="submit">SIGN UP</button>
+    <input type="password" id="passcode" placeholder="Passcode" required><br>
+    <button type="submit">Sign Up</button>
   </form>
+  <form id="login-form" style="display:none;">
+    <input type="email" id="login-email" placeholder="Email" required><br>
+    <input type="password" id="login-passcode" placeholder="Passcode" required><br>
+    <button type="submit">Login</button>
+  </form>
+  <button id="toggle-login" style="margin-top:20px;">Switch to Login</button>
 </div>
 
-<script>
-document.getElementById("signupForm").addEventListener("submit", async (e) => {
+<script type="module">
+import { auth, db } from "./firebase.js";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+
+const toggleBtn = document.getElementById("toggle-login");
+const signupForm = document.getElementById("signup-form");
+const loginForm = document.getElementById("login-form");
+
+toggleBtn.addEventListener("click", () => {
+  if(signupForm.style.display === "none") {
+    signupForm.style.display = "block";
+    loginForm.style.display = "none";
+    toggleBtn.innerText = "Switch to Login";
+  } else {
+    signupForm.style.display = "none";
+    loginForm.style.display = "block";
+    toggleBtn.innerText = "Switch to Sign Up";
+  }
+});
+
+// Signup
+signupForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  const passcode = document.getElementById("passcode").value;
 
-  const res = await fetch("/api/signup", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password })
-  });
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, passcode);
+    const user = userCredential.user;
 
-  const data = await res.json();
-  alert(data.message);
+    await setDoc(doc(db, "users", user.uid), {
+      email,
+      signupTime: serverTimestamp(),
+      lastOnline: serverTimestamp(),
+      online: true,
+      role: email === "Krfuchs@icloud.com" ? "Owner" : "Member"
+    });
+
+    alert("Signup successful! Please login.");
+    signupForm.style.display = "none";
+    loginForm.style.display = "block";
+    toggleBtn.innerText = "Switch to Sign Up";
+  } catch(err) { alert(err.message); }
+});
+
+// Login
+loginForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("login-email").value;
+  const passcode = document.getElementById("login-passcode").value;
+
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, passcode);
+    const user = userCredential.user;
+
+    await setDoc(doc(db, "users", user.uid), {
+      lastOnline: serverTimestamp(),
+      online: true
+    }, { merge: true });
+
+    localStorage.setItem("currentUser", JSON.stringify({ email: user.email }));
+
+    if(email === "Krfuchs@icloud.com") window.location.href = "admin.html";
+    else window.location.href = "file:///C:/Users/Krfuc/OneDrive/Website/New%20folder/index.html";
+
+  } catch(err) { alert(err.message); }
 });
 </script>
 </body>
