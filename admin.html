@@ -5,67 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Panel - IronBro26</title>
 <style>
-  body {
-    background:#0d0d0d;
-    color:#fff;
-    font-family:Arial,sans-serif;
-    margin:0;
-    padding:40px;
-    text-align:center;
-  }
-
-  h1 {
-    color:#ff1a1a;
-    text-shadow:0 0 10px #ff3333;
-  }
-
-  .panel {
-    background:rgba(255,26,26,0.05);
-    border-radius:15px;
-    padding:30px;
-    box-shadow:0 0 20px #ff1a1a, 0 0 40px #ff3333 inset;
-    max-width:600px;
-    margin:40px auto;
-  }
-
-  button {
-    padding:10px 20px;
-    border:none;
-    border-radius:8px;
-    background:#ff1a1a;
-    color:#fff;
-    cursor:pointer;
-    font-weight:bold;
-    box-shadow:0 0 10px #ff1a1a;
-  }
-
-  button:hover {
-    background:#ff3333;
-    box-shadow:0 0 20px #ff6666;
-  }
-
-  a {
-    color:#ff6666;
-    text-decoration:none;
-  }
-
-  a:hover {
-    text-decoration:underline;
-  }
+body { background:#0d0d0d; color:#ff1a1a; font-family:Arial, sans-serif; padding:30px; }
+h1 { text-align:center; text-shadow:0 0 5px #ff1a1a,0 0 15px #ff3333; }
+input, button { margin:10px 0; padding:10px; border-radius:5px; border:none; }
+input { width:250px; background:#330000; color:#ff6666; box-shadow:0 0 5px #ff1a1a; }
+button { background:#ff1a1a; color:white; cursor:pointer; box-shadow:0 0 10px #ff1a1a; }
+button:hover { background:#ff3333; box-shadow:0 0 15px #ff1a1a,0 0 30px #ff6666; }
+table { width:100%; border-collapse:collapse; margin-top:20px; }
+th, td { border:1px solid #ff1a1a; padding:10px; text-align:left; }
+th { background:#330000; }
+.online { color:#00ff00; font-weight:bold; }
 </style>
 </head>
 <body>
-  <h1>IronBro26 Admin Panel</h1>
-  <div class="panel">
-    <p>Welcome to your admin panel, IronBro!</p>
-    <p>This is where you can manage your members, settings, or stats in the future.</p>
-    <button onclick="goBack()">Go Back to Sign Up</button>
-  </div>
+<h1>Admin Panel</h1>
 
-<script>
-function goBack() {
-  window.location.href = "signup.html";
-}
-</script>
-</body>
-</html>
+<h2>Register a New Admin Email</h2>
+<input type="email" id="newAdminEmail" placeholder="Email">
+<button onclick="addAdmin()">Sign Up</button>
+<button onclick="goHome()">Go Home</button>
+
+<h2>Registered Emails</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th>Sign-up Time</th>
+      <th>Online</th>
+    </tr>
+  </thead>
+  <tbody id="usersTable"></t
