@@ -1,54 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>ADMIN PANEL — ironbro26fanclub</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel - IronBro26</title>
 <style>
-body{background:#000;color:#ff0033;font-family:'Orbitron',sans-serif;}
-h1{text-align:center;color:#ff0033;margin-top:20px;}
-table{width:100%;max-width:900px;margin:20px auto;border-collapse:collapse;}
-th,td{border:1px solid rgba(255,0,51,0.2);padding:10px;text-align:center;}
-th{background:rgba(255,0,51,0.05);}
-.online{color:#00ff88;font-weight:700;}
-.offline{color:#ff0033;font-weight:700;}
+  body {
+    background:#0d0d0d;
+    color:#fff;
+    font-family:Arial,sans-serif;
+    margin:0;
+    padding:40px;
+    text-align:center;
+  }
+
+  h1 {
+    color:#ff1a1a;
+    text-shadow:0 0 10px #ff3333;
+  }
+
+  .panel {
+    background:rgba(255,26,26,0.05);
+    border-radius:15px;
+    padding:30px;
+    box-shadow:0 0 20px #ff1a1a, 0 0 40px #ff3333 inset;
+    max-width:600px;
+    margin:40px auto;
+  }
+
+  button {
+    padding:10px 20px;
+    border:none;
+    border-radius:8px;
+    background:#ff1a1a;
+    color:#fff;
+    cursor:pointer;
+    font-weight:bold;
+    box-shadow:0 0 10px #ff1a1a;
+  }
+
+  button:hover {
+    background:#ff3333;
+    box-shadow:0 0 20px #ff6666;
+  }
+
+  a {
+    color:#ff6666;
+    text-decoration:none;
+  }
+
+  a:hover {
+    text-decoration:underline;
+  }
 </style>
 </head>
 <body>
-<h1>Admin Control Panel</h1>
-<table>
-  <thead>
-    <tr><th>Email</th><th>Passcode</th><th>Signup Time</th><th>Status</th><th>Last Online</th></tr>
-  </thead>
-  <tbody id="usersTable"></tbody>
-</table>
+  <h1>IronBro26 Admin Panel</h1>
+  <div class="panel">
+    <p>Welcome to your admin panel, IronBro!</p>
+    <p>This is where you can manage your members, settings, or stats in the future.</p>
+    <button onclick="goBack()">Go Back to Sign Up</button>
+  </div>
 
 <script>
-const BIN_ID = "68f65f92d0ea881f40aebb87";
-const API_KEY = "$2a$10$wpHGujrPsIgbzGPptWRaIOkuT.9Bz2iSRN.gytSpwclZcQPr880tC";
-
-async function fetchUsers() {
-  const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {headers:{'X-Master-Key':API_KEY}});
-  const data = await res.json();
-  return data.record.users || [];
+function goBack() {
+  window.location.href = "signup.html";
 }
-
-async function loadUsers() {
-  const users = await fetchUsers();
-  const tbody = document.getElementById('usersTable');
-  tbody.innerHTML = '';
-  users.forEach(u=>{
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${u.email}</td><td>*****</td><td>${new Date(u.signupTime).toLocaleString()}</td>
-                    <td class="${u.online?'online':'offline'}">${u.online?'Online':'Offline'}</td>
-                    <td>${new Date(u.lastOnline).toLocaleString()}</td>`;
-    tbody.appendChild(tr);
-  });
-}
-
-loadUsers();
 </script>
-
-
 </body>
 </html>
