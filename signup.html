@@ -6,15 +6,15 @@
 <title>Signup</title>
 <style>
     body {
-        background: #0d0d0d;
-        color: #fff;
+        background:#0d0d0d;
+        color:#fff;
         font-family: Arial, sans-serif;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         height: 100vh;
-        margin: 0;
+        margin:0;
     }
     input, button {
         padding: 10px;
@@ -27,30 +27,35 @@
         background-color: #1a73e8;
         color: white;
     }
+    h1, h2 {
+        text-align: center;
+    }
 </style>
 </head>
 <body>
-<h1>Signup / Login</h1>
+
+<h1>User Signup & Login</h1>
 
 <div id="signupDiv">
     <h2>Signup</h2>
-    <input type="text" id="signupName" placeholder="Name" required><br>
-    <input type="email" id="signupEmail" placeholder="Email" required><br>
-    <input type="password" id="signupPassword" placeholder="Password" required><br>
+    <input type="text" id="signupName" placeholder="Name"><br>
+    <input type="email" id="signupEmail" placeholder="Email"><br>
+    <input type="password" id="signupPassword" placeholder="Password"><br>
     <button onclick="signup()">Sign Up</button>
 </div>
 
 <div id="loginDiv">
     <h2>Login</h2>
-    <input type="email" id="loginEmail" placeholder="Email" required><br>
-    <input type="password" id="loginPassword" placeholder="Password" required><br>
+    <input type="email" id="loginEmail" placeholder="Email"><br>
+    <input type="password" id="loginPassword" placeholder="Password"><br>
     <button onclick="login()">Login</button>
 </div>
 
 <script>
+// Signup function
 function signup() {
-    const name = document.getElementById("signupName").value;
-    const email = document.getElementById("signupEmail").value;
+    const name = document.getElementById("signupName").value.trim();
+    const email = document.getElementById("signupEmail").value.trim();
     const password = document.getElementById("signupPassword").value;
 
     if(!name || !email || !password) {
@@ -59,12 +64,21 @@ function signup() {
     }
 
     let users = JSON.parse(localStorage.getItem("users") || "[]");
+
     if(users.some(u => u.email === email)) {
         alert("Email already registered!");
         return;
     }
 
-    users.push({ name, email, password, signupDate: new Date().toLocaleString(), online: false });
+    const newUser = {
+        name,
+        email,
+        password,
+        signupDate: new Date().toLocaleString(),
+        online: false
+    };
+
+    users.push(newUser);
     localStorage.setItem("users", JSON.stringify(users));
 
     alert("Signup successful! Please login.");
@@ -73,8 +87,9 @@ function signup() {
     document.getElementById("signupPassword").value = "";
 }
 
+// Login function
 function login() {
-    const email = document.getElementById("loginEmail").value;
+    const email = document.getElementById("loginEmail").value.trim();
     const password = document.getElementById("loginPassword").value;
 
     let users = JSON.parse(localStorage.getItem("users") || "[]");
@@ -82,13 +97,13 @@ function login() {
 
     if(user) {
         // Mark user as online
-        users = users.map(u => u.email === email ? {...u, online: true} : u);
+        users = users.map(u => u.email === email ? {...u, online:true} : u);
         localStorage.setItem("users", JSON.stringify(users));
 
         // Store current user
         localStorage.setItem("currentUser", JSON.stringify(user));
 
-        // Redirect to admin
+        // Redirect to admin panel
         window.location.href = "admin.html";
     } else {
         alert("Invalid credentials!");
