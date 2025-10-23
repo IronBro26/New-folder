@@ -3,38 +3,141 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login - IronBro26</title>
+<title>IronBro26 - Login/Signup</title>
 <style>
-body { background:#0d0d0d; color:#ff1a1a; font-family:Arial, sans-serif; display:flex; flex-direction:column; align-items:center; padding:50px; }
-input { margin:10px 0; padding:10px; border-radius:5px; border:none; width:250px; text-align:center; background-color:#330000; color:#ff6666; box-shadow:0 0 5px #ff1a1a; }
-button { padding:10px 20px; border-radius:5px; border:none; background:#ff1a1a; color:white; cursor:pointer; margin:10px 0; font-weight:bold; box-shadow:0 0 10px #ff1a1a; }
-button:hover { background:#ff3333; box-shadow:0 0 15px #ff1a1a,0 0 30px #ff6666; }
+body {
+  background:#0d0d0d;
+  color:#ff1a1a;
+  font-family:Arial,sans-serif;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:50px;
+}
+h1,h2 {
+  text-shadow:0 0 5px #ff1a1a,0 0 15px #ff3333;
+}
+input {
+  margin:10px 0;
+  padding:10px;
+  border-radius:5px;
+  border:none;
+  width:250px;
+  text-align:center;
+  background-color:#330000;
+  color:#ff6666;
+  box-shadow:0 0 5px #ff1a1a;
+}
+button {
+  padding:10px 20px;
+  border-radius:5px;
+  border:none;
+  background:#ff1a1a;
+  color:white;
+  cursor:pointer;
+  margin:10px 0;
+  font-weight:bold;
+  box-shadow:0 0 10px #ff1a1a;
+}
+button:hover {
+  background:#ff3333;
+  box-shadow:0 0 15px #ff1a1a,0 0 30px #ff6666;
+}
+a {
+  color:#ff6666;
+  text-decoration:none;
+}
+a:hover { text-decoration:underline; }
+.hidden { display:none; }
+.container {
+  background: rgba(255,26,26,0.05);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px #ff1a1a, 0 0 40px #ff3333 inset;
+  text-align:center;
+}
 </style>
 </head>
 <body>
-<h1>Login</h1>
-<input type="email" id="loginEmail" placeholder="Email" required>
-<input type="password" id="loginPassword" placeholder="Password" required>
-<button onclick="login()">Log In</button>
+<div class="container">
+  <h1>IronBro26 Members</h1>
+
+  <!-- Signup Form -->
+  <div id="signupDiv">
+    <h2>Sign Up</h2>
+    <input type="email" id="signupEmail" placeholder="Email" required><br>
+    <input type="password" id="signupPassword" placeholder="Password" required><br>
+    <button onclick="signup()">Sign Up</button>
+    <p>Already have an account? <a href="#" onclick="showLogin()">Log in</a></p>
+  </div>
+
+  <!-- Login Form -->
+  <div id="loginDiv" class="hidden">
+    <h2>Login</h2>
+    <input type="email" id="loginEmail" placeholder="Email" required><br>
+    <input type="password" id="loginPassword" placeholder="Password" required><br>
+    <button onclick="login()">Log In</button>
+    <p>Don't have an account? <a href="#" onclick="showSignup()">Sign up</a></p>
+  </div>
+</div>
 
 <script>
 let users = JSON.parse(localStorage.getItem('users')) || [];
+let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
 
+// Show/hide forms
+function showSignup() {
+  document.getElementById('signupDiv').classList.remove('hidden');
+  document.getElementById('loginDiv').classList.add('hidden');
+}
+function showLogin() {
+  document.getElementById('signupDiv').classList.add('hidden');
+  document.getElementById('loginDiv').classList.remove('hidden');
+}
+
+// Signup function
+function signup() {
+  const email = document.getElementById('signupEmail').value;
+  const password = document.getElementById('signupPassword').value;
+
+  if (!email || !password) { alert("Fill in both fields!"); return; }
+  if (users.find(u => u.email === email)) { alert("Email already exists!"); return; }
+
+  const newUser = {
+    email,
+    password,
+    role: email === 'Krfuchs11@icloud.com' ? 'admin' : 'user',
+    signupTime: new Date().toLocaleString(),
+    lastActive: Date.now()
+  };
+  users.push(newUser);
+  localStorage.setItem('users', JSON.stringify(users));
+  alert("Account created! Please log in.");
+  showLogin();
+}
+
+// Login function
 function login() {
   const email = document.getElementById('loginEmail').value;
   const password = document.getElementById('loginPassword').value;
 
   const user = users.find(u => u.email === email && u.password === password);
-  if (!user) { alert("Invalid email or password!"); return; }
+  if (!user) { alert("Invalid email or password"); return; }
 
-  if (user.role !== 'admin') { alert("Access denied. Only admin can enter."); return; }
-
-  // Update lastActive and store current user
   user.lastActive = Date.now();
   localStorage.setItem('users', JSON.stringify(users));
   localStorage.setItem('currentUser', JSON.stringify(user));
 
   window.location.href = "admin.html"; // go to admin panel
+}
+
+// Auto show signup/login on reload
+window.onload = function() {
+  if (currentUser) {
+    window.location.href = "admin.html";
+  } else {
+    showSignup();
+  }
 }
 </script>
 </body>
