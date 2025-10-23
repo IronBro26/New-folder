@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Panel - IronBro26</title>
 <style>
-body { background:#0d0d0d; color:#ff1a1a; font-family:Arial, sans-serif; padding:30px; }
-h1 { text-align:center; text-shadow:0 0 5px #ff1a1a,0 0 15px #ff3333; }
+body { background:#0d0d0d; color:#ff1a1a; font-family:Arial,sans-serif; padding:30px; }
+h1,h2 { text-align:center; text-shadow:0 0 5px #ff1a1a,0 0 15px #ff3333; }
 input, button { margin:10px 0; padding:10px; border-radius:5px; border:none; }
 input { width:250px; background:#330000; color:#ff6666; box-shadow:0 0 5px #ff1a1a; }
-button { background:#ff1a1a; color:white; cursor:pointer; box-shadow:0 0 10px #ff1a1a; }
+button { background:#ff1a1a; color:white; cursor:pointer; box-shadow:0 0 10px #ff1a1a; font-weight:bold; }
 button:hover { background:#ff3333; box-shadow:0 0 15px #ff1a1a,0 0 30px #ff6666; }
 table { width:100%; border-collapse:collapse; margin-top:20px; }
 th, td { border:1px solid #ff1a1a; padding:10px; text-align:left; }
@@ -20,18 +20,59 @@ th { background:#330000; }
 <body>
 <h1>Admin Panel</h1>
 
-<h2>Register a New Admin Email</h2>
+<div id="adminControls">
+<h2>Sign Up New Admin</h2>
 <input type="email" id="newAdminEmail" placeholder="Email">
 <button onclick="addAdmin()">Sign Up</button>
+</div>
+
 <button onclick="goHome()">Go Home</button>
 
-<h2>Registered Emails</h2>
+<h2>Registered Users</h2>
 <table>
   <thead>
-    <tr>
-      <th>Email</th>
-      <th>Sign-up Time</th>
-      <th>Online</th>
-    </tr>
+    <tr><th>Email</th><th>Signup Time</th><th>Online</th></tr>
   </thead>
-  <tbody id="usersTable"></t
+  <tbody id="usersTable"></tbody>
+</table>
+
+<script>
+let users = JSON.parse(localStorage.getItem('users')) || [];
+let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+// Restrict admin controls
+if(!currentUser){ window.location.href="login.html"; }
+if(currentUser.email !== 'Krfuchs11@icloud.com'){
+  document.getElementById('adminControls').style.display='none';
+}
+
+// Add new admin email
+function addAdmin() {
+  const email = document.getElementById('newAdminEmail').value;
+  if(!email){ alert("Enter an email"); return; }
+
+  users.push({ email, signupTime: new Date().toLocaleString(), lastActive: Date.now() });
+  localStorage.setItem('users', JSON.stringify(users));
+  document.getElementById('newAdminEmail').value = "";
+  renderTable();
+}
+
+// Display table
+function renderTable() {
+  const tbody = document.getElementById('usersTable');
+  tbody.innerHTML = "";
+  users.forEach(u => {
+    const online = (Date.now() - u.lastActive < 5*60*1000) ? '<span class="online">Yes</span>' : 'No';
+    tbody.innerHTML += `<tr><td>${u.email}</td><td>${u.signupTime || 'N/A'}</td><td>${online}</td></tr>`;
+  });
+}
+
+// Go Home
+function goHome(){ window.location.href="index.html"; }
+
+// Update online status every 30 seconds
+setInterval(()=>{ renderTable(); },30000);
+renderTable();
+</script>
+</body>
+</html>
