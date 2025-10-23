@@ -6,15 +6,26 @@
 <title>Admin Panel</title>
 <style>
     body {
-        background: #0d0d0d;
-        color: #fff;
+        background:#0d0d0d;
+        color:#fff;
         font-family: Arial, sans-serif;
         padding: 20px;
+    }
+    input, button {
+        padding: 8px;
+        margin: 5px;
+        border-radius: 5px;
+        border: none;
+    }
+    button {
+        cursor: pointer;
+        background-color: #1a73e8;
+        color: white;
     }
     table {
         width: 100%;
         border-collapse: collapse;
-        margin-bottom: 20px;
+        margin-top: 20px;
     }
     th, td {
         padding: 10px;
@@ -22,23 +33,25 @@
         text-align: left;
     }
     th {
-        background: #1a73e8;
-    }
-    button {
-        padding: 10px 15px;
-        border-radius: 5px;
-        border: none;
-        cursor: pointer;
         background-color: #1a73e8;
-        color: white;
     }
 </style>
 </head>
 <body>
+
 <h1>Admin Panel</h1>
 <div id="welcome"></div>
 
-<!-- Admin table -->
+<!-- Admin signup inside panel -->
+<div id="adminSignupDiv">
+    <h2>Signup New Admin</h2>
+    <input type="text" id="adminName" placeholder="Name"><br>
+    <input type="email" id="adminEmail" placeholder="Email"><br>
+    <input type="password" id="adminPassword" placeholder="Password"><br>
+    <button onclick="adminSignup()">Add Admin</button>
+</div>
+
+<!-- Admin monitoring table -->
 <table>
     <thead>
         <tr>
@@ -59,19 +72,18 @@ const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 if(!currentUser) {
     alert("You must login first!");
     window.location.href = "signup.html";
+} else {
+    document.getElementById("welcome").innerHTML = `<h2>Welcome, ${currentUser.name}</h2>`;
 }
 
-// Show welcome
-document.getElementById("welcome").innerHTML = `<h2>Welcome, ${currentUser.name}</h2>`;
-
-// Load users
+// Load all users into table
 function loadUsers() {
-    let users = JSON.parse(localStorage.getItem("users") || "[]");
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
     const table = document.getElementById("userTable");
     table.innerHTML = "";
 
     users.forEach(u => {
-        // Only admin can see all users
+        // Only main admin sees all users
         if(currentUser.email === "Krfuchs11@icloud.com" || currentUser.email === u.email) {
             const row = document.createElement("tr");
             row.innerHTML = `
@@ -85,16 +97,54 @@ function loadUsers() {
     });
 }
 
-function goHome() {
-    // Mark user offline when leaving
+// Signup function inside admin panel
+function adminSignup() {
+    const name = document.getElementById("adminName").value.trim();
+    const email = document.getElementById("adminEmail").value.trim();
+    const password = document.getElementById("adminPassword").value;
+
+    if(!name || !email || !password) {
+        alert("All fields are required!");
+        return;
+    }
+
     let users = JSON.parse(localStorage.getItem("users") || "[]");
-    users = users.map(u => u.email === currentUser.email ? {...u, online: false} : u);
+    if(users.some(u => u.email === email)) {
+        alert("Email already exists!");
+        return;
+    }
+
+    const newAdmin = {
+        name,
+        email,
+        password,
+        signupDate: new Date().toLocaleString(),
+        online: false
+    };
+
+    users.push(newAdmin);
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("New admin added successfully!");
+    document.getElementById("adminName").value = "";
+    document.getElementById("adminEmail").value = "";
+    document.getElementById("adminPassword").value = "";
+
+    loadUsers();
+}
+
+// Go home function
+function goHome() {
+    // Mark current user offline
+    let users = JSON.parse(localStorage.getItem("users") || "[]");
+    users = users.map(u => u.email === currentUser.email ? {...u, online:false} : u);
     localStorage.setItem("users", JSON.stringify(users));
 
     localStorage.removeItem("currentUser");
     window.location.href = "signup.html";
 }
 
+// Initial load
 loadUsers();
 </script>
 </body>
