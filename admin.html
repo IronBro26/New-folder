@@ -3,76 +3,99 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel - IronBro26</title>
+<title>Admin Panel</title>
 <style>
-body { background:#0d0d0d; color:#ff1a1a; font-family:Arial,sans-serif; padding:30px; }
-h1,h2 { text-align:center; text-shadow:0 0 5px #ff1a1a,0 0 15px #ff3333; }
-input, button { margin:10px 0; padding:10px; border-radius:5px; border:none; }
-input { width:250px; background:#330000; color:#ff6666; box-shadow:0 0 5px #ff1a1a; }
-button { background:#ff1a1a; color:white; cursor:pointer; box-shadow:0 0 10px #ff1a1a; font-weight:bold; }
-button:hover { background:#ff3333; box-shadow:0 0 15px #ff1a1a,0 0 30px #ff6666; }
-table { width:100%; border-collapse:collapse; margin-top:20px; }
-th, td { border:1px solid #ff1a1a; padding:10px; text-align:left; }
-th { background:#330000; }
-.online { color:#00ff00; font-weight:bold; }
+    body {
+        background: #0d0d0d;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        padding: 20px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    th, td {
+        padding: 10px;
+        border: 1px solid #fff;
+        text-align: left;
+    }
+    th {
+        background: #1a73e8;
+    }
+    button {
+        padding: 10px 15px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        background-color: #1a73e8;
+        color: white;
+    }
 </style>
 </head>
 <body>
 <h1>Admin Panel</h1>
+<div id="welcome"></div>
 
-<div id="adminControls">
-<h2>Sign Up New Admin</h2>
-<input type="email" id="newAdminEmail" placeholder="Email">
-<button onclick="addAdmin()">Sign Up</button>
-</div>
+<!-- Admin table -->
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Signup Date</th>
+            <th>Online</th>
+        </tr>
+    </thead>
+    <tbody id="userTable"></tbody>
+</table>
 
 <button onclick="goHome()">Go Home</button>
 
-<h2>Registered Users</h2>
-<table>
-  <thead>
-    <tr><th>Email</th><th>Signup Time</th><th>Online</th></tr>
-  </thead>
-  <tbody id="usersTable"></tbody>
-</table>
-
 <script>
-let users = JSON.parse(localStorage.getItem('users')) || [];
-let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-// Restrict admin controls
-if(!currentUser){ window.location.href="login.html"; }
-if(currentUser.email !== 'Krfuchs11@icloud.com'){
-  document.getElementById('adminControls').style.display='none';
+if(!currentUser) {
+    alert("You must login first!");
+    window.location.href = "signup.html";
 }
 
-// Add new admin email
-function addAdmin() {
-  const email = document.getElementById('newAdminEmail').value;
-  if(!email){ alert("Enter an email"); return; }
+// Show welcome
+document.getElementById("welcome").innerHTML = `<h2>Welcome, ${currentUser.name}</h2>`;
 
-  users.push({ email, signupTime: new Date().toLocaleString(), lastActive: Date.now() });
-  localStorage.setItem('users', JSON.stringify(users));
-  document.getElementById('newAdminEmail').value = "";
-  renderTable();
+// Load users
+function loadUsers() {
+    let users = JSON.parse(localStorage.getItem("users") || "[]");
+    const table = document.getElementById("userTable");
+    table.innerHTML = "";
+
+    users.forEach(u => {
+        // Only admin can see all users
+        if(currentUser.email === "Krfuchs11@icloud.com" || currentUser.email === u.email) {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${u.name}</td>
+                <td>${u.email}</td>
+                <td>${u.signupDate}</td>
+                <td>${u.online ? "Online" : "Offline"}</td>
+            `;
+            table.appendChild(row);
+        }
+    });
 }
 
-// Display table
-function renderTable() {
-  const tbody = document.getElementById('usersTable');
-  tbody.innerHTML = "";
-  users.forEach(u => {
-    const online = (Date.now() - u.lastActive < 5*60*1000) ? '<span class="online">Yes</span>' : 'No';
-    tbody.innerHTML += `<tr><td>${u.email}</td><td>${u.signupTime || 'N/A'}</td><td>${online}</td></tr>`;
-  });
+function goHome() {
+    // Mark user offline when leaving
+    let users = JSON.parse(localStorage.getItem("users") || "[]");
+    users = users.map(u => u.email === currentUser.email ? {...u, online: false} : u);
+    localStorage.setItem("users", JSON.stringify(users));
+
+    localStorage.removeItem("currentUser");
+    window.location.href = "signup.html";
 }
 
-// Go Home
-function goHome(){ window.location.href="index.html"; }
-
-// Update online status every 30 seconds
-setInterval(()=>{ renderTable(); },30000);
-renderTable();
+loadUsers();
 </script>
 </body>
 </html>
